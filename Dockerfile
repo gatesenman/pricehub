@@ -13,6 +13,7 @@ RUN pip install -r requirements.txt
 ARG WITH_BROWSER=1
 RUN if [ "$WITH_BROWSER" = "1" ]; then python -m playwright install --with-deps chromium || echo '跳过浏览器安装：浏览器渲染采集不可用'; fi
 COPY app ./app
+COPY data/platforms.csv data/sample_products.csv ./data/
 COPY plugins /plugins
 VOLUME ["/data", "/plugins"]
 EXPOSE 8800

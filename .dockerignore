@@ -7,3 +7,5 @@ screenshots
 tests
 *.db
 *.tar.gz
+!data/platforms.csv
+!data/sample_products.csv

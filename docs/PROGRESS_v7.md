@@ -6,3 +6,5 @@
 - [x] 阶段4a 多租户（SQLite 改写 / PG RLS）、账号、OIDC、邀请角色、配额（d7cbfc4）
 - [x] 2026-10-21 22:05 阶段4b Redis Streams 队列 + 独立 worker（app/worker.py）+ 无 Redis 回退；模拟 OIDC；tests/test_v7_team.py 3 项通过（SQLite）；UI：登录页、工作区切换、团队与成员、用量页（v7.js）；podman 镜像 localhost/pricehub:v7 构建成功
 - [x] 2026-10-21 22:08 UI e2e tests/test_v7_ui.py 通过，截图 screenshots/v7/01-07；compose 修复 YAML、增加 APP_PORT
+- [x] 2026-10-21 22:10 PRD/ARCHITECTURE v7 章节更新（PDF 待压测后重导）
+- [ ] 压测后台运行中

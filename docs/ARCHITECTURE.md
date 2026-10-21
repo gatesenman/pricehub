@@ -65,6 +65,8 @@ flowchart TB
 
 **依赖规则**：界面 → 接口 → 领域 → 内核，单向依赖；领域之间不直接调用对方内部函数，跨领域协作通过事件（如“采集完成 → 价格记录 → 告警”）。旧模块路径（`app/db.py`、`app/render.py` 等）保留为兼容垫片，指向新位置的同一模块对象，保证旧代码与测试不受影响。
 
+**v7 完成情况**：告警、定价、匹配、分析建议、集成、采集设置、管理的业务实现已从 `app/api/lifecycle.py` 下沉到 `app/domains/*/service.py`，`lifecycle.py` 只负责注册路由与接线（46 条路由，旧函数名保留别名）。新增 `app/domains/team`（账号、工作区、邀请、OIDC、用量）。
+
 **当前重构程度（如实说明）**：底层模块（存储、采集、解析、渲染、搜索、置信度、分析）已物理迁移到领域包；v5 的告警/定价/匹配/管理业务函数目前仍在 `app/api/lifecycle.py` 中，领域包以延迟导入的门面对外暴露，下一步把实现逐个下沉。
 
 ## 3. 数据源插件 SDK
@@ -209,8 +211,22 @@ sequenceDiagram
 
 ## 8. 多租户与权限
 
-- 现状：API 令牌（只存哈希）+ 三种角色（admin / editor / viewer）；非本机访问且开启“需要鉴权”时强制校验；所有写操作和被拒绝的请求写审计表。
-- 规划（1.5）：`workspace_id` 列加到主数据表 + 行级过滤（PostgreSQL RLS）；OIDC 单点登录；配额（SKU 数、采集频率）按工作区计量，对应商业版本分级。
+v7 已实现：
+
+- **工作区上下文**：`app/core/tenancy.py` 用 contextvar 保存当前工作区；身份中间件（`app/api/team.py`）按会话 Cookie / `Authorization: Session` / `X-API-Key` 确定用户、工作区和角色后设置；后台任务提交时把工作区写进任务负载，执行时恢复（内存与 Redis 队列一致）。
+- **隔离**：14 张业务表（sources、products、prices、channels、rules、notifications、map_prices、evidence、pricing_rules、tokens、audit、alerts、dead_letters、settings）带 `workspace_id`，唯一键改为含 `workspace_id`。
+  - SQLite：用 sqlglot 改写每条 SQL——SELECT/UPDATE/DELETE 追加 `workspace_id = ?` 条件（JOIN 条件放在 ON 上），INSERT 自动补列；改写结果按（SQL, 工作区）缓存。
+  - PostgreSQL：启用 `FORCE ROW LEVEL SECURITY`，策略 `ws_isolation` 比较 `current_setting('app.ws')`；每次取连接用 `set_config` 设置工作区，`workspace_id` 默认值取自同一设置；系统任务用 `app.bypass` 绕过。
+- **账号**：users / memberships / sessions / invites 为全局表；密码 scrypt 哈希；会话只存令牌哈希。OIDC 走授权码流程，校验 state、nonce、签名（JWKS，RS256/ES256）、aud、iss。
+- **角色**：owner > admin > editor > viewer；viewer 拒绝所有写方法，editor 拒绝成员/设置类接口；单机模式下本机视为 owner。
+- **配额与计量**：`app/domains/team/usage.py`，指标 skus（实时计数）、collects（按月）、api_calls（按天）；计数先在内存累加，每 5 秒写入 usage 表；超限：新增商品和接口调用返回 429，采集任务以永久错误进入死信。
+
+## 8.1 分布式队列
+
+- `app/core/redis_queue.py`：`PRICEHUB_QUEUE=redis` 且 Redis 可连通时启用，否则自动回退内存队列并记录警告。
+- 10 个优先级流 `pricehub:q:0..9` + 消费组 `workers`；任务状态在哈希 `pricehub:job:<id>`；重试/限速等待放有序集合 `pricehub:delayed`；按域名限速用 Lua 脚本在 Redis 里原子计算，多进程共享；死信仍写数据库。
+- 独立 worker：`python -m app.worker --concurrency 4`；API 进程设 `PRICEHUB_EMBEDDED_WORKER=0` 后只投递不消费。
+- `/metrics`：本机访问放行；其他来源需 `Authorization: Bearer $PRICEHUB_METRICS_TOKEN` 或有效 API 令牌（`PRICEHUB_METRICS_STRICT=1` 时本机也要求令牌）。
 
 ## 9. 可观测性
 
@@ -230,6 +246,9 @@ flowchart LR
   end
   subgraph Docker Compose 团队版
     APP[app 容器 uvicorn] --> PGC[(postgres:17)]
+    APP --> RD[[redis:7 Streams]]
+    WKR[worker 容器] --> RD
+    WKR --> PGC
     PR[prometheus 可选] --> APP
   end
   subgraph 集群 2.0
@@ -243,7 +262,7 @@ flowchart LR
 ```
 
 - 桌面：`build_desktop.sh` 打包 Linux 客户端，服务端本机运行。
-- Docker：`Dockerfile`（Python 3.13 slim + CPU 版 torch + Chromium）、`docker-compose.yml`（app + postgres，`--profile monitoring` 加 Prometheus，配置在 `deploy/prometheus.yml`）。
+- Docker：`Dockerfile`（Python 3.13 slim + CPU 版 torch + Chromium）、`docker-compose.yml`（app + worker + postgres + redis，`APP_PORT` 可改宿主端口，`--profile monitoring` 加 Prometheus，配置在 `deploy/prometheus.yml`）。
 - 集群：API 无状态水平扩展；调度器换分布式队列后采集节点独立扩缩；时序库与主库分离。
 
 ## 11. 容量估算
