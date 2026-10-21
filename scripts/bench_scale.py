@@ -41,7 +41,9 @@ R["queries"]["全量最新价聚合(100万点)"] = timeit(lambda: db.q("SELECT C
 R["queries"]["按类目统计均价"] = timeit(lambda: db.q("SELECT p.category, AVG(x.price) a FROM products p JOIN prices x ON x.product_id=p.id GROUP BY p.category"), 3)
 # 分页接口（与 /api/catalog/page 同逻辑）
 os.environ.setdefault("PRICEHUB_NO_ST", "1")
-from app.api import platform as P
+t0 = time.perf_counter(); from app.api import platform as P
+from app import main as M
+R["startup_with_conf_backfill_s"] = round(time.perf_counter() - t0, 1); R["conf_backfilled"] = M.MIGRATED
 R["queries"]["分页接口 /api/catalog/page"] = timeit(lambda: P.catalog_page(offset=rnd.randint(0, args.skus - 100), limit=50), 50)
 # 向量检索：10 万 × 384 维（与多语言文本模型同维度）
 from app.core.vector import VectorIndex

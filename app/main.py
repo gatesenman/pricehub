@@ -57,14 +57,21 @@ def record_price(pid, price, method, ts=None, in_stock=None):
     if not ts: _fire("price", pid=pid, price=price, prev=hist[0] if hist else None)
     return c
 def migrate_confidence():
-    """为已有价格记录补算置信度（幂等，仅处理 confidence 为空的记录）。"""
-    rows = db.q("SELECT pr.*, s.type stype, s.config sconf, p.currency, p.title FROM prices pr JOIN products p ON p.id=pr.product_id LEFT JOIN sources s ON s.id=p.source_id WHERE pr.confidence IS NULL ORDER BY pr.product_id, pr.ts, pr.id")
+    """为已有价格记录补算置信度（幂等，仅处理 confidence 为空的记录）。v6：单次扫描 + 内存中维护历史 + 批量写回，百万级价格点可在分钟内完成。"""
+    if not db.q("SELECT id FROM prices WHERE confidence IS NULL LIMIT 1", one=True): return 0
+    rows = db.q("SELECT pr.id, pr.product_id, pr.price, pr.ts, pr.method, pr.confidence, s.type stype, s.config sconf, p.currency, p.title FROM prices pr JOIN products p ON p.id=pr.product_id LEFT JOIN sources s ON s.id=p.source_id "
+                "WHERE pr.product_id IN (SELECT DISTINCT product_id FROM prices WHERE confidence IS NULL) ORDER BY pr.product_id, pr.ts, pr.id")
+    batch, n, cur, hist = [], 0, None, []
     for r in rows:
-        m = r["method"] or {"mock": "mock", "rest": "api", "csv": "structured", None: "manual"}.get(r["stype"]) or ("css" if '"price_selector"' in (r["sconf"] or "") else "regex")
-        hist = [x["price"] for x in db.q("SELECT price FROM prices WHERE product_id=? AND (ts<? OR (ts=? AND id<?)) ORDER BY ts DESC, id DESC LIMIT 10", (r["product_id"], r["ts"], r["ts"], r["id"]))]
-        c = CF.score_price(r["price"], m, hist, [], r["currency"], r["title"]); c["basis"].append("（迁移补算）")
-        db.ex("UPDATE prices SET confidence=?,conf_level=?,conf_basis=?,method=? WHERE id=?", (c["confidence"], c["level"], json.dumps(c["basis"], ensure_ascii=False), m, r["id"]))
-    return len(rows)
+        if r["product_id"] != cur: cur, hist = r["product_id"], []
+        if r["confidence"] is None:
+            m = r["method"] or {"mock": "mock", "rest": "api", "csv": "structured", None: "manual"}.get(r["stype"]) or ("css" if '"price_selector"' in (r["sconf"] or "") else "regex")
+            c = CF.score_price(r["price"], m, hist[-10:][::-1], [], r["currency"], r["title"]); c["basis"].append("（迁移补算）")
+            batch.append((c["confidence"], c["level"], json.dumps(c["basis"], ensure_ascii=False), m, r["id"])); n += 1
+            if len(batch) >= 5000: db.ex_many("UPDATE prices SET confidence=?,conf_level=?,conf_basis=?,method=? WHERE id=?", batch); batch = []
+        hist.append(r["price"])
+    if batch: db.ex_many("UPDATE prices SET confidence=?,conf_level=?,conf_basis=?,method=? WHERE id=?", batch)
+    return n
 MIGRATED = migrate_confidence()
 
 def upsert(src_id, it):
