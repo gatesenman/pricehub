@@ -8,4 +8,5 @@
 - [x] 2026-10-21 22:08 UI e2e tests/test_v7_ui.py 通过，截图 screenshots/v7/01-07；compose 修复 YAML、增加 APP_PORT
 - [x] 2026-10-21 22:10 PRD/ARCHITECTURE v7 章节更新（PDF 待压测后重导）
 - [x] 2026-10-21 22:17 podman 构建镜像 localhost/pricehub:v7 成功；podman-compose 启动 db/redis/app（PostgreSQL 后端，/readyz ready）；worker 容器因 podman 无 systemd 健康检查一直 starting、podman-compose 卡住，改用 podman run 同网络启动，经容器 worker 完成采集任务（Redis 后端）；宿主访问 /metrics 无令牌 401
-- [ ] 压测后台运行中
+- [x] 2026-10-21 22:30 修复：RLS 表不允许 COPY → 改为 COPY 到临时表再 INSERT…SELECT；SQLite 启动执行 PRAGMA optimize 避免误用 workspace_id 索引（同款组比价 15ms 回退）。PG 压测完成（COPY 11 万点/秒，机器负载约 100，数字偏保守）
+- [ ] SQLite 压测后台运行中

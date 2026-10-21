@@ -28,6 +28,7 @@ for d in range(args.per):
         if len(rows) >= 50_000: db.ex_many("INSERT INTO prices(product_id,price,ts,method) VALUES(?,?,?,?)", rows); rows = []
 if rows: db.ex_many("INSERT INTO prices(product_id,price,ts,method) VALUES(?,?,?,?)", rows)
 el = time.perf_counter() - t0; R["insert_prices_s"] = round(el, 2); R["insert_prices_per_s"] = int(args.skus * args.per / el)
+if args.backend == "sqlite": t = time.perf_counter(); db.optimize(); R["analyze_s"] = round(time.perf_counter() - t, 2)   # 应用启动时同样执行 PRAGMA optimize
 if args.backend == "postgresql": t = time.perf_counter(); db.q("ANALYZE"); R["analyze_s"] = round(time.perf_counter() - t, 2)   # 正常运行时由 autovacuum 完成
 R["write_path"] = "COPY" if args.backend == "postgresql" else "executemany"
 pick = lambda: rnd.randint(1, args.skus)

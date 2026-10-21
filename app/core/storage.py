@@ -66,7 +66,13 @@ def _sqlite_init():
             for col, typ in cols:
                 if col not in have: c.execute(f"ALTER TABLE {t} ADD COLUMN {col} {typ}")
         for ix in INDEXES: c.execute(ix)
+        # 让查询规划器掌握各列的区分度（尤其 workspace_id 区分度低），避免误用工作区索引导致全表扫描
+        c.execute("PRAGMA optimize=0x10002")
         c.commit()
+def optimize():
+    """大批量导入后调用：SQLite 更新统计信息；PostgreSQL 由 autovacuum 负责。"""
+    if BACKEND == "sqlite":
+        with _lock, conn() as c: c.execute("PRAGMA optimize=0x10002"); c.commit()
 # ---------------- PostgreSQL ----------------
 COPY_MIN = int(os.environ.get("PRICEHUB_COPY_MIN", "200"))
 _COUNT = {}
@@ -233,8 +239,13 @@ def ex_many(sql, rows):
                 c = pg_conn()
                 try:
                     with c.cursor() as cur0: _pg_ws(cur0)
-                    with c.cursor() as cur, cur.copy(f"COPY {m.group(1)} ({cols}) FROM STDIN") as cp:
-                        for r in rows: cp.write_row(r)
+                    # 业务表启用了行级安全，PostgreSQL 不允许直接 COPY 进去：先 COPY 到无 RLS 的临时表，再一条 INSERT…SELECT 搬入（仍受 RLS 校验）
+                    t = m.group(1); stg = f"_stg_{t}"
+                    with c.cursor() as cur:
+                        cur.execute(f"CREATE TEMP TABLE {stg} ON COMMIT DROP AS SELECT {cols} FROM {t} WITH NO DATA")
+                        with cur.copy(f"COPY {stg} ({cols}) FROM STDIN") as cp:
+                            for r in rows: cp.write_row(r)
+                        cur.execute(f"INSERT INTO {t} ({cols}) SELECT {cols} FROM {stg}")
                     c.commit()
                 except Exception: c.rollback(); raise
             VER[0] += 1; return
