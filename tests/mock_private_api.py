@@ -47,3 +47,35 @@ def p_spa(): return '<html><body><div id="root"></div><noscript>You need to enab
 def p_search(q: str = ""):
     items = [{"@type": "Product", "name": f"{q} 型号{i}", "url": f"http://127.0.0.1:8901/shop/jsonld?i={i}", "offers": {"price": 100 + i * 10, "priceCurrency": "CNY"}} for i in range(4)]
     return f'<html><script type="application/ld+json">{_json.dumps({"@type": "ItemList", "itemListElement": items})}</script></html>'
+# ---------- v5：JS 渲染页、库存/多规格页、通知渠道接收端（本地模拟，不发往真实第三方） ----------
+from fastapi import Request as _Req
+@app.get("/shop/spa-price", response_class=HTMLResponse)
+def p_spa_price():
+    return """<html><head><title>loading</title></head><body><div id=root></div><noscript>You need to enable JavaScript to run this app.</noscript><script src=a.js></script><script src=b.js></script>
+<script>setTimeout(function(){var s=document.createElement('script');s.type='application/ld+json';s.text=JSON.stringify({"@type":"Product","name":"Nintendo Switch OLED","gtin13":"0045496453435","brand":{"name":"Nintendo"},"offers":{"price":"2099.00","priceCurrency":"CNY","availability":"https://schema.org/InStock"}});document.head.appendChild(s);document.getElementById('root').innerHTML='<h1>Nintendo Switch OLED</h1><b>¥2099</b>';},300)</script></body></html>"""
+_STOCK = {"state": "in", "price": "399.00"}
+@app.post("/shop/stock/set")
+def stock_set(state: str = "in", price: str = "399.00"): _STOCK.update(state=state, price=price); return _STOCK
+@app.get("/shop/stock", response_class=HTMLResponse)
+def p_stock():
+    av = "https://schema.org/InStock" if _STOCK["state"] == "in" else "https://schema.org/OutOfStock"
+    d = {"@type": "Product", "name": "Steam 充值卡", "sku": "STEAM", "brand": "Valve", "gtin13": "0000000000017",
+         "offers": [{"@type": "Offer", "name": "面值 100", "sku": "S100", "price": _STOCK["price"], "priceCurrency": "CNY", "availability": av},
+                    {"@type": "Offer", "name": "面值 200", "sku": "S200", "price": "780.00", "priceCurrency": "CNY", "availability": "https://schema.org/InStock"}]}
+    return f'<html><head><script type="application/ld+json">{_json.dumps(d, ensure_ascii=False)}</script></head><body>card</body></html>'
+@app.get("/shop/usd", response_class=HTMLResponse)
+def p_usd():
+    d = {"@type": "Product", "name": "Sony WH-1000XM5 Wireless", "gtin13": "4548736132610", "brand": {"name": "Sony"}, "mpn": "WH-1000XM5",
+         "offers": {"price": "329.99", "priceCurrency": "USD", "availability": "InStock", "shippingDetails": {"shippingRate": {"value": "15", "currency": "USD"}}}}
+    return f'<html><head><script type="application/ld+json">{_json.dumps(d)}</script></head><body>x</body></html>'
+HOOKS = {}
+@app.post("/hooks/{name}")
+async def hook(name: str, req: _Req):
+    HOOKS.setdefault(name, []).append(await req.json()); return {"ok": True, "errcode": 0, "code": 0, "StatusCode": 0}
+@app.post("/tg/{bot}/sendMessage")
+async def tg(bot: str, req: _Req):
+    HOOKS.setdefault("telegram", []).append(await req.json()); return {"ok": True}
+@app.get("/hooks/{name}")
+def hook_list(name: str): return HOOKS.get(name, [])
+@app.delete("/hooks")
+def hook_clear(): HOOKS.clear(); return {"ok": True}

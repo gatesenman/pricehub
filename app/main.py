@@ -38,12 +38,18 @@ def _conf_of(r):
     return {"confidence": r.get("confidence"), "level": r.get("conf_level"), "basis": json.loads(r.get("conf_basis") or "[]"), "method": r.get("method")}
 def _group_latest(gk, exclude_pid):
     return [r["price"] for r in db.q("SELECT (SELECT price FROM prices WHERE product_id=p.id ORDER BY id DESC LIMIT 1) price FROM products p WHERE group_key=? AND id<>?", (gk, exclude_pid)) if r["price"]]
-def record_price(pid, price, method, ts=None):
+HOOKS = []   # v5：价格记录/库存变化后的回调（告警规则、Webhook 事件）
+def _fire(event, **kw):
+    for h in HOOKS:
+        try: h(event, **kw)
+        except Exception as e: print("hook fail", event, e)
+def record_price(pid, price, method, ts=None, in_stock=None):
     p = db.q("SELECT * FROM products WHERE id=?", (pid,), one=True)
     hist = [r["price"] for r in db.q("SELECT price FROM prices WHERE product_id=? ORDER BY id DESC LIMIT 10", (pid,))]
     c = CF.score_price(price, method, hist, _group_latest(p["group_key"], pid), p.get("currency"), p.get("title"))
-    db.ex("INSERT INTO prices(product_id,price,ts,confidence,conf_level,conf_basis,method) VALUES(?,?,COALESCE(?,datetime('now')),?,?,?,?)",
-          (pid, price, ts, c["confidence"], c["level"], json.dumps(c["basis"], ensure_ascii=False), method))
+    db.ex("INSERT INTO prices(product_id,price,ts,confidence,conf_level,conf_basis,method,in_stock) VALUES(?,?,COALESCE(?,datetime('now')),?,?,?,?,?)",
+          (pid, price, ts, c["confidence"], c["level"], json.dumps(c["basis"], ensure_ascii=False), method, in_stock))
+    if not ts: _fire("price", pid=pid, price=price, prev=hist[0] if hist else None)
     return c
 def migrate_confidence():
     """为已有价格记录补算置信度（幂等，仅处理 confidence 为空的记录）。"""
@@ -67,9 +73,21 @@ def upsert(src_id, it):
         pid = db.ex("INSERT INTO products(source_id,platform,external_id,title,category,chain,brand,url,currency,cost,group_key,seller,attrs) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",
                     (src_id, plat, it["external_id"], it.get("title"), it.get("category"), it.get("chain"), it.get("brand"), it.get("url"), it.get("currency") or "CNY", it.get("cost"), gk, it.get("seller"), attrs))
     if it.get("image_url") and not (ex and ex.get("phash")): _save_image(it["image_url"], pid)
+    for k in ("gtin", "model", "shipping", "rendered"):
+        if it.get(k) is not None: db.ex(f"UPDATE products SET {k}=? WHERE id=?", (it[k], pid))
+    if it.get("brand") and not (ex and ex.get("brand")): db.ex("UPDATE products SET brand=? WHERE id=?", (it["brand"], pid))
+    stock = None if it.get("in_stock") is None else int(bool(it["in_stock"]))
+    if stock is not None:
+        old = ex.get("in_stock") if ex else None; db.ex("UPDATE products SET in_stock=? WHERE id=?", (stock, pid))
+        if old is not None and old != stock:
+            db.ex("INSERT INTO alerts(product_id,msg) VALUES(?,?)", (pid, "恢复有货" if stock else "缺货/下架")); _fire("stock", pid=pid, in_stock=stock)
+    for v in it.get("variants") or []:   # 多规格：每个规格作为子商品单独记录价格与库存
+        sub = dict(it, variants=None, external_id=f"{it['external_id']}#{v.get('sku') or v['name']}", title=f"{it.get('title')} / {v['name']}", price=v.get("price"),
+                   in_stock=v.get("in_stock"), group_key=f"{gk}|{v['name']}", variant=v["name"])
+        cid = upsert(src_id, sub); db.ex("UPDATE products SET parent_id=?, variant=? WHERE id=?", (pid, v["name"], cid))
     if it.get("price") is not None:
         last = db.q("SELECT price FROM prices WHERE product_id=? ORDER BY id DESC LIMIT 1", (pid,), one=True)
-        record_price(pid, it["price"], it.get("method") or "manual")
+        record_price(pid, it["price"], it.get("method") or "manual", in_stock=stock)
         if last and last["price"] and abs(it["price"] - last["price"]) / last["price"] >= 0.05:
             db.ex("INSERT INTO alerts(product_id,msg) VALUES(?,?)", (pid, f"价格变动 {last['price']} -> {it['price']}"))
     return pid
@@ -291,10 +309,12 @@ def s_ai(q: str, provider: str = "deepseek"):
     return r
 @app.get("/api/ai/providers")
 def providers(): return {k: {"env": v["env"], "configured": bool(os.environ.get(v["env"]))} for k, v in ai_search.PROVIDERS.items()}
-from . import v4  # noqa: E402  v4 体验优化：引导、任务队列、一键监控、撤销、建议
 @app.get("/")
 def index(): return FileResponse(os.path.join(HERE, "static", "index.html"))
 sched = BackgroundScheduler()
 @app.on_event("startup")
 def _start():
     sched.add_job(fetch_all, "interval", minutes=int(os.environ.get("PRICEHUB_MONITOR_MIN", "60")), id="monitor"); sched.start()
+
+from . import v4  # noqa: E402  v4 体验优化：引导、任务队列、一键监控、撤销、建议
+from . import v5  # noqa: E402  v5 全生命周期补全

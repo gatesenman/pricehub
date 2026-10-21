@@ -1,5 +1,5 @@
 <!doctype html><html lang="zh-CN" data-theme="dark"><head><meta charset="utf-8"><title>PriceHub 价格管理工作台</title><link rel="icon" href="data:,">
-<link rel="stylesheet" href="/static/vendor/codicon.css"><link rel="stylesheet" href="/static/style.css"><script src="/static/vendor/chart.js"></script><script defer src="/static/v4.js"></script><script defer src="/static/app.js"></script><script defer src="/static/vendor/alpine.js"></script></head>
+<link rel="stylesheet" href="/static/vendor/codicon.css"><link rel="stylesheet" href="/static/style.css"><script src="/static/vendor/chart.js"></script><script defer src="/static/v4.js"></script><script defer src="/static/app.js"></script><script defer src="/static/v5.js"></script><script defer src="/static/vendor/alpine.js"></script></head>
 <body x-data="App()" @keydown.window="keys($event)" @click.window="menuOpen=null;ctx=null;openPid($event)" @mousemove.window="dragMove($event)" @mouseup.window="dragEnd()" @mouseover.window="tipOver($event)">
 <div class="app">
 <div class="menubar" data-menubar><span class="logo"><i class="codicon codicon-pulse"></i> PriceHub</span>
@@ -83,6 +83,18 @@
        <div class="filterbar" style="margin-top:6px">手动记录一次价格 <input type="number" step="0.01" x-model="t.np" style="width:100px"><button class="btn" @click="addPrice(t)">记录</button>
         <span style="margin-left:auto" :class="{'上涨':'up','下跌':'down'}[t.d.f.trend]" x-text="t.d.f.trend?'趋势：'+t.d.f.trend:'数据不足'"></span></div></div>
        <table class="grid"><tbody><template x-for="s in statRows(t)"><tr><td class="muted" x-text="s[0]"></td><td class="num"><span x-text="s[1]"></span> <span x-html="s[2]?confBadge(s[2]):''"></span></td></tr></template></tbody></table></div></div>
+     <template x-if="t.x"><div class="row" data-v5-product>
+      <div class="grp" data-landed><h4><i class="codicon codicon-credit-card"></i> 到手价<span class="muted" x-text="t.x.landed?'折合人民币 '+money(t.x.landed.landed_cny):''"></span></h4><div class="b">
+       <div class="big" x-text="t.x.landed?money(t.x.landed.landed,t.x.landed.currency):'—'" data-landed-value></div><div class="hint" x-text="t.x.landed&&t.x.landed.formula"></div>
+       <div class="form" style="grid-template-columns:90px 1fr 90px 1fr;margin-top:8px"><label>运费</label><input type="number" x-model="t.cf.shipping" data-cf-ship><label>税率 %</label><input type="number" x-model="t.cf.tax_pct" data-cf-tax>
+        <label>优惠/满减</label><input type="number" x-model="t.cf.coupon" data-cf-coupon><label>目标价</label><input type="number" x-model="t.cf.target_price" placeholder="降到就提醒" data-cf-target>
+        <label>最低限价</label><input type="number" x-model="t.cf.map_price" placeholder="控价用，可空"><span></span><button class="btn primary" @click="saveCosts(t)" data-cf-save>保存</button></div>
+       <div class="hint" style="margin-top:6px"><span x-text="t.x.in_stock===1?'有货':t.x.in_stock===0?'缺货/下架':'库存未知'" :class="t.x.in_stock===0?'err':t.x.in_stock===1?'ok':''" data-stock></span><span x-show="t.x.gtin" x-text="' · 条码 '+t.x.gtin"></span><span x-show="t.x.rendered" > · 经无头浏览器读取</span></div>
+       <template x-if="t.x.variants&&t.x.variants.length"><div style="margin-top:6px" data-variants><b>规格</b><template x-for="v in t.x.variants" :key="v.id"><div class="kvrow"><a href="#" @click.prevent="openProduct(v.id)" x-text="v.variant"></a><span class="mono"><span x-text="money(v.price)"></span> <span :class="v.in_stock===0?'err':'muted'" x-text="v.in_stock===0?'缺货':''"></span></span></div></template></div></template></div></div>
+      <div class="grp" data-advice><h4><i class="codicon codicon-lightbulb"></i> 买入时机建议</h4><div class="b"><template x-if="!t.adv"><div class="muted">价格记录不足</div></template>
+       <template x-if="t.adv"><div><div class="big" :class="verdictCls(t.adv.verdict)" x-text="t.adv.verdict" data-verdict></div> <span x-html="confBadge(t.adv.conf)"></span>
+        <ul style="margin:6px 0;padding-left:18px"><template x-for="r in t.adv.reasons"><li x-text="r"></li></template></ul>
+        <template x-for="e in t.adv.promos"><div class="hint" x-text="'促销：'+e.name+'（'+e.date+(e.in_progress?'，进行中':'，'+e.days_left+' 天后')+'）'"></div></template></div></template></div></div></div></template>
      <div class="row"><div class="grp" data-compare><h4>跨平台比价<span class="muted" x-text="t.d.c.spread?'价差 '+money(t.d.c.spread):''"></span></h4><div class="b">
        <template x-if="(t.d.c.offers||[]).length<2"><div class="muted">暂未发现其他平台同款</div></template>
        <table class="grid" x-show="(t.d.c.offers||[]).length"><thead><tr><th>平台</th><th>卖家</th><th class="num">价格</th><th>置信度</th><th style="width:120px"></th></tr></thead><tbody><template x-for="(o,i) in t.d.c.offers"><tr @dblclick="openProduct(o.id)">
@@ -121,6 +133,17 @@
     商品 <select x-model="t.pid" style="width:340px" data-pricing-select><template x-for="p in all"><option :value="p.id" x-text="p.platform+' · '+p.title" :selected="p.id==t.pid"></option></template></select>
     成本 <input type="number" x-model="t.cost" style="width:90px"> 加成率 <input type="number" step="0.05" x-model="t.markup" style="width:70px"><button class="btn primary" @click="pricingTab(t)" data-pricing-run>生成建议</button></div>
     <div class="muted">推荐价 = max(成本x1.05, min(成本加成价, 竞品最低x0.99))；无竞品取成本加成价，无成本取市场中位数。</div></div></div>
+    <div class="grp" data-pricing-engine><h4><i class="codicon codicon-symbol-ruler"></i> 定价规则与利润模拟</h4><div class="b">
+     <div class="filterbar">规则 <select x-model="t.ruleId" style="width:220px" data-pr-rule><option value="">选择已保存的规则…</option><template x-for="r in (t.pr||{}).items||[]"><option :value="r.id" x-text="r.name"></option></template></select>
+      <span class="muted">或新建：</span><input x-model="(t.npr||{}).name" placeholder="名称" style="width:110px"><select x-model="(t.npr||{}).strategy" data-pr-strategy><template x-for="(l,k) in (t.pr||{}).strategies||{}"><option :value="k" x-text="l"></option></template></select>
+      X=<input type="number" x-model="(t.npr||{}).param" style="width:55px">% 保底毛利<input type="number" x-model="(t.npr||{}).min_margin" style="width:55px">% 尾数<select x-model="(t.npr||{}).round_to"><option value="">不处理</option><option value=".9">.9</option><option value="int">取整</option></select>
+      <label><input type="checkbox" x-model="(t.npr||{}).respect_map"> 遵守最低限价</label><button class="btn" @click="addPricingRule(t)" data-pr-save>保存规则</button></div>
+     <div class="filterbar">平台费率<input type="number" x-model="t.fee" style="width:55px">% 价格弹性<input type="number" step="0.1" x-model="t.el" style="width:55px" title="降价 1% 销量增加约多少 %"> 基准销量<input type="number" x-model="t.vol" style="width:70px">
+      <button class="btn primary" @click="simulate(t)" data-pr-sim><i class="codicon codicon-play"></i> 模拟全部商品</button><button class="btn" @click="pushPricing(t)" :disabled="!t.sim" data-pr-push title="推送给订阅了调价建议的 Webhook（如 ERP），不会直接改平台价格"><i class="codicon codicon-send"></i> 推送调价建议</button></div>
+     <template x-if="t.sim"><div data-pr-result><div class="kvrow"><span>模拟利润：现价 <b class="mono" x-text="money(t.sim.profit_now)"></b> → 新价 <b class="mono" x-text="money(t.sim.profit_new)"></b></span><b class="mono" :class="t.sim.delta>=0?'ok':'err'" x-text="(t.sim.delta>=0?'+':'')+money(t.sim.delta)" data-pr-delta></b></div>
+      <div style="max-height:300px;overflow:auto"><table class="grid"><thead><tr><th>商品</th><th style="width:90px" class="num">现价</th><th style="width:90px" class="num">建议价</th><th style="width:70px" class="num">变化</th><th style="width:70px" class="num">毛利率</th><th style="width:90px" class="num">利润变化</th><th style="width:240px">依据</th></tr></thead><tbody>
+       <template x-for="r in t.sim.rows" :key="r.id"><tr data-pr-row><td x-text="r.title"></td><td class="num" x-text="money(r.current)"></td><td class="num" x-text="money(r.suggested)"></td><td class="num" :class="r.change_pct<0?'down':r.change_pct>0?'up':''" x-text="r.change_pct+'%'"></td><td class="num" x-text="r.margin_pct!=null?r.margin_pct+'%':'—'"></td><td class="num" :class="r.profit_new>=r.profit_now?'ok':'err'" x-text="money(r.profit_new-r.profit_now)"></td><td class="muted" x-text="r.why.join('；')" :title="r.why.join('；')"></td></tr></template></tbody></table></div>
+      <div class="hint" x-text="t.sim.note"></div></div></template></div></div>
     <template x-if="t.r"><table class="grid" style="width:520px;min-width:0"><tbody><template x-for="s in [['成本加成价',t.r.cost_plus],['竞品最低-1%',t.r.competitive_min_minus_1pct],['市场中位数',t.r.market_median],['推荐售价',t.r.recommended]]"><tr><td x-text="s[0]"></td><td class="num" x-text="money(s[1])" data-pricing-val></td><td x-html="s[0]==='推荐售价'?confBadge(t.r.conf):''"></td></tr></template></tbody></table></template></div></template>
 
    <template x-if="t.type==='search'"><div>
@@ -172,6 +195,89 @@
       <td><button class="btn" :class="p.enabled&&'primary'" :disabled="!p.domain" @click.stop="togglePlatform(p)" data-enable :title="p.domain?'':'缺少网址，无法启用'"><i class="codicon" :class="p.enabled?'codicon-check':'codicon-add'"></i> <span x-text="p.enabled?'已启用':'启用'"></span></button></td></tr></template>
       <tr class="vpad"><td colspan="9" :style="'height:'+vwin(t,catRows(t)).bot+'px'"></td></tr></tbody></table></div>
     <template x-if="pAll&&!catRows(t).length"><div class="empty"><i class="codicon codicon-globe ei"></i><h3>没有符合条件的平台</h3><div class="acts"><button class="btn" @click="openCatalog({})">清除筛选</button></div></div></template></div></template>
+
+   <template x-if="t.type==='rules'"><div data-v5-rules>
+    <div class="row"><div class="grp"><h4><i class="codicon codicon-broadcast"></i> 通知渠道 <span class="muted">告警发到哪里</span></h4><div class="b">
+     <div class="filterbar"><select x-model="t.nc.type" data-nc-type><template x-for="(l,k) in t.ch.types"><option :value="k" x-text="l" :selected="k===t.nc.type"></option></template></select>
+      <input x-model="t.nc.name" placeholder="名称（可选）" style="width:120px"><input x-model="t.nc.url" :placeholder="t.nc.type==='telegram'?'https://api.telegram.org/bot<令牌>':'机器人 / Webhook 地址 https://...'" style="flex:1;min-width:200px" data-nc-url>
+      <input x-show="t.nc.type==='telegram'" x-model="t.nc.chat_id" placeholder="chat_id" style="width:100px">
+      <label x-show="t.nc.type==='webhook'" title="把价格变动和调价建议也推送给这个地址（给 ERP/自有系统用）"><input type="checkbox" x-model="t.nc.events"> 同时推送价格变动/调价建议</label>
+      <button class="btn primary" @click="addChannel(t)" data-nc-add><i class="codicon codicon-add"></i> 添加</button></div>
+     <template x-if="!t.ch.items.length"><div class="empty" style="padding:16px">还没有通知渠道。支持企业微信、飞书、钉钉群机器人，Telegram，邮件和通用 Webhook。</div></template>
+     <table class="grid" x-show="t.ch.items.length"><thead><tr><th style="width:40px">ID</th><th>名称</th><th style="width:150px">类型</th><th style="width:200px">操作</th></tr></thead><tbody>
+      <template x-for="c in t.ch.items" :key="c.id"><tr data-channel-row><td class="num" x-text="c.id"></td><td x-text="c.name"></td><td x-text="t.ch.types[c.type]"></td>
+       <td><button class="btn" @click="testChannel(t,c)" data-nc-test><i class="codicon codicon-send"></i> 发测试消息</button> <button class="btn danger" @click="delChannel(t,c)"><i class="codicon codicon-trash"></i></button></td></tr></template></tbody></table></div></div>
+     <div class="grp"><h4><i class="codicon codicon-bell-dot"></i> 告警规则 <span class="muted">什么情况下提醒</span></h4><div class="b">
+      <div class="filterbar"><select x-model="t.nr.type" data-nr-type><template x-for="(l,k) in t.ru.types"><option :value="k" x-text="l" :selected="k===t.nr.type"></option></template></select>
+       <input x-show="!['stock','map','any'].includes(t.nr.type)" x-model="t.nr.value" type="number" :placeholder="t.nr.type.endsWith('pct')?'百分比，如 10':'价格'" style="width:90px" data-nr-value>
+       <select x-model="t.nr.product_id" style="width:200px" data-nr-product><option value="">全部商品</option><template x-for="p in all"><option :value="p.id" x-text="p.title"></option></template></select>
+       <span class="muted">同一商品</span><input type="number" x-model="t.nr.cooldown_min" style="width:60px"><span class="muted">分钟内不重复</span></div>
+      <div class="filterbar"><span class="muted">发送到：</span><template x-for="c in t.ch.items" :key="c.id"><label class="chip" :class="t.nr.channel_ids.includes(String(c.id))&&'on'"><input type="checkbox" :value="String(c.id)" x-model="t.nr.channel_ids" style="display:none"><span x-text="c.name"></span></label></template>
+       <span class="muted" x-show="!t.ch.items.length">（只记在站内告警）</span><button class="btn primary" style="margin-left:auto" @click="addRule(t)" data-nr-add><i class="codicon codicon-add"></i> 添加规则</button></div>
+      <table class="grid" x-show="t.ru.items.length"><thead><tr><th>规则</th><th style="width:170px">范围</th><th style="width:70px" class="num">触发次数</th><th style="width:150px">操作</th></tr></thead><tbody>
+       <template x-for="r in t.ru.items" :key="r.id"><tr data-rule-row :style="!r.enabled&&'opacity:.5'"><td><span x-text="r.name"></span> <span class="muted mono" x-text="r.value!=null?r.value:''"></span></td><td x-text="r.product||'全部商品'"></td><td class="num" x-text="r.fired_count"></td>
+        <td><button class="btn" @click="toggleRule(t,r)" x-text="r.enabled?'暂停':'启用'"></button> <button class="btn danger" @click="delRule(t,r)"><i class="codicon codicon-trash"></i></button></td></tr></template></tbody></table></div></div></div>
+    <div class="grp"><h4>最近发送记录</h4><div class="b" style="max-height:260px;overflow:auto"><template x-if="!t.no.length"><div class="muted">暂无</div></template>
+     <table class="grid" x-show="t.no.length"><thead><tr><th style="width:170px">时间 (UTC+8)</th><th style="width:140px">渠道</th><th style="width:110px">事件</th><th style="width:70px">结果</th><th>详情</th></tr></thead><tbody>
+      <template x-for="n in t.no" :key="n.id"><tr data-notify-row><td x-text="fmtTs(n.ts)"></td><td x-text="n.channel"></td><td x-text="{alert:'告警',test:'测试',price_change:'价格变动',price_suggestion:'调价建议',report:'报告'}[n.event]||n.event"></td><td :class="n.ok?'ok':'err'" x-text="n.ok?'成功':'失败'"></td><td class="muted" x-text="n.detail" :title="n.detail"></td></tr></template></tbody></table></div></div></div></template>
+
+   <template x-if="t.type==='match'"><div data-v5-match>
+    <div class="filterbar"><span class="muted">按条码、型号、品牌、标题语义和图片，找出不同平台上可能是同一件商品的组合。确认后合并为同款，就能跨平台比价。</span>
+     <span style="margin-left:auto">相似度门槛</span><select x-model="t.th" @change="loadV5(t)"><option value="0.65">0.65（宽松）</option><option value="0.75">0.75</option><option value="0.85">0.85（严格）</option></select></div>
+    <template x-if="t.loading"><div class="skel-rows" data-skeleton><template x-for="i in 6"><div class="skel"></div></template></div></template>
+    <template x-if="t.sug&&!t.sug.length"><div class="empty"><i class="codicon codicon-link ei"></i><h3>没有待确认的同款</h3>可以降低相似度门槛再试试。</div></template>
+    <table class="grid" x-show="t.sug&&t.sug.length"><thead><tr><th>商品 A</th><th>商品 B</th><th style="width:80px" class="num">相似度</th><th style="width:220px">依据</th><th style="width:110px"></th></tr></thead><tbody>
+     <template x-for="s in t.sug||[]" :key="s.a.id+'-'+s.b.id"><tr data-match-row><td><span x-text="s.a.title"></span> <span class="tag" x-text="s.a.platform"></span></td><td><span x-text="s.b.title"></span> <span class="tag" x-text="s.b.platform"></span></td>
+      <td class="num" x-text="Math.round(s.score*100)+'%'"></td><td class="muted" x-text="s.why.join('，')"></td><td><button class="btn primary" @click="mergePair(t,s)" data-match-merge><i class="codicon codicon-check"></i> 是同款</button></td></tr></template></tbody></table></div></template>
+
+   <template x-if="t.type==='map'"><div data-v5-map>
+    <div class="grp"><h4><i class="codicon codicon-shield"></i> 最低限价（MAP）<span class="muted">低于这个价就算破价</span></h4><div class="b"><div class="filterbar">
+     <select x-model="t.nm.group_key" style="width:320px" data-map-group><option value="">选择同款商品…</option><template x-for="g in groupsList()"><option :value="g[0]" x-text="g[1]"></option></template></select>
+     <input type="number" x-model="t.nm.price" placeholder="最低限价" style="width:110px" data-map-price><button class="btn primary" @click="setMap(t)" data-map-set>设置</button>
+     <span class="muted" x-text="t.mp.length?('已设置 '+t.mp.length+' 个'):''"></span></div></div></div>
+    <div class="grp"><h4><i class="codicon codicon-warning"></i> 破价商品（<span x-text="t.v.length"></span>）</h4><div class="b">
+     <template x-if="!t.v.length"><div class="muted">目前没有低于最低限价的商品。</div></template>
+     <table class="grid" x-show="t.v.length"><thead><tr><th>商品</th><th style="width:150px">卖家</th><th style="width:100px" class="num">现价</th><th style="width:100px" class="num">限价</th><th style="width:80px" class="num">低于</th><th style="width:170px">取证</th></tr></thead><tbody>
+      <template x-for="v in t.v" :key="v.id"><tr data-violation-row><td><a href="#" @click.prevent="openProduct(v.id)" x-text="v.title"></a></td><td x-text="v.seller"></td><td class="num down" x-text="money(v.price,v.currency)"></td><td class="num" x-text="money(v.map,v.currency)"></td><td class="num err" x-text="'-'+v.gap_pct+'%'"></td>
+       <td><button class="btn" @click="takeEvidence(t,v)" data-evidence><i class="codicon codicon-device-camera"></i> 截图取证</button> <span class="muted" x-show="v.evidence" x-text="v.evidence?'已取证':''"></span></td></tr></template></tbody></table></div></div>
+    <div class="row"><div class="grp"><h4><i class="codicon codicon-person"></i> 卖家画像</h4><div class="b"><table class="grid"><thead><tr><th>卖家</th><th style="width:60px" class="num">商品</th><th style="width:80px" class="num">价格指数</th><th style="width:60px" class="num">破价</th><th style="width:110px">判断</th></tr></thead><tbody>
+      <template x-for="s in t.sel" :key="s.seller"><tr data-seller-row><td x-text="s.seller" :title="s.platforms.join('、')"></td><td class="num" x-text="s.products"></td><td class="num" x-text="s.price_index??'—'" title="同款中位数=100，越低越便宜"></td><td class="num" :class="s.violations&&'err'" x-text="s.violations"></td><td :class="s.violations?'err':''" x-text="s.tag"></td></tr></template></tbody></table>
+      <div class="hint" style="margin-top:4px">价格指数：该卖家价格相对同款中位数（=100），低于 100 更便宜。</div></div></div>
+     <div class="grp"><h4><i class="codicon codicon-device-camera"></i> 取证记录（<span x-text="t.ev.length"></span>）</h4><div class="b" style="max-height:340px;overflow:auto">
+      <template x-if="!t.ev.length"><div class="muted">还没有取证。对破价商品点“截图取证”，系统会用无头浏览器打开商品页整页截图，并记录时间、价格和文件指纹。</div></template>
+      <template x-for="e in t.ev" :key="e.id"><div class="task-it" data-evidence-row><div class="l1"><b x-text="e.title"></b><span class="s muted" x-text="fmtTs(e.ts)"></span></div>
+       <div class="hint" x-text="'价格 '+e.price+' / 限价 '+(e.map_price??'—')+' · 指纹 '+e.sha256.slice(0,16)+'…'"></div><a :href="'/api/map/evidence/'+e.id+'/image'" target="_blank">查看截图</a></div></template></div></div></div></div></template>
+
+   <template x-if="t.type==='reports'"><div data-v5-reports>
+    <div class="filterbar"><a class="btn" href="/api/reports/summary?format=csv" data-report-csv><i class="codicon codicon-export"></i> 导出 CSV</a><a class="btn" href="/api/reports/summary?format=html" target="_blank" data-report-html><i class="codicon codicon-file"></i> 打开网页版报告</a>
+     <button class="btn primary" @click="sendReport()" data-report-send><i class="codicon codicon-send"></i> 立即推送报告</button></div>
+    <template x-if="t.r"><div><div class="stat"><template x-for="c in [['商品',t.r.products],['同款组',t.r.groups],['近 7 天告警',t.r.alerts_7d],['破价',t.r.violations.length],['缺货',t.r.out_of_stock.length]]"><div><div class="l" x-text="c[0]"></div><div class="n" x-text="c[1]"></div></div></template></div>
+     <div class="row"><div class="grp"><h4>同款价差排行</h4><div class="b" style="max-height:320px;overflow:auto"><table class="grid"><thead><tr><th>同款</th><th style="width:60px" class="num">平台</th><th style="width:90px" class="num">最低</th><th style="width:90px" class="num">最高</th><th style="width:70px" class="num">价差</th></tr></thead><tbody>
+       <template x-for="r in t.r.spread.slice(0,30)"><tr><td x-text="r['同款']"></td><td class="num" x-text="r['平台数']"></td><td class="num down" x-text="money(r['最低价'])"></td><td class="num" x-text="money(r['最高价'])"></td><td class="num up" x-text="r['价差%']+'%'"></td></tr></template></tbody></table></div></div>
+      <div class="grp" data-promo-calendar><h4><i class="codicon codicon-calendar"></i> 促销日历</h4><div class="b" style="max-height:320px;overflow:auto">
+       <template x-for="e in t.cal" :key="e.name+e.date"><div class="kvrow" data-promo><span><b x-text="e.name"></b> <span class="muted" x-text="e.region"></span></span><span class="mono" :class="e.in_progress?'ok':''" x-text="e.date+(e.in_progress?' 进行中':' · '+e.days_left+' 天后')"></span></div></template></div></div></div>
+     <div class="grp"><h4><i class="codicon codicon-clock"></i> 定时报告</h4><div class="b"><div class="filterbar"><label><input type="checkbox" x-model="t.sch.enabled" data-sch-enabled> 每天</label><select x-model.number="t.sch.hour"><template x-for="h in 24"><option :value="h-1" x-text="(h-1)+':00 (UTC+8)'" :selected="h-1===t.sch.hour"></option></template></select>
+      <span class="muted">推送到：</span><template x-for="c in t.ch.items" :key="c.id"><label class="chip" :class="(t.sch.channel_ids||[]).map(String).includes(String(c.id))&&'on'"><input type="checkbox" style="display:none" :checked="(t.sch.channel_ids||[]).map(String).includes(String(c.id))" @change="t.sch.channel_ids=$event.target.checked?[...(t.sch.channel_ids||[]),c.id]:(t.sch.channel_ids||[]).filter(x=>String(x)!==String(c.id))"><span x-text="c.name"></span></label></template>
+      <span class="muted" x-show="!t.ch.items.length">请先在「告警与通知」添加渠道</span><button class="btn primary" style="margin-left:auto" @click="saveSchedule(t)" data-sch-save>保存</button></div></div></div></div></template></div></template>
+
+   <template x-if="t.type==='admin'"><div data-v5-admin>
+    <div class="row"><div class="grp"><h4><i class="codicon codicon-globe"></i> 汇率（折合人民币）</h4><div class="b"><div class="filterbar">1 <select x-model="t.fxCur"><template x-for="(v,k) in t.fx.rates"><option x-text="k" :selected="k===t.fxCur"></option></template></select> =
+      <input type="number" step="0.0001" x-model="t.fxVal" :placeholder="t.fx.rates[t.fxCur]" style="width:100px" data-fx-val> 人民币 <button class="btn primary" @click="saveFx(t)" data-fx-save>更新</button></div>
+      <div class="hint" x-text="'已自定义：'+(Object.keys(t.fx.custom||{}).join('、')||'无')+'。其余为内置参考汇率。'"></div></div></div>
+     <div class="grp"><h4><i class="codicon codicon-browser"></i> 采集方式</h4><div class="b"><label><input type="checkbox" x-model="t.col.render_fallback" data-render-toggle> 读不到价格时自动用无头浏览器渲染（适合需要脚本加载的网站，较慢）</label>
+      <div class="hint" x-text="'无头浏览器：'+(t.col.render.ok===false?'不可用 '+t.col.render.error:(t.col.render.started?'已就绪':'按需启动'))"></div>
+      <div class="field"><label>代理池（每行一个，轮换使用；留空=直连）</label><textarea rows="3" x-model="t.proxyText" placeholder="http://user:pass@host:port" data-proxies></textarea></div><button class="btn primary" @click="saveCollect(t)" data-collect-save>保存</button></div></div></div>
+    <div class="row"><div class="grp"><h4><i class="codicon codicon-key"></i> API 令牌与权限</h4><div class="b"><div class="filterbar"><input x-model="t.ntName" placeholder="令牌名称，如 ERP" style="width:140px" data-tok-name><select x-model="t.ntRole"><template x-for="(l,k) in t.tok.roles"><option :value="k" x-text="l" :selected="k===t.ntRole"></option></template></select><button class="btn primary" @click="addToken(t)" data-tok-add>生成令牌</button></div>
+      <template x-if="t.newTok"><div class="result-card" data-tok-new><b>新令牌（只显示这一次）：</b><div class="mono" style="user-select:all;word-break:break-all" x-text="t.newTok.token"></div><div class="hint">调用接口时放在请求头 X-API-Key 中。</div></div></template>
+      <table class="grid" x-show="t.tok.items.length"><thead><tr><th>名称</th><th style="width:150px">角色</th><th style="width:60px"></th></tr></thead><tbody><template x-for="k in t.tok.items" :key="k.id"><tr><td x-text="k.name"></td><td x-text="t.tok.roles[k.role]"></td><td><button class="btn danger" @click="delToken(t,k)"><i class="codicon codicon-trash"></i></button></td></tr></template></tbody></table>
+      <div class="hint" style="margin-top:6px">本机使用不需要令牌；其他电脑或系统访问时，开启“要求令牌”后必须携带。</div>
+      <label><input type="checkbox" :checked="t.tok.auth_required" @change="post('/api/tokens/auth',{required:$event.target.checked}).then(r=>t.tok=r)"> 要求远程访问携带令牌</label>
+      <div class="hint"><a href="/docs" target="_blank">开发者接口文档</a> · Webhook 事件：价格变动、告警、调价建议、报告</div></div></div>
+     <div class="grp"><h4><i class="codicon codicon-database"></i> 备份与恢复</h4><div class="b"><div class="filterbar"><a class="btn primary" href="/api/backup" data-backup><i class="codicon codicon-cloud-download"></i> 下载完整备份</a>
+      <label class="btn"><i class="codicon codicon-cloud-upload"></i> 从备份恢复…<input type="file" accept=".db" style="display:none" @change="restoreDb(t,$event)" data-restore></label></div><div class="hint">恢复前会自动保留当前数据的副本，可随时回退。</div>
+      <h4 style="margin:12px 0 4px;font-size:12px">浏览器一键收藏</h4><div class="hint">把书签工具拖到浏览器书签栏，在任意商品页点一下即可开始监控。</div><a class="btn" href="/bookmarklet" target="_blank" data-bookmarklet-link><i class="codicon codicon-bookmark"></i> 获取书签工具</a></div></div></div>
+    <div class="grp"><h4><i class="codicon codicon-history"></i> 操作审计（最近 50 条）</h4><div class="b" style="max-height:260px;overflow:auto"><table class="grid"><thead><tr><th style="width:170px">时间 (UTC+8)</th><th style="width:180px">操作者</th><th style="width:70px">方式</th><th>接口</th><th style="width:60px" class="num">结果</th></tr></thead><tbody>
+     <template x-for="a in t.au" :key="a.id"><tr data-audit-row><td x-text="fmtTs(a.ts)"></td><td x-text="a.actor"></td><td x-text="{POST:'新增',PUT:'修改',DELETE:'删除'}[a.method]||a.method"></td><td class="mono" x-text="a.path"></td><td class="num" :class="a.status>=400?'err':'ok'" x-text="a.status"></td></tr></template></tbody></table></div></div></div></template>
 
    <template x-if="t.type==='alerts'"><div><table class="grid"><thead><tr><th style="width:170px">时间 (UTC+8)</th><th style="width:300px">商品</th><th style="width:120px">平台</th><th style="width:240px">内容</th></tr></thead>
     <tbody><template x-for="a in alertsList"><tr data-alert @dblclick="openProduct(a.product_id)"><td x-text="fmtTs(a.ts)"></td><td x-text="a.title"></td><td x-text="a.platform"></td><td class="up" x-text="a.msg"></td></tr></template></tbody></table>

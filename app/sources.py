@@ -119,12 +119,12 @@ class PlatformSource(DataSource):
             d.update(platform=pf["domain"] or pf["name"], currency=d.get("currency") or pf["currency"], category=self.config.get("category", ""),
                      external_id=hashlib.md5((d.get("url") or d.get("title") or "").encode()).hexdigest()[:10], seller=pf["name"])
             out.append(d)
+        from . import collect
         for url in self.config.get("urls", []):
-            r = httpx.get(url, timeout=15, follow_redirects=True, headers=H)
-            st, why = parsing.classify(r.status_code, r.text)
-            if st == "反爬拦截": raise ValueError(f"{url}: 反爬拦截（{why}）")
-            d = parsing.parse_product(r.text, url, rule)
-            if not d or not d.get("price"): raise ValueError(f"{url}: 未解析到价格（{st}：{why}）")
+            d, st, why, code = collect.fetch_parse(url, rule, pf["lang"] or "en")
+            if not d or not d.get("price"):
+                if st == "反爬拦截": raise ValueError(f"{url}: 反爬拦截（{why}）")
+                raise ValueError(f"{url}: 未解析到价格（{st}：{why}）")
             item(d)
         if self.config.get("query"):
             su = (self.config.get("search_url") or pf["search_url"]).replace("{q}", httpx.QueryParams({"q": self.config["query"]})["q"].replace(" ", "+"))

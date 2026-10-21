@@ -162,15 +162,13 @@ def quick_monitor(body):
     pf = match_platform(url); host = urlparse(url).hostname
     def fn(prog):
         prog(0.15, f"识别平台：{pf['name'] if pf else host}")
-        H = {"User-Agent": "Mozilla/5.0 PriceHub/0.4", "Accept-Language": (pf and pf["lang"]) or "zh-CN,en"}
-        try: r = httpx.get(url, timeout=15, follow_redirects=True, headers=H)
-        except Exception as e: raise FriendlyError("无法打开这个链接", explain("不可达", type(e).__name__), {"platform": pf and pf["name"]})
-        prog(0.55, "读取价格…")
-        st, why = parsing.classify(r.status_code, r.text)
-        d = parsing.parse_product(r.text, url, json.loads((pf and pf["rules"]) or "{}")) if st != "反爬拦截" else None
+        from . import collect
+        prog(0.35, "读取页面（必要时用无头浏览器渲染）…")
+        d, st, why, code = collect.fetch_parse(url, json.loads((pf and pf["rules"]) or "{}"), (pf and pf["lang"]) or "zh-CN,en")
         if not d or not d.get("price"):
+            if code == 404: raise FriendlyError("链接指向的页面不存在（404）", {"status": "失败", "title": "页面不存在", "reason": "这个链接打开后显示“页面不存在”，可能已下架或链接不完整。", "next": ["回到商品页重新复制完整链接"]})
+            if st == "不可达" and not code: raise FriendlyError("无法打开这个链接", explain("不可达", why), {"platform": pf and pf["name"]})
             st2 = st if st != "解析成功" else "可达"
-            if r.status_code == 404: raise FriendlyError("链接指向的页面不存在（404）", {"status": "失败", "title": "页面不存在", "reason": "这个链接打开后显示“页面不存在”，可能已下架或链接不完整。", "next": ["回到商品页重新复制完整链接"]})
             raise FriendlyError(f"没能从这个页面读到价格（{EXPLAIN.get(st2, EXPLAIN[None])[0]}）", explain(st2, why), {"platform": pf and pf["name"]})
         prog(0.8, "保存并加入监控…")
         sid, cfg = _monitor_source(pf, host)
@@ -182,7 +180,7 @@ def quick_monitor(body):
         pid = upsert(sid, d)
         if pf and not pf["enabled"]: db.ex("UPDATE platforms SET enabled=1 WHERE id=?", (pf["id"],))
         return {"product_id": pid, "title": d.get("title"), "price": d.get("price"), "currency": d.get("currency"), "method": d.get("method"),
-                "platform": pf["name"] if pf else host, "source_id": sid, "known_platform": bool(pf)}
+                "platform": pf["name"] if pf else host, "source_id": sid, "known_platform": bool(pf), "rendered": bool(d.get("rendered")), "in_stock": d.get("in_stock")}
     return submit("quick_monitor", f"一键监控 {host}", fn, url=url)
 @app.post("/api/quick-monitor")
 def quick_monitor_api(body: dict = Body(...)): return quick_monitor(body)

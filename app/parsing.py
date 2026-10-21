@@ -32,20 +32,44 @@ def _offer(p):
     o = o[0] if isinstance(o, list) and o else o
     price = o.get("price") or o.get("lowPrice") if isinstance(o, dict) else None
     return num(price), (o.get("priceCurrency") if isinstance(o, dict) else None)
+def _avail(v):
+    """schema.org availability → True(有货)/False(缺货/下架)/None(未知)。"""
+    if not v: return None
+    v = str(v).lower()
+    if any(k in v for k in ("outofstock", "soldout", "discontinued", "out of stock")): return False
+    if any(k in v for k in ("instock", "limitedavailability", "preorder", "onlineonly", "in stock")): return True
+    return None
+def _extra(p):
+    """从 JSON-LD Product 读取 GTIN/品牌/型号/库存/运费/多规格。"""
+    offers = p.get("offers") or {}
+    offs = offers if isinstance(offers, list) else (offers.get("offers") if isinstance(offers.get("offers"), list) else [offers])
+    b = p.get("brand"); b = b.get("name") if isinstance(b, dict) else b
+    gtin = next((str(p[k]) for k in ("gtin13", "gtin", "gtin12", "gtin14", "gtin8", "ean") if p.get(k)), None)
+    o0 = offs[0] if offs and isinstance(offs[0], dict) else {}
+    ship = None
+    sd = o0.get("shippingDetails")
+    sd = sd[0] if isinstance(sd, list) and sd else sd
+    if isinstance(sd, dict): ship = num((sd.get("shippingRate") or {}).get("value"))
+    variants = [{"name": o.get("name") or o.get("sku") or f"规格{i+1}", "sku": o.get("sku"), "price": num(o.get("price")), "in_stock": _avail(o.get("availability"))}
+                for i, o in enumerate(offs) if isinstance(o, dict) and num(o.get("price"))] if len(offs) > 1 else []
+    return {k: v for k, v in dict(gtin=gtin, brand=b, model=p.get("mpn") or p.get("model") if isinstance(p.get("model"), (str, type(None))) else None, sku=p.get("sku"),
+            in_stock=_avail(o0.get("availability")), shipping=ship, variants=variants or None).items() if v is not None}
 def parse_product(html, url="", rule=None):
     rule = rule or {}; s = BeautifulSoup(html, "html.parser")
     title = None; img = (s.find("meta", property="og:image") or {}).get("content")
     for p in _jsonld(s):
         price, cur = _offer(p)
-        if price: return dict(title=p.get("name"), price=price, currency=cur, method="jsonld", image_url=img or (p.get("image") if isinstance(p.get("image"), str) else None), url=url)
+        if price: return dict(title=p.get("name"), price=price, currency=cur, method="jsonld", image_url=img or (p.get("image") if isinstance(p.get("image"), str) else None), url=url, **_extra(p))
     if rule.get("page_price_sel") and s.select_one(rule["page_price_sel"]):
         t = s.select_one(rule.get("page_title_sel") or "h1")
         return dict(title=t.get_text(strip=True) if t else None, price=num(s.select_one(rule["page_price_sel"]).get_text()), currency=None, method="css", image_url=img, url=url)
     ip = s.find(attrs={"itemprop": "price"})
     title = (s.find("meta", property="og:title") or {}).get("content") or (s.title.string.strip() if s.title and s.title.string else None)
     if ip:
-        cur = s.find(attrs={"itemprop": "priceCurrency"})
-        return dict(title=title, price=num(ip.get("content") or ip.get_text()), currency=cur and (cur.get("content") or cur.get_text()), method="microdata", image_url=img, url=url)
+        cur = s.find(attrs={"itemprop": "priceCurrency"}); av = s.find(attrs={"itemprop": "availability"})
+        d = dict(title=title, price=num(ip.get("content") or ip.get_text()), currency=cur and (cur.get("content") or cur.get_text()), method="microdata", image_url=img, url=url)
+        if av is not None and _avail(av.get("href") or av.get("content") or av.get_text()) is not None: d["in_stock"] = _avail(av.get("href") or av.get("content") or av.get_text())
+        return d
     for prop in ("product:price:amount", "og:price:amount"):
         m = s.find("meta", property=prop)
         if m and num(m.get("content")):
