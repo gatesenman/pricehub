@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS usage(id INTEGER PRIMARY KEY, ws_id INTEGER, metric T
 MIGRATIONS = {"prices": [("confidence", "REAL"), ("conf_level", "TEXT"), ("conf_basis", "TEXT"), ("method", "TEXT"), ("in_stock", "INTEGER")],
               "products": [("seller", "TEXT"), ("attrs", "TEXT"), ("gtin", "TEXT"), ("model", "TEXT"), ("in_stock", "INTEGER"), ("shipping", "REAL"), ("tax_rate", "REAL"),
                            ("coupon", "REAL"), ("map_price", "REAL"), ("target_price", "REAL"), ("variant", "TEXT"), ("parent_id", "INTEGER"), ("rendered", "INTEGER")]}
-INDEXES = ["CREATE INDEX IF NOT EXISTS ix_products_ws ON products(workspace_id)", "CREATE INDEX IF NOT EXISTS ix_sources_ws ON sources(workspace_id)",
+INDEXES = ["CREATE INDEX IF NOT EXISTS ix_products_ws_id ON products(workspace_id, id)", "DROP INDEX IF EXISTS ix_products_ws", "CREATE INDEX IF NOT EXISTS ix_sources_ws ON sources(workspace_id)",
            "INSERT OR IGNORE INTO workspaces(id,name,slug,plan) VALUES(1,'默认工作区','default','desktop')","CREATE INDEX IF NOT EXISTS ix_prices_pid ON prices(product_id, id)", "CREATE INDEX IF NOT EXISTS ix_products_gk ON products(group_key)",
            "CREATE INDEX IF NOT EXISTS ix_products_platform ON products(platform)", "CREATE INDEX IF NOT EXISTS ix_alerts_pid ON alerts(product_id)"]
 # ---------------- SQLite ----------------
