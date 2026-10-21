@@ -82,6 +82,9 @@ def upsert(src_id, it):
         pid = ex["id"]
         if it.get("seller") or it.get("attrs"): db.ex("UPDATE products SET seller=COALESCE(?,seller), attrs=? WHERE id=?", (it.get("seller"), attrs, pid))
     else:
+        from app.domains.team import usage as _U
+        try: _U.check("skus")
+        except _U.QuotaExceeded as e: raise HTTPException(429, str(e))
         pid = db.ex("INSERT INTO products(source_id,platform,external_id,title,category,chain,brand,url,currency,cost,group_key,seller,attrs) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",
                     (src_id, plat, it["external_id"], it.get("title"), it.get("category"), it.get("chain"), it.get("brand"), it.get("url"), it.get("currency") or "CNY", it.get("cost"), gk, it.get("seller"), attrs))
     if it.get("image_url") and not (ex and ex.get("phash")): _save_image(it["image_url"], pid)
@@ -210,7 +213,12 @@ def fetch_source(sid: int):
 def fetch_all(wait=True):
     """定时监控：每个数据源作为一个调度任务提交（按域名限速、失败退避重试、最终进死信）。"""
     from .v6 import submit_source_fetch, SCHED
-    jobs = [submit_source_fetch(s["id"], priority=5) for s in db.q("SELECT id FROM sources WHERE enabled=1 AND NOT (type='platform' AND config LIKE '%\"urls\": []%' AND config LIKE '%\"query\": \"\"%')")]
+    from app.core import tenancy
+    jobs = []
+    with tenancy.bypass(): wss = [r["id"] for r in db.q("SELECT id FROM workspaces ORDER BY id")] or [1]
+    for ws in ([tenancy.current()] if wait else wss):   # 定时任务遍历所有工作区；接口调用只跑当前工作区
+      with tenancy.use(ws):
+        jobs += [submit_source_fetch(s["id"], priority=5) for s in db.q("SELECT id FROM sources WHERE enabled=1 AND NOT (type='platform' AND config LIKE '%\"urls\": []%' AND config LIKE '%\"query\": \"\"%')")]
     if wait: SCHED.wait(jobs, timeout=600)
     return jobs
 @app.post("/api/monitor/run")
@@ -330,8 +338,9 @@ def index(): return FileResponse(os.path.join(HERE, "static", "index.html"))
 sched = BackgroundScheduler()
 @app.on_event("startup")
 def _start():
-    sched.add_job(fetch_all, "interval", minutes=int(os.environ.get("PRICEHUB_MONITOR_MIN", "60")), id="monitor"); sched.start()
+    sched.add_job(fetch_all, "interval", kwargs={"wait": False}, minutes=int(os.environ.get("PRICEHUB_MONITOR_MIN", "60")), id="monitor"); sched.start()
 
 from . import v4  # noqa: E402  v4 体验优化：引导、任务队列、一键监控、撤销、建议
 from . import v5  # noqa: E402  v5 全生命周期补全
+from .api import team  # noqa: E402,F401  v7 团队协作（须在 v6 之前导入，使版本中间件保持最外层）
 from . import v6  # noqa: E402  v6 平台化：插件 SDK、调度器、事件总线、指标、API 版本化

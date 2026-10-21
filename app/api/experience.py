@@ -55,7 +55,7 @@ def submit(kind, title, fn, **meta):
         except FriendlyError as e: t["status"] = "失败"; t["error"] = str(e); t["advice"] = e.advice; t["result"] = e.result
         except Exception as e: t["status"] = "失败"; t["error"] = f"{e}"
         t["finished"] = _now()
-    _POOL.submit(run)
+    from app.core import tenancy as _tn; _POOL.submit(_tn.wrap(run))   # 带上当前工作区
     if len(TASKS) > 200:
         for k in sorted(TASKS, key=lambda k: TASKS[k]["created"])[:50]: TASKS.pop(k, None)
     return t

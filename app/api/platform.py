@@ -11,6 +11,9 @@ from app.core.apiver import ApiVersionMiddleware
 log = obs.setup_logging()
 # ---------------- 调度器 ----------------
 def _dead_sink(j):
+    from app.core import tenancy
+    with tenancy.use((j.payload or {}).get("ws", 1)): _dead_insert(j)
+def _dead_insert(j):
     db.ex("INSERT INTO dead_letters(kind,job_key,payload,error,attempts) VALUES(?,?,?,?,?)", (j.kind, j.key, json.dumps(j.payload, ensure_ascii=False), j.error, j.attempts))
     obs.DEAD.set((db.q("SELECT COUNT(*) n FROM dead_letters", one=True) or {}).get("n", 0))
 def _on_result(j, result):
@@ -38,7 +41,8 @@ def _h_source_fetch(p):
 SCHED.register_handler("source.fetch", _h_source_fetch)
 def submit_source_fetch(sid, priority=5, max_attempts=4):
     s = db.q("SELECT * FROM sources WHERE id=?", (sid,), one=True) or {"type": "default"}
-    return SCHED.submit("source.fetch", {"source_id": sid}, key=source_key(s), priority=priority, max_attempts=max_attempts)
+    from app.core import tenancy
+    return SCHED.submit("source.fetch", {"source_id": sid, "ws": tenancy.current()}, key=source_key(s), priority=priority, max_attempts=max_attempts)
 @app.get("/api/scheduler")
 def scheduler_stats():
     st = SCHED.stats(); st["dead_letters"] = (db.q("SELECT COUNT(*) n FROM dead_letters", one=True) or {}).get("n", 0); obs.QUEUE.set(st["ready"] + st["delayed"]); return st
