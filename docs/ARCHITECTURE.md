@@ -93,6 +93,7 @@ class MyShop(SourcePlugin):
 
 ```mermaid
 stateDiagram-v2
+  direction LR
   [*] --> discovered: 扫描插件目录
   discovered --> loaded: 导入模块
   loaded --> active: 校验 meta / SDK 版本 / id

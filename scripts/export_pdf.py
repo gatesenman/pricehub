@@ -5,10 +5,10 @@ from playwright.sync_api import sync_playwright
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__))); MJS = os.path.join(ROOT, "scripts", "vendor", "mermaid.min.js")
 CSS = """body{font-family:'Noto Sans CJK SC','Noto Serif CJK SC',sans-serif;font-size:10.5pt;line-height:1.6;color:#1f2328;margin:0 6mm}
 h1{font-size:20pt;border-bottom:2px solid #0969da;padding-bottom:4px}h2{font-size:14pt;border-bottom:1px solid #d0d7de;padding-bottom:2px;margin-top:20px;page-break-after:avoid}
-h3{font-size:12pt;page-break-after:avoid}table{border-collapse:collapse;width:100%;margin:8px 0;font-size:9pt;page-break-inside:auto}tr{page-break-inside:avoid}
+h3{font-size:12pt}table{border-collapse:collapse;width:100%;margin:8px 0;font-size:9pt;page-break-inside:auto}tr{page-break-inside:avoid}
 th,td{border:1px solid #d0d7de;padding:4px 6px;vertical-align:top}th{background:#f6f8fa}code{font-family:'DejaVu Sans Mono',monospace;font-size:8.5pt;background:#f6f8fa;padding:1px 3px}
 pre{background:#f6f8fa;padding:8px;overflow:hidden;white-space:pre-wrap;font-size:8.5pt}blockquote{color:#57606a;border-left:3px solid #d0d7de;margin:0;padding-left:10px}
-.mermaid{text-align:center;page-break-inside:avoid;background:none}.mermaid svg{max-width:100%;height:auto}"""
+.mermaid{text-align:center;page-break-inside:avoid;background:none}.mermaid svg{max-width:100%;max-height:200mm;height:auto;width:auto}"""
 def to_html(md_text, title):
     blocks = []
     def keep(m): blocks.append(m.group(1)); return f"\n\nMERMAIDBLOCK{len(blocks) - 1}\n\n"
