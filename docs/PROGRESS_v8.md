@@ -11,3 +11,7 @@
 - [x] 2026-10-22 01:28 渲染池 workers/queue 可配；Chrome/Edge MV3 扩展 zip；pgvector 可选后端接口
 - [x] 2026-10-22 01:22 test_v8_forecast + test_v8_official 5 passed；PRD/ARCHITECTURE 2.0 章节已写
 - [x] 2026-10-22 01:30 UI e2e 通过，截图 screenshots/v8/01-03
+- [x] 2026-10-22 01:30 UI e2e 通过，截图 screenshots/v8/01-03；PDF 已重导
+- [x] 2026-10-22 01:32 :8800 重启（SQLite，免登录默认工作区，/readyz ready）；Linux 包 dist/PriceHub-linux-x64.tar.gz（214MB）
+- [x] 2026-10-22 01:41 分批测试 SQLite/PG：v8 相关全绿；修复买入概率模板空值后 test_ui_e2e 17 / test_v4 12 / test_v5_ui 4 通过
+- 未做：真实官方 API 签名（Amazon SigV4 等）、分布式采集节点、TimescaleDB/ClickHouse、移动端、pgvector 扩展未在本机安装（接口已就绪）

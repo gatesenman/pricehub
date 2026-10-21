@@ -94,9 +94,9 @@
       <div class="grp" data-advice><h4><i class="codicon codicon-lightbulb"></i> 买入时机建议</h4><div class="b"><template x-if="!t.adv"><div class="muted">价格记录不足</div></template>
        <template x-if="t.adv"><div><div class="big" :class="verdictCls(t.adv.verdict)" x-text="t.adv.verdict" data-verdict></div> <span x-html="confBadge(t.adv.conf)"></span>
         <ul style="margin:6px 0;padding-left:18px"><template x-for="r in t.adv.reasons"><li x-text="r"></li></template></ul>
-        <template x-if="t.adv.buy"><div class="usage-it" data-buy-prob><div class="ul"><span>买入时机概率</span><span class="muted" x-text="Math.round(t.adv.buy.probability*100)+'%（90% 区间 '+Math.round(t.adv.buy.ci90[0]*100)+'–'+Math.round(t.adv.buy.ci90[1]*100)+'%）'"></span></div>
-          <div class="pbar"><div :style="'width:'+(t.adv.buy.probability*100)+'%'"></div></div></div></template>
-        <template x-if="t.adv.ci90"><div class="hint" data-forecast-ci x-text="'预测中枢 '+(t.adv.point_forecast??'')+'，90% 置信区间 '+t.adv.ci90[0]+'–'+t.adv.ci90[1]+'（引擎 '+(t.adv.forecast_engine||'')+'）'"></div></template>
+        <template x-if="t.adv.buy"><div class="usage-it" data-buy-prob><div class="ul"><span>买入时机概率</span><span class="muted" x-text="Math.round((t.adv.buy.probability||0)*100)+'%（90% 区间 '+Math.round(((t.adv.buy.ci90||[0,0])[0]||0)*100)+'–'+Math.round(((t.adv.buy.ci90||[0,0])[1]||0)*100)+'%）'"></span></div>
+          <div class="pbar"><div :style="'width:'+((t.adv.buy.probability||0)*100)+'%'"></div></div></div></template>
+        <template x-if="t.adv.ci90"><div class="hint" data-forecast-ci x-text="'预测中枢 '+(t.adv.point_forecast??'')+'，90% 置信区间 '+((t.adv.ci90||[])[0]??'')+'–'+((t.adv.ci90||[])[1]??'')+'（引擎 '+(t.adv.forecast_engine||'')+'）'"></div></template>
         <template x-if="t.adv.elasticity&&t.adv.elasticity.ok"><div class="hint" data-elasticity x-text="'价格弹性 '+t.adv.elasticity.elasticity+' · '+t.adv.elasticity.label"></div></template>
         <template x-for="e in t.adv.promos"><div class="hint" x-text="'促销：'+e.name+'（'+e.date+(e.in_progress?'，进行中':'，'+e.days_left+' 天后')+'）'"></div></template></div></template></div></div></div></template>
      <div class="row"><div class="grp" data-compare><h4>跨平台比价<span class="muted" x-text="t.d.c.spread?'价差 '+money(t.d.c.spread):''"></span></h4><div class="b">
