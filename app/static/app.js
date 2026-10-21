@@ -9,7 +9,7 @@ function AppBase() { return {
   tabs: [], active: null, checked: [], tip: null, pstats: {}, ptree: {regions: [], countries: [], types: []}, seq: 0, sel: null, menuOpen: null, ctx: null, form: null, testRes: null, dlg: null, palette: false, pq: '', pi: 0, quick: '',
   showSide: true, showProps: true, sideW: 230, propsW: 260, drag: null, dragData: null, collapsed: {}, theme: localStorage.getItem('ph-theme') || 'dark',
   busy: 0, task: null, toasts: [], online: true, health: {}, dash: {}, all: [], srcs: [], adapters: {}, providers: {}, facets: {countries: [], types: []}, alertsList: [],
-  cols: [{k:'id',label:'ID',w:50,num:1},{k:'title',label:'商品',w:300},{k:'platform',label:'平台',w:120},{k:'category',label:'类目',w:90},{k:'chain',label:'产业链',w:160},{k:'brand',label:'品牌',w:90},
+  cols: [{k:'id',label:'ID',w:50,num:1},{k:'title',label:'商品',w:300},{k:'platform',label:'来源平台',w:120},{k:'category',label:'类目',w:90},{k:'chain',label:'产业链',w:160},{k:'brand',label:'品牌',w:90},
          {k:'seller',label:'卖家',w:130},{k:'last_price',label:'现价',w:100,num:1,fmt:(v,p)=>App.money(v,p.currency)},{k:'conf',label:'置信度',w:110,html:p=>App.confBadge(p.last_conf)},{k:'cost',label:'成本',w:90,num:1,fmt:v=>App.money(v)}],
   get menus() { return [
     {name:'文件', items:[{label:'一键监控商品链接…',icon:'link',key:'Ctrl+M',run:()=>this.openQuickMonitor()},{label:'新建数据源…',icon:'add',key:'Ctrl+N',run:()=>this.editSource(null)},{label:'导入 CSV 商品…',icon:'go-to-file',run:()=>this.importCsv()},{label:'导出商品为 CSV',icon:'export',key:'Ctrl+E',run:()=>this.exportCsv()},'-',
@@ -84,7 +84,7 @@ function AppBase() { return {
   // ---------- 商品表 ----------
   uniq(k) { return [...new Set(this.all.map(p => p[k]).filter(Boolean))].sort(); },
   filtered(t) { const f = t.f, q = f.q.toLowerCase();
-    return this.all.filter(p => (!q || (p.title + ' ' + (p.brand || '')).toLowerCase().includes(q)) && (!f.platform || p.platform === f.platform) && (!f.category || p.category === f.category))
+    return this.all.filter(p => (!q || (p.title + ' ' + (p.brand || '')).toLowerCase().includes(q)) && (!f.platform || p.platform === f.platform) && (!f.category || p.category === f.category) && (!f.chain || p.chain === f.chain) && (!f.fav || (this.favs||[]).includes(p.id)))
       .sort((a, b) => { const g = p => t.sk === 'conf' ? (p.last_conf || {}).confidence : p[t.sk]; const x = g(a) ?? '', y = g(b) ?? ''; return (x > y ? 1 : x < y ? -1 : 0) * (t.asc ? 1 : -1); }); },
   pages(t) { return Math.max(1, Math.ceil(this.filtered(t).length / t.per)); },
   paged(t) { if (t.pg > this.pages(t)) t.pg = this.pages(t); return this.filtered(t).slice((t.pg - 1) * t.per, t.pg * t.per); },

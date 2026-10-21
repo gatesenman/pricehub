@@ -1,5 +1,5 @@
 <!doctype html><html lang="zh-CN" data-theme="dark"><head><meta charset="utf-8"><title>PriceHub 价格管理工作台</title><link rel="icon" href="data:,">
-<link rel="stylesheet" href="/static/vendor/codicon.css"><link rel="stylesheet" href="/static/style.css"><script src="/static/vendor/chart.js"></script><script defer src="/static/v4.js"></script><script defer src="/static/app.js"></script><script defer src="/static/v5.js"></script><script defer src="/static/v7.js"></script><script defer src="/static/v8.js"></script><script defer src="/static/vendor/alpine.js"></script></head>
+<link rel="stylesheet" href="/static/vendor/codicon.css"><link rel="stylesheet" href="/static/style.css"><script src="/static/vendor/chart.js"></script><script defer src="/static/v4.js"></script><script defer src="/static/app.js"></script><script defer src="/static/v5.js"></script><script defer src="/static/v7.js"></script><script defer src="/static/v8.js"></script><script defer src="/static/nav.js"></script><script defer src="/static/vendor/alpine.js"></script></head>
 <body x-data="App()" @keydown.window="keys($event)" @click.window="menuOpen=null;ctx=null;openPid($event)" @mousemove.window="dragMove($event)" @mouseup.window="dragEnd()" @mouseover.window="tipOver($event)">
 <div class="app">
 <div class="menubar" data-menubar><span class="logo"><i class="codicon codicon-pulse"></i> PriceHub</span>
@@ -15,12 +15,17 @@
   <div class="sh" x-show="x&&x.head" x-text="x.sec"></div>
   <div class="sug-it" :class="i===si&&'on'" @mouseenter="si=i" @mousedown.prevent="sugRun(x)" :data-sug="x&&x.attr"><i class="codicon" :class="'codicon-'+(x&&x.icon)"></i><span class="t" x-text="x&&x.label"></span><span class="r" x-text="x&&x.right"></span></div></div></template></div></div></div>
 <div class="main">
- <div class="side" x-show="showSide" :style="'width:'+sideW+'px'" data-side>
-  <div class="phead">资源管理器</div>
-  <div class="tree"><template x-for="g in tree()" :key="g.key"><div>
-   <div class="node" @click="toggle(g.key)" style="font-weight:600" :data-group-node="g.key"><i class="codicon tw" :class="collapsed[g.key]?'codicon-chevron-right':'codicon-chevron-down'"></i><span x-text="g.label"></span></div>
-   <div x-show="!collapsed[g.key]"><template x-for="n in g.children" :key="g.key+n.label"><div class="node" style="padding-left:22px" @click="n.run()" :data-node="n.label" :class="isActiveNode(n)&&'sel'">
-    <i class="codicon" :class="'codicon-'+(n.icon||'circle-outline')" :style="n.color&&('color:'+n.color)"></i><span x-text="n.label"></span><span class="cnt" x-text="n.count??''"></span></div></template></div></div></template></div></div>
+ <div class="actbar" data-actbar><template x-for="v in navViews" :key="v.id"><div class="act" :class="navView===v.id&&showSide&&'on'" @click="setNav(v.id)" :title="v.tip" :data-act="v.id"><i class="codicon" :class="'codicon-'+v.icon"></i></div></template></div>
+ <div class="side" x-show="showSide" :style="'width:'+sideW+'px'" data-side :data-nav-view="navView">
+  <div class="phead" x-text="(navViews.find(v=>v.id===navView)||{}).label"></div>
+  <div class="navfilter"><i class="codicon codicon-filter"></i><input x-model="navQ" :placeholder="navView==='catalog'&&catDim==='country'?'搜索国家':'过滤侧栏'" data-nav-filter></div>
+  <template x-if="navView==='catalog'"><div class="navdims"><div class="seg" data-cat-dims><template x-for="d in catDims" :key="d[0]"><button :class="catDim===d[0]&&'on'" @click="setCatDim(d[0])" x-text="d[1]" :data-cat-dim="d[0]"></button></template></div>
+   <div class="hint" style="margin:4px 2px 0">数字：已启用 / 共有平台数。点一项在「平台目录」中筛选。</div></div></template>
+  <div class="tree"><template x-for="g in navGroups()" :key="g.key"><div>
+   <div class="ghead" @click="toggle(g.key)" :data-group-node="g.key"><i class="codicon tw" :class="collapsed[g.key]?'codicon-chevron-right':'codicon-chevron-down'"></i><span x-text="g.label"></span><span class="gcnt" x-text="g.note||''"></span></div>
+   <div x-show="!collapsed[g.key]"><template x-for="n in g.children" :key="g.key+n.label"><div class="node" :class="[n.kind==='filter'?'nf':'nm', (isActiveNode(n)||isActiveFilter(n))&&'sel']" @click="n.run()" :data-node="n.label" :data-kind="n.kind||'open'" :title="n.tip||''">
+    <i class="codicon" :class="'codicon-'+(n.icon||'circle-outline')" :style="n.color&&('color:'+n.color)"></i><span class="nl" x-text="n.label"></span><span class="badge" x-show="n.count!=null&&n.count!==''" x-text="n.count" :title="n.countTip||''"></span></div></template>
+    <div class="hint" style="padding:2px 22px" x-show="!g.children.length" x-text="g.empty||'没有匹配项'"></div></div></div></template></div></div>
  <div class="split" x-show="showSide" @mousedown.prevent="dragStart('side',$event)" :class="drag==='side'&&'drag'" data-split-side></div>
  <div class="work">
   <div class="tabs" data-tabs><template x-for="t in tabs" :key="t.id"><div class="tab" :class="t.id===active&&'active'" @click="active=t.id" @mousedown.middle.prevent="closeTab(t.id)" :data-tab="t.id">
@@ -43,10 +48,13 @@
      <div class="muted" style="margin-top:6px">最近抓取 <span x-text="fmtTs(dash.last_fetch)"></span></div></div></div></div></template>
 
    <template x-if="t.type==='products'"><div>
+    <div class="chips" x-show="filterChips(t).length" data-filter-chips><span class="muted">筛选：</span><template x-for="c in filterChips(t)" :key="c.k"><span class="chip on" :data-chip="c.k"><span x-text="c.label"></span><i class="codicon codicon-close" @click="t.f[c.k]=c.k==='fav'?false:'';t.pg=1" :data-chip-clear="c.k"></i></span></template>
+     <a href="#" @click.prevent="t.f={q:'',platform:'',category:'',chain:'',fav:false}" data-chips-clear>全部清除</a></div>
     <div class="filterbar"><input placeholder="按名称或品牌筛选" x-model="t.f.q" data-filter-q style="width:200px">
-     <select x-model="t.f.platform" data-filter-plat><option value="">全部平台</option><template x-for="v in uniq('platform')"><option x-text="v" :selected="v===t.f.platform"></option></template></select>
+     <select x-model="t.f.platform" data-filter-plat><option value="">全部来源平台</option><template x-for="v in uniq('platform')"><option x-text="v" :selected="v===t.f.platform"></option></template></select>
      <select x-model="t.f.category" data-filter-cat><option value="">全部类目</option><template x-for="v in uniq('category')"><option x-text="v" :selected="v===t.f.category"></option></template></select>
-     <button class="btn" x-show="t.f.q||t.f.platform||t.f.category" @click="t.f={q:'',platform:'',category:''}" data-clear-filter><i class="codicon codicon-clear-all"></i> 清除筛选</button>
+     <button class="btn" x-show="t.f.q||t.f.platform||t.f.category||t.f.chain||t.f.fav" @click="t.f={q:'',platform:'',category:'',chain:'',fav:false}" data-clear-filter><i class="codicon codicon-clear-all"></i> 清除筛选</button>
+     <button class="btn" x-show="checked.length" @click="toggleFavs(checked)" data-fav-checked><i class="codicon codicon-star-empty"></i> 收藏/取消收藏所选</button>
      <button class="btn primary" @click="openQuickMonitor()" data-open-qm><i class="codicon codicon-link"></i> 粘贴链接监控</button>
      <span class="muted" style="margin-left:auto">共 <b class="mono" x-text="filtered(t).length" data-total></b> 条 · 勾选可批量操作 · 双击打开 · 右键更多</span></div>
     <div class="batchbar" x-show="checked.length" x-cloak data-batch><b>已选 <span class="mono" x-text="checked.length" data-batch-count></span> 项</b>

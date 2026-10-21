@@ -114,7 +114,7 @@ const V4 = {
   // ---------- 虚拟滚动 ----------
   filtered(t) { const f = t.f, key = JSON.stringify([f, t.sk, t.asc, this.allVer || 0]); const m = MEMO['p' + t.id];
     if (m && m.key === key) return m.rows; const q = f.q.toLowerCase();
-    const rows = this.all.filter(p => (!q || (p.title + ' ' + (p.brand || '')).toLowerCase().includes(q)) && (!f.platform || p.platform === f.platform) && (!f.category || p.category === f.category))
+    const rows = this.all.filter(p => (!q || (p.title + ' ' + (p.brand || '')).toLowerCase().includes(q)) && (!f.platform || p.platform === f.platform) && (!f.category || p.category === f.category) && (!f.chain || p.chain === f.chain) && (!f.fav || this.favs.includes(p.id)))
       .sort((a, b) => { const g = p => t.sk === 'conf' ? (p.last_conf || {}).confidence : p[t.sk]; const x = g(a) ?? '', y = g(b) ?? ''; return (x > y ? 1 : x < y ? -1 : 0) * (t.asc ? 1 : -1); });
     MEMO['p' + t.id] = {key, rows}; return rows; },
   vwin(t, rows, rh = 28) { const s = Math.max(0, Math.floor((t.st || 0) / rh) - 8), e = Math.min(rows.length, s + Math.ceil((t.vh || 900) / rh) + 16); return {s, e, top: s * rh, bot: (rows.length - e) * rh}; },

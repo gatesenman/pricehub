@@ -194,3 +194,18 @@ input:hover,select:hover,textarea:hover{border-color:color-mix(in srgb,var(--acc
 .login-ov{place-items:center;background:var(--bg)}
 .usage-it{margin:8px 0}.usage-it .ul{display:flex;justify-content:space-between;margin-bottom:3px}
 .pbar.warn>div{background:#d7a20b}.pbar.err>div{background:var(--up)}
+/* 侧栏导航：活动栏 + 分组 */
+.actbar{width:44px;flex-shrink:0;background:var(--panel2);border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding-top:4px}
+.actbar .act{width:44px;height:42px;display:grid;place-items:center;cursor:pointer;color:var(--muted);border-left:2px solid transparent}
+.actbar .act .codicon{font-size:22px}.actbar .act:hover{color:var(--fg)}.actbar .act.on{color:var(--fg);border-left-color:var(--accent)}
+.navfilter{display:flex;align-items:center;gap:4px;margin:6px 8px;padding:0 6px;border:1px solid var(--border);border-radius:var(--r1,2px);background:var(--bg)}
+.navfilter input{border:0;background:transparent;flex:1;min-width:0;padding:3px 0;outline:none}.navfilter .codicon{color:var(--muted)}
+.navdims{padding:0 8px 6px}.navdims .seg{display:flex}.navdims .seg button{flex:1;padding:3px 0}
+.tree .ghead{display:flex;align-items:center;gap:4px;padding:6px 6px 2px;cursor:pointer;font-size:11px;letter-spacing:.6px;color:var(--muted);font-weight:600;user-select:none}
+.tree .ghead:hover{color:var(--fg)}.tree .ghead .gcnt{margin-left:auto}
+.tree .node{padding-left:20px}.tree .node .nl{overflow:hidden;text-overflow:ellipsis}
+.tree .node.nm .codicon{color:var(--accent)}.tree .node.nf .codicon{color:var(--muted)}.tree .node.nf .nl{color:var(--fg)}
+.tree .node.sel{background:var(--sel);box-shadow:inset 2px 0 0 var(--accent)}
+.tree .badge{margin-left:auto;font-size:10px;line-height:15px;padding:0 6px;border-radius:8px;background:var(--panel2);border:1px solid var(--border);color:var(--muted)}
+.chips{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:6px 10px 0}.chips .chip{display:inline-flex;align-items:center;gap:4px}.chips .chip .codicon{cursor:pointer;font-size:12px}
+.main{overflow:clip}.work{min-width:0}

@@ -32,19 +32,27 @@ def page():
     for p in ps: p.terminate()
 def shot(pg, name): pg.wait_for_timeout(400); pg.screenshot(path=os.path.join(SHOTS, name))
 V = lambda pg, t: pg.locator(f"[data-view={t}]:visible")
+def nav(pg, view):   # 切换活动栏视图（已在该视图时不再点击，避免折叠侧栏）
+    side = pg.locator("[data-side]")
+    if not (side.is_visible() and side.get_attribute("data-nav-view") == view): pg.click(f"[data-act='{view}']")
+    expect(pg.locator(f"[data-side][data-nav-view='{view}']")).to_be_visible()
 def test_main_window(page):
     page.goto(API + "/"); expect(page.locator("[data-tab]")).to_have_count(2)
     expect(V(page, "dashboard").locator("[data-stat]").first).to_have_text("16")
     expect(page.locator("[data-status-count]")).to_have_text("商品 16"); expect(page.locator("[data-online]")).to_contain_text("在线")
     for m in ["文件", "编辑", "视图", "数据源", "工具", "帮助"]: expect(page.locator(f"[data-menu={m}]")).to_be_visible()
-    expect(page.locator("[data-node='jd.com']")).to_be_visible(); expect(page.locator("[data-node='耳机']")).to_be_visible(); shot(page, "01-main.png")
+    expect(page.locator("[data-group-node=w_mon]")).to_contain_text("监控"); expect(page.locator("[data-node='商品监控'][data-kind=open]")).to_be_visible()
+    nav(page, "goods"); expect(page.locator("[data-node='jd.com'][data-kind=filter]")).to_be_visible(); expect(page.locator("[data-node='耳机']")).to_be_visible(); shot(page, "01-main.png")
 def test_products_grid(page):
     page.locator("[data-tab=t2]").click(); rows = V(page, "products").locator("[data-row]"); expect(rows).to_have_count(16)
     page.fill("[data-filter-q]", "iPhone"); expect(rows).to_have_count(3)
     page.click("th[data-sort=last_price]"); first = rows.first.locator("td").nth(8).inner_text(); page.click("th[data-sort=last_price]")
     expect(rows.first.locator("td").nth(8)).not_to_have_text(first)
     page.fill("[data-filter-q]", ""); page.select_option("[data-filter-cat]", "耳机"); expect(rows).to_have_count(2)
-    page.click("[data-node='jd.com']"); expect(rows).to_have_count(6)   # 导航树按平台筛选
+    nav(page, "goods"); page.click("[data-node='jd.com']"); expect(rows).to_have_count(6)   # 侧栏按来源平台筛选
+    expect(page.locator("[data-chip=platform]")).to_contain_text("来源平台：jd.com"); page.click("[data-chip-clear=platform]"); expect(rows).to_have_count(16)
+    page.click("[data-node='jd.com']"); expect(rows).to_have_count(6)
+    page.evaluate("document.querySelectorAll('.vscroll').forEach(e=>e.scrollLeft=0)")   # 排序点击会把表格横向滚到价格列
     th = page.locator("th[data-sort=title]"); w0 = th.bounding_box()["width"]; h = th.locator("[data-resize]").bounding_box()
     page.mouse.move(h["x"] + 2, h["y"] + 5); page.mouse.down(); page.mouse.move(h["x"] + 82, h["y"] + 5, steps=5); page.mouse.up()
     assert th.bounding_box()["width"] > w0 + 50   # 列宽可调
@@ -56,7 +64,7 @@ def test_split_panel_drag(page):
     page.mouse.move(s["x"] + 2, 300); page.mouse.down(); page.mouse.move(s["x"] + 102, 300, steps=5); page.mouse.up()
     assert side.bounding_box()["width"] > w0 + 80
 def test_multi_product_tabs(page):
-    page.locator("[data-tab=t2]").click(); page.click("[data-node='taobao.com']"); rows = V(page, "products").locator("[data-row]")
+    page.locator("[data-tab=t2]").click(); nav(page, "goods"); page.click("[data-node='taobao.com']"); rows = V(page, "products").locator("[data-row]")
     rows.filter(has_text='iPhone').dblclick(); rows_tab = page.locator("[data-tab]")
     page.locator("[data-tab=t2]").click(); rows.filter(has_text='小米').dblclick(); expect(rows_tab).to_have_count(5)
     expect(V(page, "product").locator("[data-product-title]")).to_contain_text("小米")
@@ -96,10 +104,10 @@ def test_sources_dialog(page):
     v.locator("[data-source-row]", has_text="私有ERP").locator("[data-del]").click(); expect(v.locator("[data-source-row]")).to_have_count(3)
     page.click("[data-menu=数据源]"); page.click("[data-mi='立即抓取全部']"); expect(page.locator("[data-toast]").last).to_contain_text("3/3")
 def test_catalog(page):
-    page.click("[data-node='平台目录']"); v = V(page, "catalog"); v.locator("[data-cat-country]").select_option("日本")
+    nav(page, "work"); page.click("[data-node='平台目录']"); v = V(page, "catalog"); v.locator("[data-cat-country]").select_option("日本")
     expect(v.locator("[data-cat-total]")).to_have_text("6"); expect(v.locator("[data-cat-row]").first).to_contain_text("日本")
 def test_command_palette_and_theme(page):
-    page.keyboard.press("Control+k"); expect(page.locator("[data-palette]")).to_be_visible(); page.keyboard.type("主题"); shot(page, "05-palette.png")
+    page.keyboard.press("Control+k"); expect(page.locator("[data-palette]")).to_be_visible(); page.keyboard.type("主题"); expect(page.locator("[data-cmd]").first).to_contain_text("主题"); shot(page, "05-palette.png")
     page.keyboard.press("Enter"); expect(page.locator("html")).to_have_attribute("data-theme", "light")
     page.keyboard.press("Control+k"); expect(page.locator("[data-palette-input]")).to_be_focused(); page.keyboard.type("打开商品: 有机")
     expect(page.locator("[data-cmd]").first).to_contain_text("绿茶"); page.keyboard.press("Enter"); expect(V(page, "product").locator("[data-product-title]")).to_contain_text("绿茶")
@@ -135,14 +143,22 @@ def test_confidence_badges_and_tooltip(page):
     expect(page.locator("[data-tooltip]")).to_contain_text("新鲜度"); shot(page, "07-conf-tooltip.png")
 def test_platform_catalog_920_enable(page):
     page.click("[data-tb='平台目录']"); v = V(page, "catalog"); expect(v.locator("[data-cat-total]")).to_have_text("920")
-    expect(page.locator("[data-group-node=preg]")).to_contain_text("920")
-    page.click("[data-group-node=pcty]"); page.locator("[data-node='日本']").click(); expect(v.locator("[data-cat-total]")).to_have_text("6")   # 国家分组默认折叠，展开后选择
+    nav(page, "catalog"); expect(page.locator("[data-group-node=c_region]")).to_contain_text("920")
+    page.click("[data-cat-dim=country]"); expect(page.locator("[data-group-node]")).to_have_count(1)   # 只展示一个维度
+    page.fill("[data-nav-filter]", "日本"); page.locator("[data-node='日本']").click(); expect(v.locator("[data-cat-total]")).to_have_text("6")
+    assert "共" in page.locator("[data-node='日本'] .badge").get_attribute("title"); page.fill("[data-nav-filter]", "")
     v.locator("[data-cat-row]").first.locator("[data-enable]").click(); expect(v.locator("[data-cat-row]").first.locator("[data-enable]")).to_contain_text("已启用")
     v.locator("[data-bulk-enable]").click(); expect(page.locator("[data-status-platforms]")).to_contain_text("已启用 6/920")
 def test_no_emoji_or_symbol_icons(page):
+    nav(page, "work")
     for t in ["dashboard", "products", "catalog"]: page.click(f"[data-node='{ {'dashboard':'仪表盘','products':'商品监控','catalog':'平台目录'}[t] }']")
     page.click("[data-menu=文件]"); txt = page.evaluate("document.body.innerText + [...document.querySelectorAll('[title],[placeholder]')].map(e=>(e.title||'')+(e.placeholder||'')).join(' ')")
     page.keyboard.press("Escape"); bad = re.findall(EMOJI_RE, txt); assert not bad, bad
     assert page.locator(".codicon").count() > 30 and page.evaluate("document.fonts.check('14px codicon')")
+def test_activity_bar_toggle(page):
+    nav(page, "settings"); expect(page.locator("[data-node='设置与集成']")).to_be_visible()
+    page.click("[data-act='settings']"); expect(page.locator("[data-side]")).to_be_hidden()   # 再点一次折叠
+    page.click("[data-act='work']"); expect(page.locator("[data-side][data-nav-view=work]")).to_be_visible()
+    page.click("[data-group-node=w_ana]"); expect(page.locator("[data-node='比价']")).to_be_hidden(); page.click("[data-group-node=w_ana]")
 def test_no_console_errors(page):
     assert page.errors == [], page.errors
