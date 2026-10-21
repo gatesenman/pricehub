@@ -1,0 +1,7427 @@
+[
+{
+"region": "亚洲-东亚",
+"country": "澳门",
+"name": "Taobao 淘宝",
+"url": "taobao.com",
+"type": "C2C/跨境",
+"scope": "国际",
+"note": "澳门居民主要网购渠道，内地直邮"
+},
+{
+"region": "亚洲-东亚",
+"country": "澳门",
+"name": "JD.com 京东",
+"url": "jd.com",
+"type": "B2C",
+"scope": "国际",
+"note": "内地电商，支持寄送澳门"
+},
+{
+"region": "亚洲-东亚",
+"country": "澳门",
+"name": "Aomi 澳觅",
+"url": "aomi.mo",
+"type": "本地生活/外卖",
+"scope": "本土",
+"note": "澳门本地外卖及生活服务平台"
+},
+{
+"region": "亚洲-东亚",
+"country": "韩国",
+"name": "Coupang 쿠팡",
+"url": "coupang.com",
+"type": "综合/自营",
+"scope": "本土",
+"note": "韩国最大电商，“火箭配送”，纽交所上市"
+},
+{
+"region": "亚洲-东亚",
+"country": "韩国",
+"name": "Naver Shopping",
+"url": "shopping.naver.com",
+"type": "综合/比价",
+"scope": "本土",
+"note": "Naver旗下购物搜索与开放市场"
+},
+{
+"region": "亚洲-东亚",
+"country": "韩国",
+"name": "11st 11번가",
+"url": "11st.co.kr",
+"type": "综合",
+"scope": "本土",
+"note": "SK集团系开放市场"
+},
+{
+"region": "亚洲-东亚",
+"country": "韩国",
+"name": "Gmarket",
+"url": "gmarket.co.kr",
+"type": "综合",
+"scope": "本土",
+"note": "新世界集团旗下，与阿里国际组建合资公司"
+},
+{
+"region": "亚洲-东亚",
+"country": "韩国",
+"name": "Karrot 당근마켓",
+"url": "daangn.com",
+"type": "二手/C2C",
+"scope": "本土",
+"note": "胡萝卜市场，本地二手交易App"
+},
+{
+"region": "亚洲-东亚",
+"country": "韩国",
+"name": "蒙古",
+"url": "Shoppy.mn",
+"type": "shoppy.mn",
+"scope": "综合",
+"note": "本土"
+},
+{
+"region": "亚洲-东亚",
+"country": "韩国",
+"name": "Taobao 淘宝",
+"url": "taobao.com",
+"type": "C2C/跨境",
+"scope": "国际",
+"note": "经中国转运代购广泛使用"
+},
+{
+"region": "亚洲-东亚",
+"country": "韩国",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "亚洲-东亚",
+"country": "日本",
+"name": "Amazon",
+"url": "amazon.co.jp",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "日本最大电商平台之一"
+},
+{
+"region": "亚洲-东亚",
+"country": "日本",
+"name": "Rakuten Ichiba 楽天市場",
+"url": "rakuten.co.jp",
+"type": "综合",
+"scope": "本土",
+"note": "乐天集团旗下，与亚马逊并列日本两强"
+},
+{
+"region": "亚洲-东亚",
+"country": "日本",
+"name": "Yahoo!ショッピング",
+"url": "shopping.yahoo.co.jp",
+"type": "综合",
+"scope": "本土",
+"note": "LY Corporation（软银系）旗下"
+},
+{
+"region": "亚洲-东亚",
+"country": "日本",
+"name": "Mercari メルカリ",
+"url": "jp.mercari.com",
+"type": "二手/C2C",
+"scope": "本土",
+"note": "日本最大二手交易App"
+},
+{
+"region": "亚洲-东亚",
+"country": "日本",
+"name": "ZOZOTOWN",
+"url": "zozo.jp",
+"type": "垂直类(时尚)",
+"scope": "本土",
+"note": "日本最大时尚电商，LY集团旗下"
+},
+{
+"region": "亚洲-东亚",
+"country": "日本",
+"name": "Yahoo!オークション",
+"url": "auctions.yahoo.co.jp",
+"type": "C2C/拍卖",
+"scope": "本土",
+"note": "日本最大网络拍卖平台"
+},
+{
+"region": "亚洲-东亚",
+"country": "台湾",
+"name": "momo購物網",
+"url": "momoshop.com.tw",
+"type": "B2C",
+"scope": "本土",
+"note": "富邦媒体旗下，台湾最大B2C电商"
+},
+{
+"region": "亚洲-东亚",
+"country": "台湾",
+"name": "Shopee 蝦皮購物",
+"url": "shopee.tw",
+"type": "综合/C2C",
+"scope": "区域",
+"note": "Sea集团旗下，台湾流量最大电商之一"
+},
+{
+"region": "亚洲-东亚",
+"country": "台湾",
+"name": "PChome 24h購物",
+"url": "24h.pchome.com.tw",
+"type": "B2C",
+"scope": "本土",
+"note": "老牌电商，以快速到货著称"
+},
+{
+"region": "亚洲-东亚",
+"country": "台湾",
+"name": "Coupang 酷澎",
+"url": "tw.coupang.com",
+"type": "B2C/跨境",
+"scope": "国际",
+"note": "韩国Coupang 2022年进入台湾，增长迅速"
+},
+{
+"region": "亚洲-东亚",
+"country": "台湾",
+"name": "Yahoo!奇摩購物中心",
+"url": "tw.buy.yahoo.com",
+"type": "综合",
+"scope": "本土",
+"note": "老牌综合购物平台"
+},
+{
+"region": "亚洲-东亚",
+"country": "台湾",
+"name": "露天拍賣 Ruten",
+"url": "ruten.com.tw",
+"type": "C2C/拍卖",
+"scope": "本土",
+"note": "本土C2C拍卖平台"
+},
+{
+"region": "亚洲-东亚",
+"country": "香港",
+"name": "HKTVmall",
+"url": "hktvmall.com",
+"type": "综合",
+"scope": "本土",
+"note": "香港最大本地综合网购平台（香港科技探索）"
+},
+{
+"region": "亚洲-东亚",
+"country": "香港",
+"name": "Taobao 淘宝",
+"url": "taobao.com",
+"type": "C2C/跨境",
+"scope": "国际",
+"note": "香港消费者最常用的跨境网购平台之一"
+},
+{
+"region": "亚洲-东亚",
+"country": "香港",
+"name": "Carousell",
+"url": "carousell.com.hk",
+"type": "二手/C2C",
+"scope": "区域",
+"note": "新加坡起家的分类与二手交易平台"
+},
+{
+"region": "亚洲-东亚",
+"country": "香港",
+"name": "Ztore 士多",
+"url": "ztore.com",
+"type": "生鲜/超市",
+"scope": "本土",
+"note": "本地网上超市"
+},
+{
+"region": "亚洲-东亚",
+"country": "中国",
+"name": "Taobao 淘宝",
+"url": "taobao.com",
+"type": "C2C/综合",
+"scope": "本土",
+"note": "阿里巴巴旗下，中国最大的网购平台之一"
+},
+{
+"region": "亚洲-东亚",
+"country": "中国",
+"name": "Tmall 天猫",
+"url": "tmall.com",
+"type": "B2C",
+"scope": "本土",
+"note": "阿里巴巴旗下品牌官方商城"
+},
+{
+"region": "亚洲-东亚",
+"country": "中国",
+"name": "JD.com 京东",
+"url": "jd.com",
+"type": "B2C/自营",
+"scope": "本土",
+"note": "自营+自建物流，3C家电优势明显"
+},
+{
+"region": "亚洲-东亚",
+"country": "中国",
+"name": "Pinduoduo 拼多多",
+"url": "pinduoduo.com",
+"type": "社交电商",
+"scope": "本土",
+"note": "PDD控股旗下，低价拼团，下沉市场领先"
+},
+{
+"region": "亚洲-东亚",
+"country": "中国",
+"name": "Douyin 抖音电商",
+"url": "douyin.com",
+"type": "直播/内容电商",
+"scope": "本土",
+"note": "字节跳动旗下，直播带货规模领先"
+},
+{
+"region": "亚洲-东亚",
+"country": "中国",
+"name": "Xianyu 闲鱼",
+"url": "goofish.com",
+"type": "二手/C2C",
+"scope": "本土",
+"note": "阿里巴巴旗下，中国最大二手交易平台"
+},
+{
+"region": "亚洲-东南亚",
+"country": "东帝汶",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "社交平台交易为主"
+},
+{
+"region": "亚洲-东南亚",
+"country": "东帝汶",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "待核实：配送覆盖有限"
+},
+{
+"region": "亚洲-东南亚",
+"country": "菲律宾",
+"name": "Shopee",
+"url": "shopee.ph",
+"type": "综合/C2C",
+"scope": "区域",
+"note": "菲律宾第一大电商"
+},
+{
+"region": "亚洲-东南亚",
+"country": "菲律宾",
+"name": "Lazada",
+"url": "lazada.com.ph",
+"type": "综合/B2C",
+"scope": "区域",
+"note": "阿里巴巴控股"
+},
+{
+"region": "亚洲-东南亚",
+"country": "菲律宾",
+"name": "TikTok Shop",
+"url": "shop.tiktok.com",
+"type": "社交电商/直播",
+"scope": "国际",
+"note": "直播电商增长快"
+},
+{
+"region": "亚洲-东南亚",
+"country": "菲律宾",
+"name": "Zalora",
+"url": "zalora.com.ph",
+"type": "垂直类(时尚)",
+"scope": "区域",
+"note": "东南亚时尚电商"
+},
+{
+"region": "亚洲-东南亚",
+"country": "菲律宾",
+"name": "Carousell",
+"url": "carousell.ph",
+"type": "二手/C2C",
+"scope": "区域",
+"note": "分类与二手交易平台"
+},
+{
+"region": "亚洲-东南亚",
+"country": "柬埔寨",
+"name": "Khmer24",
+"url": "khmer24.com",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "柬埔寨最大分类信息与交易平台"
+},
+{
+"region": "亚洲-东南亚",
+"country": "柬埔寨",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "社交电商为主要网购方式"
+},
+{
+"region": "亚洲-东南亚",
+"country": "柬埔寨",
+"name": "Taobao 淘宝",
+"url": "taobao.com",
+"type": "C2C/跨境",
+"scope": "国际",
+"note": "经转运代购常见"
+},
+{
+"region": "亚洲-东南亚",
+"country": "柬埔寨",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "亚洲-东南亚",
+"country": "老挝",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Facebook及WhatsApp社交卖家为主要渠道"
+},
+{
+"region": "亚洲-东南亚",
+"country": "老挝",
+"name": "Taobao 淘宝",
+"url": "taobao.com",
+"type": "C2C/跨境",
+"scope": "国际",
+"note": "中老铁路开通后中国商品跨境网购增多"
+},
+{
+"region": "亚洲-东南亚",
+"country": "老挝",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "亚洲-东南亚",
+"country": "马来西亚",
+"name": "Shopee",
+"url": "shopee.com.my",
+"type": "综合/C2C",
+"scope": "区域",
+"note": "马来西亚第一大电商"
+},
+{
+"region": "亚洲-东南亚",
+"country": "马来西亚",
+"name": "Lazada",
+"url": "lazada.com.my",
+"type": "综合/B2C",
+"scope": "区域",
+"note": "马来西亚第二大综合电商"
+},
+{
+"region": "亚洲-东南亚",
+"country": "马来西亚",
+"name": "TikTok Shop",
+"url": "shop.tiktok.com",
+"type": "社交电商/直播",
+"scope": "国际",
+"note": "直播电商快速增长"
+},
+{
+"region": "亚洲-东南亚",
+"country": "马来西亚",
+"name": "PG Mall",
+"url": "pgmall.my",
+"type": "综合",
+"scope": "本土",
+"note": "马来西亚本土综合电商"
+},
+{
+"region": "亚洲-东南亚",
+"country": "马来西亚",
+"name": "Zalora",
+"url": "zalora.com.my",
+"type": "垂直类(时尚)",
+"scope": "区域",
+"note": "东南亚时尚电商"
+},
+{
+"region": "亚洲-东南亚",
+"country": "缅甸",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "缅甸电商以Facebook社交销售为主"
+},
+{
+"region": "亚洲-东南亚",
+"country": "缅甸",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "亚洲-东南亚",
+"country": "泰国",
+"name": "Shopee",
+"url": "shopee.co.th",
+"type": "综合/C2C",
+"scope": "区域",
+"note": "泰国第一大电商"
+},
+{
+"region": "亚洲-东南亚",
+"country": "泰国",
+"name": "Lazada",
+"url": "lazada.co.th",
+"type": "综合/B2C",
+"scope": "区域",
+"note": "泰国第二大电商"
+},
+{
+"region": "亚洲-东南亚",
+"country": "泰国",
+"name": "TikTok Shop",
+"url": "shop.tiktok.com",
+"type": "社交电商/直播",
+"scope": "国际",
+"note": "泰国直播电商增长极快"
+},
+{
+"region": "亚洲-东南亚",
+"country": "泰国",
+"name": "Central Online",
+"url": "central.co.th",
+"type": "B2C/百货",
+"scope": "本土",
+"note": "尚泰集团百货线上渠道"
+},
+{
+"region": "亚洲-东南亚",
+"country": "泰国",
+"name": "Kaidee",
+"url": "kaidee.com",
+"type": "分类/二手",
+"scope": "本土",
+"note": "泰国最大二手分类平台"
+},
+{
+"region": "亚洲-东南亚",
+"country": "文莱",
+"name": "Instagram / WhatsApp",
+"url": "instagram.com",
+"type": "社交电商",
+"scope": "国际",
+"note": "文莱本地网购以Instagram社交卖家为主"
+},
+{
+"region": "亚洲-东南亚",
+"country": "文莱",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "亚洲-东南亚",
+"country": "文莱",
+"name": "Taobao 淘宝",
+"url": "taobao.com",
+"type": "C2C/跨境",
+"scope": "国际",
+"note": "经转运使用"
+},
+{
+"region": "亚洲-东南亚",
+"country": "新加坡",
+"name": "Shopee",
+"url": "shopee.sg",
+"type": "综合/C2C",
+"scope": "区域",
+"note": "新加坡流量第一的电商平台（Sea总部所在地）"
+},
+{
+"region": "亚洲-东南亚",
+"country": "新加坡",
+"name": "Lazada",
+"url": "lazada.sg",
+"type": "综合/B2C",
+"scope": "区域",
+"note": "阿里巴巴控股，Lazada总部所在地"
+},
+{
+"region": "亚洲-东南亚",
+"country": "新加坡",
+"name": "Amazon",
+"url": "amazon.sg",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "亚马逊新加坡站（2019年上线）"
+},
+{
+"region": "亚洲-东南亚",
+"country": "新加坡",
+"name": "Carousell",
+"url": "carousell.sg",
+"type": "二手/C2C",
+"scope": "本土",
+"note": "新加坡创立的分类与二手交易平台"
+},
+{
+"region": "亚洲-东南亚",
+"country": "新加坡",
+"name": "FairPrice Online",
+"url": "fairprice.com.sg",
+"type": "生鲜/超市",
+"scope": "本土",
+"note": "NTUC职总平价超市线上渠道"
+},
+{
+"region": "亚洲-东南亚",
+"country": "新加坡",
+"name": "TikTok Shop",
+"url": "shop.tiktok.com",
+"type": "社交电商/直播",
+"scope": "国际",
+"note": "增长迅速的直播电商"
+},
+{
+"region": "亚洲-东南亚",
+"country": "印度尼西亚",
+"name": "Shopee",
+"url": "shopee.co.id",
+"type": "综合/C2C",
+"scope": "区域",
+"note": "印尼GMV第一的电商平台"
+},
+{
+"region": "亚洲-东南亚",
+"country": "印度尼西亚",
+"name": "Tokopedia",
+"url": "tokopedia.com",
+"type": "综合",
+"scope": "本土",
+"note": "印尼本土龙头，2024年起TikTok持股75%并与TikTok Shop整合"
+},
+{
+"region": "亚洲-东南亚",
+"country": "印度尼西亚",
+"name": "Lazada",
+"url": "lazada.co.id",
+"type": "综合/B2C",
+"scope": "区域",
+"note": "阿里巴巴控股"
+},
+{
+"region": "亚洲-东南亚",
+"country": "印度尼西亚",
+"name": "Blibli",
+"url": "blibli.com",
+"type": "B2C",
+"scope": "本土",
+"note": "Djarum集团旗下，主打正品与电子产品"
+},
+{
+"region": "亚洲-东南亚",
+"country": "印度尼西亚",
+"name": "TikTok Shop",
+"url": "shop.tiktok.com",
+"type": "社交电商/直播",
+"scope": "国际",
+"note": "与Tokopedia合并运营"
+},
+{
+"region": "亚洲-东南亚",
+"country": "印度尼西亚",
+"name": "Bukalapak",
+"url": "bukalapak.com",
+"type": "虚拟商品",
+"scope": "本土",
+"note": "曾为三大电商之一，2025年2月起停止实物商品交易，仅保留虚拟产品"
+},
+{
+"region": "亚洲-东南亚",
+"country": "越南",
+"name": "Shopee",
+"url": "shopee.vn",
+"type": "综合/C2C",
+"scope": "区域",
+"note": "越南市场份额第一"
+},
+{
+"region": "亚洲-东南亚",
+"country": "越南",
+"name": "TikTok Shop",
+"url": "shop.tiktok.com",
+"type": "社交电商/直播",
+"scope": "国际",
+"note": "越南第二大电商渠道"
+},
+{
+"region": "亚洲-东南亚",
+"country": "越南",
+"name": "Lazada",
+"url": "lazada.vn",
+"type": "综合/B2C",
+"scope": "区域",
+"note": "阿里巴巴控股"
+},
+{
+"region": "亚洲-东南亚",
+"country": "越南",
+"name": "Tiki",
+"url": "tiki.vn",
+"type": "B2C/自营",
+"scope": "本土",
+"note": "越南本土电商，自营书籍电子见长"
+},
+{
+"region": "亚洲-东南亚",
+"country": "越南",
+"name": "Chợ Tốt",
+"url": "chotot.com",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "越南最大分类信息平台"
+},
+{
+"region": "亚洲-东南亚",
+"country": "越南",
+"name": "Thế Giới Di Động",
+"url": "thegioididong.com",
+"type": "垂直类(手机数码)",
+"scope": "本土",
+"note": "越南最大手机电子零售商（MWG集团）"
+},
+{
+"region": "亚洲-南亚",
+"country": "阿富汗",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "社交平台交易为主"
+},
+{
+"region": "亚洲-南亚",
+"country": "巴基斯坦",
+"name": "Daraz",
+"url": "daraz.pk",
+"type": "综合",
+"scope": "区域",
+"note": "巴基斯坦最大电商"
+},
+{
+"region": "亚洲-南亚",
+"country": "巴基斯坦",
+"name": "OLX Pakistan",
+"url": "olx.com.pk",
+"type": "分类/C2C",
+"scope": "国际",
+"note": "巴基斯坦最大分类信息平台（Dubizzle集团）"
+},
+{
+"region": "亚洲-南亚",
+"country": "巴基斯坦",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "2024年进入巴基斯坦"
+},
+{
+"region": "亚洲-南亚",
+"country": "巴基斯坦",
+"name": "PriceOye",
+"url": "priceoye.pk",
+"type": "垂直类(电子)",
+"scope": "本土",
+"note": "手机电子产品电商"
+},
+{
+"region": "亚洲-南亚",
+"country": "不丹",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "社交平台交易为主"
+},
+{
+"region": "亚洲-南亚",
+"country": "不丹",
+"name": "Amazon",
+"url": "amazon.in",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经印度跨境购物常见"
+},
+{
+"region": "亚洲-南亚",
+"country": "马尔代夫",
+"name": "Instagram / WhatsApp",
+"url": "instagram.com",
+"type": "社交电商",
+"scope": "国际",
+"note": "本地商户多经Instagram/Viber销售"
+},
+{
+"region": "亚洲-南亚",
+"country": "马尔代夫",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "亚洲-南亚",
+"country": "马尔代夫",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经转运使用"
+},
+{
+"region": "亚洲-南亚",
+"country": "孟加拉国",
+"name": "Daraz",
+"url": "daraz.com.bd",
+"type": "综合",
+"scope": "区域",
+"note": "孟加拉最大电商"
+},
+{
+"region": "亚洲-南亚",
+"country": "孟加拉国",
+"name": "Chaldal",
+"url": "chaldal.com",
+"type": "生鲜/杂货",
+"scope": "本土",
+"note": "达卡领先的线上杂货平台"
+},
+{
+"region": "亚洲-南亚",
+"country": "孟加拉国",
+"name": "Bikroy",
+"url": "bikroy.com",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "孟加拉最大分类信息平台"
+},
+{
+"region": "亚洲-南亚",
+"country": "孟加拉国",
+"name": "Rokomari",
+"url": "rokomari.com",
+"type": "垂直类(图书)",
+"scope": "本土",
+"note": "孟加拉最大网上书店"
+},
+{
+"region": "亚洲-南亚",
+"country": "尼泊尔",
+"name": "Daraz",
+"url": "daraz.com.np",
+"type": "综合",
+"scope": "区域",
+"note": "尼泊尔最大电商"
+},
+{
+"region": "亚洲-南亚",
+"country": "尼泊尔",
+"name": "Sastodeal",
+"url": "sastodeal.com",
+"type": "综合",
+"scope": "本土",
+"note": "尼泊尔本土综合电商"
+},
+{
+"region": "亚洲-南亚",
+"country": "尼泊尔",
+"name": "Hamrobazar",
+"url": "hamrobazaar.com",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "尼泊尔最大分类信息平台"
+},
+{
+"region": "亚洲-南亚",
+"country": "斯里兰卡",
+"name": "Daraz",
+"url": "daraz.lk",
+"type": "综合",
+"scope": "区域",
+"note": "斯里兰卡最大电商"
+},
+{
+"region": "亚洲-南亚",
+"country": "斯里兰卡",
+"name": "ikman",
+"url": "ikman.lk",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "斯里兰卡最大分类信息平台"
+},
+{
+"region": "亚洲-南亚",
+"country": "斯里兰卡",
+"name": "Kapruka",
+"url": "kapruka.com",
+"type": "综合/礼品",
+"scope": "本土",
+"note": "老牌本土电商，海外侨民送礼常用"
+},
+{
+"region": "亚洲-南亚",
+"country": "印度",
+"name": "Flipkart",
+"url": "flipkart.com",
+"type": "综合",
+"scope": "本土",
+"note": "印度最大电商，沃尔玛控股"
+},
+{
+"region": "亚洲-南亚",
+"country": "印度",
+"name": "Amazon",
+"url": "amazon.in",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "亚马逊印度站，与Flipkart双寡头"
+},
+{
+"region": "亚洲-南亚",
+"country": "印度",
+"name": "Meesho",
+"url": "meesho.com",
+"type": "社交电商",
+"scope": "本土",
+"note": "主打零佣金、下沉市场，订单量领先"
+},
+{
+"region": "亚洲-南亚",
+"country": "印度",
+"name": "Myntra",
+"url": "myntra.com",
+"type": "垂直类(时尚)",
+"scope": "本土",
+"note": "Flipkart旗下时尚电商"
+},
+{
+"region": "亚洲-南亚",
+"country": "印度",
+"name": "JioMart",
+"url": "jiomart.com",
+"type": "综合/生鲜",
+"scope": "本土",
+"note": "信实集团(Reliance)旗下"
+},
+{
+"region": "亚洲-南亚",
+"country": "印度",
+"name": "Nykaa",
+"url": "nykaa.com",
+"type": "垂直类(美妆)",
+"scope": "本土",
+"note": "印度最大美妆电商"
+},
+{
+"region": "亚洲-中亚",
+"country": "印度",
+"name": "哈萨克斯坦",
+"url": "Kaspi.kz",
+"type": "kaspi.kz",
+"scope": "综合/超级App",
+"note": "本土"
+},
+{
+"region": "亚洲-中亚",
+"country": "印度",
+"name": "Wildberries",
+"url": "wildberries.kz",
+"type": "综合",
+"scope": "区域",
+"note": "俄罗斯头部电商在哈萨克斯坦"
+},
+{
+"region": "亚洲-中亚",
+"country": "印度",
+"name": "Ozon",
+"url": "ozon.kz",
+"type": "综合",
+"scope": "区域",
+"note": "俄罗斯电商在哈萨克斯坦"
+},
+{
+"region": "亚洲-中亚",
+"country": "印度",
+"name": "OLX Kazakhstan",
+"url": "olx.kz",
+"type": "分类/C2C",
+"scope": "国际",
+"note": "最大分类信息平台"
+},
+{
+"region": "亚洲-中亚",
+"country": "印度",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "亚洲-中亚",
+"country": "吉尔吉斯斯坦",
+"name": "Wildberries",
+"url": "wildberries.kg",
+"type": "综合",
+"scope": "区域",
+"note": "当地最常用网购平台之一"
+},
+{
+"region": "亚洲-中亚",
+"country": "吉尔吉斯斯坦",
+"name": "Ozon",
+"url": "ozon.ru",
+"type": "综合",
+"scope": "区域",
+"note": "俄罗斯头部电商，拓展至独联体"
+},
+{
+"region": "亚洲-中亚",
+"country": "吉尔吉斯斯坦",
+"name": "Lalafo",
+"url": "lalafo.kg",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "比什凯克创立的分类信息平台"
+},
+{
+"region": "亚洲-中亚",
+"country": "吉尔吉斯斯坦",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "亚洲-中亚",
+"country": "吉尔吉斯斯坦",
+"name": "塔吉克斯坦",
+"url": "Somon.tj",
+"type": "somon.tj",
+"scope": "分类/C2C",
+"note": "本土"
+},
+{
+"region": "亚洲-中亚",
+"country": "吉尔吉斯斯坦",
+"name": "Wildberries",
+"url": "wildberries.ru",
+"type": "综合",
+"scope": "区域",
+"note": "已在塔吉克斯坦开设取货点"
+},
+{
+"region": "亚洲-中亚",
+"country": "吉尔吉斯斯坦",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "亚洲-中亚",
+"country": "吉尔吉斯斯坦",
+"name": "Instagram / WhatsApp",
+"url": "instagram.com",
+"type": "社交电商",
+"scope": "国际",
+"note": "待核实：互联网管控严格，电商极不发达"
+},
+{
+"region": "亚洲-中亚",
+"country": "乌兹别克斯坦",
+"name": "Uzum Market",
+"url": "uzum.uz",
+"type": "综合",
+"scope": "本土",
+"note": "乌兹别克斯坦最大电商，首家独角兽"
+},
+{
+"region": "亚洲-中亚",
+"country": "乌兹别克斯坦",
+"name": "Wildberries",
+"url": "wildberries.uz",
+"type": "综合",
+"scope": "区域",
+"note": "俄罗斯头部电商在乌兹别克"
+},
+{
+"region": "亚洲-中亚",
+"country": "乌兹别克斯坦",
+"name": "Ozon",
+"url": "ozon.uz",
+"type": "综合",
+"scope": "区域",
+"note": "俄罗斯电商在乌兹别克"
+},
+{
+"region": "亚洲-中亚",
+"country": "乌兹别克斯坦",
+"name": "OLX Uzbekistan",
+"url": "olx.uz",
+"type": "分类/C2C",
+"scope": "国际",
+"note": "最大分类信息平台"
+},
+{
+"region": "亚洲-中亚",
+"country": "阿联酋",
+"name": "Amazon",
+"url": "amazon.ae",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "亚马逊阿联酋站"
+},
+{
+"region": "亚洲-中亚",
+"country": "阿联酋",
+"name": "noon",
+"url": "noon.com",
+"type": "综合",
+"scope": "区域",
+"note": "总部迪拜的本土电商龙头"
+},
+{
+"region": "亚洲-中亚",
+"country": "阿联酋",
+"name": "Namshi",
+"url": "namshi.com",
+"type": "垂直类(时尚)",
+"scope": "区域",
+"note": "中东时尚电商，noon旗下"
+},
+{
+"region": "亚洲-中亚",
+"country": "阿联酋",
+"name": "Dubizzle",
+"url": "dubizzle.com",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "阿联酋最大分类信息平台"
+},
+{
+"region": "亚洲-中亚",
+"country": "阿联酋",
+"name": "Carrefour UAE",
+"url": "carrefouruae.com",
+"type": "生鲜/超市",
+"scope": "区域",
+"note": "Majid Al Futtaim运营的家乐福线上渠道"
+},
+{
+"region": "亚洲-中亚",
+"country": "阿联酋",
+"name": "Sharaf DG",
+"url": "uae.sharafdg.com",
+"type": "垂直类(电子)",
+"scope": "本土",
+"note": "电子产品零售商"
+},
+{
+"region": "亚洲-中亚",
+"country": "阿曼",
+"name": "noon",
+"url": "noon.com",
+"type": "综合",
+"scope": "区域",
+"note": "2025年起覆盖阿曼"
+},
+{
+"region": "亚洲-中亚",
+"country": "阿曼",
+"name": "talabat",
+"url": "talabat.com",
+"type": "本地生活/即时零售",
+"scope": "区域",
+"note": "中东外卖及杂货即时配送，Delivery Hero旗下"
+},
+{
+"region": "亚洲-中亚",
+"country": "阿曼",
+"name": "Namshi",
+"url": "namshi.com",
+"type": "垂直类(时尚)",
+"scope": "区域",
+"note": "中东时尚电商，noon旗下"
+},
+{
+"region": "亚洲-中亚",
+"country": "阿曼",
+"name": "OpenSooq",
+"url": "om.opensooq.com",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "中东北非分类信息平台，约旦创立"
+},
+{
+"region": "亚洲-中亚",
+"country": "阿塞拜疆",
+"name": "Umico",
+"url": "umico.az",
+"type": "综合",
+"scope": "本土",
+"note": "阿塞拜疆本土综合电商与积分平台"
+},
+{
+"region": "亚洲-中亚",
+"country": "阿塞拜疆",
+"name": "Wildberries",
+"url": "wildberries.az",
+"type": "综合",
+"scope": "区域",
+"note": "已进入阿塞拜疆"
+},
+{
+"region": "亚洲-中亚",
+"country": "阿塞拜疆",
+"name": "Trendyol",
+"url": "trendyol.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "直邮阿塞拜疆，使用广泛"
+},
+{
+"region": "亚洲-中亚",
+"country": "阿塞拜疆",
+"name": "Kontakt Home",
+"url": "kontakt.az",
+"type": "垂直类(电子)",
+"scope": "本土",
+"note": "电子家电零售商"
+},
+{
+"region": "亚洲-中亚",
+"country": "巴勒斯坦",
+"name": "OpenSooq",
+"url": "ps.opensooq.com",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "中东北非分类信息平台，约旦创立"
+},
+{
+"region": "亚洲-中亚",
+"country": "巴勒斯坦",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "社交平台交易为主"
+},
+{
+"region": "亚洲-中亚",
+"country": "巴林",
+"name": "noon",
+"url": "noon.com",
+"type": "综合",
+"scope": "区域",
+"note": "经阿联酋站跨境覆盖巴林"
+},
+{
+"region": "亚洲-中亚",
+"country": "巴林",
+"name": "talabat",
+"url": "talabat.com",
+"type": "本地生活/即时零售",
+"scope": "区域",
+"note": "中东外卖及杂货即时配送，Delivery Hero旗下"
+},
+{
+"region": "亚洲-中亚",
+"country": "巴林",
+"name": "Namshi",
+"url": "namshi.com",
+"type": "垂直类(时尚)",
+"scope": "区域",
+"note": "中东时尚电商，noon旗下"
+},
+{
+"region": "亚洲-中亚",
+"country": "巴林",
+"name": "Carrefour Bahrain",
+"url": "carrefourbahrain.com",
+"type": "生鲜/超市",
+"scope": "区域",
+"note": "家乐福巴林线上渠道"
+},
+{
+"region": "亚洲-中亚",
+"country": "巴林",
+"name": "格鲁吉亚",
+"url": "Extra.ge",
+"type": "extra.ge",
+"scope": "综合",
+"note": "本土"
+},
+{
+"region": "亚洲-中亚",
+"country": "巴林",
+"name": "MyMarket",
+"url": "mymarket.ge",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "TNET集团旗下分类信息平台"
+},
+{
+"region": "亚洲-中亚",
+"country": "巴林",
+"name": "Zoommer",
+"url": "zoommer.ge",
+"type": "垂直类(电子)",
+"scope": "本土",
+"note": "电子产品零售商"
+},
+{
+"region": "亚洲-中亚",
+"country": "巴林",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "亚洲-中亚",
+"country": "巴林",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "亚洲-中亚",
+"country": "卡塔尔",
+"name": "Snoonu",
+"url": "snoonu.com",
+"type": "即时零售/综合",
+"scope": "本土",
+"note": "卡塔尔本土快送与电商超级App"
+},
+{
+"region": "亚洲-中亚",
+"country": "卡塔尔",
+"name": "noon",
+"url": "noon.com",
+"type": "综合",
+"scope": "区域",
+"note": "2025年起覆盖卡塔尔"
+},
+{
+"region": "亚洲-中亚",
+"country": "卡塔尔",
+"name": "talabat",
+"url": "talabat.com",
+"type": "本地生活/即时零售",
+"scope": "区域",
+"note": "中东外卖及杂货即时配送，Delivery Hero旗下"
+},
+{
+"region": "亚洲-中亚",
+"country": "卡塔尔",
+"name": "Qatar Living",
+"url": "qatarliving.com",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "卡塔尔最大社区与分类信息网站"
+},
+{
+"region": "亚洲-中亚",
+"country": "卡塔尔",
+"name": "Carrefour Qatar",
+"url": "carrefourqatar.com",
+"type": "生鲜/超市",
+"scope": "区域",
+"note": "家乐福卡塔尔线上渠道"
+},
+{
+"region": "亚洲-中亚",
+"country": "科威特",
+"name": "Xcite",
+"url": "xcite.com",
+"type": "垂直类(电子)",
+"scope": "本土",
+"note": "Alghanim集团旗下电子零售"
+},
+{
+"region": "亚洲-中亚",
+"country": "科威特",
+"name": "noon",
+"url": "noon.com",
+"type": "综合",
+"scope": "区域",
+"note": "2025年起覆盖科威特"
+},
+{
+"region": "亚洲-中亚",
+"country": "科威特",
+"name": "talabat",
+"url": "talabat.com",
+"type": "本地生活/即时零售",
+"scope": "区域",
+"note": "talabat创立于科威特"
+},
+{
+"region": "亚洲-中亚",
+"country": "科威特",
+"name": "4Sale",
+"url": "q84sale.com",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "科威特最大分类信息平台"
+},
+{
+"region": "亚洲-中亚",
+"country": "科威特",
+"name": "Namshi",
+"url": "namshi.com",
+"type": "垂直类(时尚)",
+"scope": "区域",
+"note": "中东时尚电商，noon旗下"
+},
+{
+"region": "亚洲-中亚",
+"country": "黎巴嫩",
+"name": "Dubizzle Lebanon",
+"url": "dubizzle.com.lb",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "原OLX黎巴嫩，最大分类信息平台"
+},
+{
+"region": "亚洲-中亚",
+"country": "黎巴嫩",
+"name": "Toters",
+"url": "totersapp.com",
+"type": "即时零售/外卖",
+"scope": "本土",
+"note": "黎巴嫩本土快送App"
+},
+{
+"region": "亚洲-中亚",
+"country": "黎巴嫩",
+"name": "Shein",
+"url": "shein.com",
+"type": "垂直类(时尚)/跨境",
+"scope": "国际",
+"note": "快时尚跨境平台，总部新加坡"
+},
+{
+"region": "亚洲-中亚",
+"country": "黎巴嫩",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经转运使用"
+},
+{
+"region": "亚洲-中亚",
+"country": "塞浦路斯",
+"name": "Skroutz",
+"url": "skroutz.cy",
+"type": "比价/综合",
+"scope": "区域",
+"note": "希腊比价与市场平台塞浦路斯站"
+},
+{
+"region": "亚洲-中亚",
+"country": "塞浦路斯",
+"name": "Bazaraki",
+"url": "bazaraki.com",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "塞浦路斯最大分类信息平台"
+},
+{
+"region": "亚洲-中亚",
+"country": "塞浦路斯",
+"name": "Amazon",
+"url": "amazon.de",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "多经德国/意大利站跨境购物"
+},
+{
+"region": "亚洲-中亚",
+"country": "塞浦路斯",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "亚洲-中亚",
+"country": "沙特阿拉伯",
+"name": "noon",
+"url": "noon.com",
+"type": "综合",
+"scope": "区域",
+"note": "沙特与阿联酋最大本土电商"
+},
+{
+"region": "亚洲-中亚",
+"country": "沙特阿拉伯",
+"name": "Amazon",
+"url": "amazon.sa",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "亚马逊沙特站（原Souq）"
+},
+{
+"region": "亚洲-中亚",
+"country": "沙特阿拉伯",
+"name": "Namshi",
+"url": "namshi.com",
+"type": "垂直类(时尚)",
+"scope": "区域",
+"note": "noon旗下时尚电商"
+},
+{
+"region": "亚洲-中亚",
+"country": "沙特阿拉伯",
+"name": "Jarir",
+"url": "jarir.com",
+"type": "垂直类(电子/图书)",
+"scope": "本土",
+"note": "沙特大型电子及图书零售商"
+},
+{
+"region": "亚洲-中亚",
+"country": "沙特阿拉伯",
+"name": "Extra",
+"url": "extra.com",
+"type": "垂直类(电子)",
+"scope": "本土",
+"note": "沙特电子家电零售商"
+},
+{
+"region": "亚洲-中亚",
+"country": "沙特阿拉伯",
+"name": "Haraj",
+"url": "haraj.com.sa",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "沙特最大分类信息平台"
+},
+{
+"region": "亚洲-中亚",
+"country": "土耳其",
+"name": "Trendyol",
+"url": "trendyol.com",
+"type": "综合",
+"scope": "本土",
+"note": "土耳其最大电商，阿里巴巴控股"
+},
+{
+"region": "亚洲-中亚",
+"country": "土耳其",
+"name": "Hepsiburada",
+"url": "hepsiburada.com",
+"type": "综合",
+"scope": "本土",
+"note": "老牌电商，2025年起由哈萨克斯坦Kaspi控股"
+},
+{
+"region": "亚洲-中亚",
+"country": "土耳其",
+"name": "Amazon",
+"url": "amazon.com.tr",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "亚马逊土耳其站"
+},
+{
+"region": "亚洲-中亚",
+"country": "土耳其",
+"name": "N11",
+"url": "n11.com",
+"type": "综合",
+"scope": "本土",
+"note": "综合开放市场"
+},
+{
+"region": "亚洲-中亚",
+"country": "土耳其",
+"name": "Sahibinden",
+"url": "sahibinden.com",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "最大分类信息平台（房产/汽车）"
+},
+{
+"region": "亚洲-中亚",
+"country": "土耳其",
+"name": "Çiçeksepeti",
+"url": "ciceksepeti.com",
+"type": "综合/礼品",
+"scope": "本土",
+"note": "鲜花礼品起家的综合电商"
+},
+{
+"region": "亚洲-中亚",
+"country": "叙利亚",
+"name": "OpenSooq",
+"url": "sy.opensooq.com",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "中东北非分类信息平台，约旦创立"
+},
+{
+"region": "亚洲-中亚",
+"country": "叙利亚",
+"name": "noon",
+"url": "noon.com",
+"type": "综合",
+"scope": "区域",
+"note": "2026年5月宣布进军叙利亚"
+},
+{
+"region": "亚洲-中亚",
+"country": "叙利亚",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "社交平台交易为主"
+},
+{
+"region": "亚洲-中亚",
+"country": "叙利亚",
+"name": "亚美尼亚",
+"url": "List.am",
+"type": "list.am",
+"scope": "分类/C2C",
+"note": "本土"
+},
+{
+"region": "亚洲-中亚",
+"country": "叙利亚",
+"name": "Wildberries",
+"url": "wildberries.am",
+"type": "综合",
+"scope": "区域",
+"note": "已进入亚美尼亚"
+},
+{
+"region": "亚洲-中亚",
+"country": "叙利亚",
+"name": "Ozon",
+"url": "ozon.ru",
+"type": "综合",
+"scope": "区域",
+"note": "已进入亚美尼亚"
+},
+{
+"region": "亚洲-中亚",
+"country": "也门",
+"name": "OpenSooq",
+"url": "ye.opensooq.com",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "分类信息平台"
+},
+{
+"region": "亚洲-中亚",
+"country": "也门",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "社交平台交易为主"
+},
+{
+"region": "亚洲-中亚",
+"country": "伊拉克",
+"name": "Miswag",
+"url": "miswag.com",
+"type": "综合",
+"scope": "本土",
+"note": "伊拉克本土领先电商"
+},
+{
+"region": "亚洲-中亚",
+"country": "伊拉克",
+"name": "OpenSooq",
+"url": "iq.opensooq.com",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "中东北非分类信息平台，约旦创立"
+},
+{
+"region": "亚洲-中亚",
+"country": "伊拉克",
+"name": "talabat",
+"url": "talabat.com",
+"type": "本地生活/即时零售",
+"scope": "区域",
+"note": "覆盖伊拉克主要城市"
+},
+{
+"region": "亚洲-中亚",
+"country": "伊拉克",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "社交电商非常普遍"
+},
+{
+"region": "亚洲-中亚",
+"country": "伊朗",
+"name": "Digikala",
+"url": "digikala.com",
+"type": "综合",
+"scope": "本土",
+"note": "伊朗最大电商（受制裁，国际平台缺席）"
+},
+{
+"region": "亚洲-中亚",
+"country": "伊朗",
+"name": "Divar",
+"url": "divar.ir",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "伊朗最大分类信息平台"
+},
+{
+"region": "亚洲-中亚",
+"country": "伊朗",
+"name": "Basalam",
+"url": "basalam.com",
+"type": "C2C/手工",
+"scope": "本土",
+"note": "手工艺品及小商户市场"
+},
+{
+"region": "亚洲-中亚",
+"country": "伊朗",
+"name": "Torob",
+"url": "torob.com",
+"type": "比价",
+"scope": "本土",
+"note": "伊朗最大比价购物搜索"
+},
+{
+"region": "亚洲-中亚",
+"country": "以色列",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "以色列人均使用率极高的跨境平台"
+},
+{
+"region": "亚洲-中亚",
+"country": "以色列",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "满额免费直邮以色列，使用广泛"
+},
+{
+"region": "亚洲-中亚",
+"country": "以色列",
+"name": "KSP",
+"url": "ksp.co.il",
+"type": "垂直类(电子)",
+"scope": "本土",
+"note": "以色列最大电子产品电商"
+},
+{
+"region": "亚洲-中亚",
+"country": "以色列",
+"name": "Yad2",
+"url": "yad2.co.il",
+"type": "分类/二手",
+"scope": "本土",
+"note": "以色列最大二手分类平台"
+},
+{
+"region": "亚洲-中亚",
+"country": "以色列",
+"name": "Shufersal Online",
+"url": "shufersal.co.il",
+"type": "生鲜/超市",
+"scope": "本土",
+"note": "最大连锁超市线上渠道"
+},
+{
+"region": "亚洲-中亚",
+"country": "以色列",
+"name": "Zap",
+"url": "zap.co.il",
+"type": "比价",
+"scope": "本土",
+"note": "以色列主流比价平台"
+},
+{
+"region": "亚洲-中亚",
+"country": "约旦",
+"name": "OpenSooq",
+"url": "jo.opensooq.com",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "发源于约旦的分类信息平台"
+},
+{
+"region": "亚洲-中亚",
+"country": "约旦",
+"name": "talabat",
+"url": "talabat.com",
+"type": "本地生活/即时零售",
+"scope": "区域",
+"note": "中东外卖及杂货即时配送，Delivery Hero旗下"
+},
+{
+"region": "亚洲-中亚",
+"country": "约旦",
+"name": "Shein",
+"url": "shein.com",
+"type": "垂直类(时尚)/跨境",
+"scope": "国际",
+"note": "快时尚跨境平台，总部新加坡"
+},
+{
+"region": "亚洲-中亚",
+"country": "约旦",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经转运使用"
+},
+{
+"region": "欧洲-西欧",
+"country": "爱尔兰",
+"name": "Amazon",
+"url": "amazon.ie",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "2025年3月上线的亚马逊爱尔兰站"
+},
+{
+"region": "欧洲-西欧",
+"country": "爱尔兰",
+"name": "DoneDeal",
+"url": "donedeal.ie",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "爱尔兰最大分类信息平台"
+},
+{
+"region": "欧洲-西欧",
+"country": "爱尔兰",
+"name": "Tesco Ireland",
+"url": "tesco.ie",
+"type": "生鲜/超市",
+"scope": "国际",
+"note": "Tesco爱尔兰线上渠道"
+},
+{
+"region": "欧洲-西欧",
+"country": "爱尔兰",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "欧洲-西欧",
+"country": "爱尔兰",
+"name": "Shein",
+"url": "shein.com",
+"type": "垂直类(时尚)/跨境",
+"scope": "国际",
+"note": "快时尚跨境平台，总部新加坡"
+},
+{
+"region": "欧洲-西欧",
+"country": "奥地利",
+"name": "Amazon",
+"url": "amazon.de",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "奥地利无本地站，主要使用德国站"
+},
+{
+"region": "欧洲-西欧",
+"country": "奥地利",
+"name": "willhaben",
+"url": "willhaben.at",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "奥地利最大分类信息平台"
+},
+{
+"region": "欧洲-西欧",
+"country": "奥地利",
+"name": "Zalando",
+"url": "zalando.at",
+"type": "垂直类(时尚)",
+"scope": "区域",
+"note": "欧洲最大时尚电商，总部柏林"
+},
+{
+"region": "欧洲-西欧",
+"country": "奥地利",
+"name": "MediaMarkt",
+"url": "mediamarkt.at",
+"type": "垂直类(电子)",
+"scope": "区域",
+"note": "电子零售"
+},
+{
+"region": "欧洲-西欧",
+"country": "奥地利",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "欧洲-西欧",
+"country": "比利时",
+"name": "Bol",
+"url": "bol.com",
+"type": "综合",
+"scope": "区域",
+"note": "荷兰平台，比利时（弗拉芒区）第一"
+},
+{
+"region": "欧洲-西欧",
+"country": "比利时",
+"name": "Amazon",
+"url": "amazon.com.be",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "2022年上线的亚马逊比利时站"
+},
+{
+"region": "欧洲-西欧",
+"country": "比利时",
+"name": "Coolblue",
+"url": "coolblue.be",
+"type": "垂直类(电子)",
+"scope": "区域",
+"note": "荷兰电子电商"
+},
+{
+"region": "欧洲-西欧",
+"country": "比利时",
+"name": "2dehands / 2ememain",
+"url": "2dehands.be",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "比利时最大分类信息平台"
+},
+{
+"region": "欧洲-西欧",
+"country": "比利时",
+"name": "Zalando",
+"url": "zalando.be",
+"type": "垂直类(时尚)",
+"scope": "区域",
+"note": "欧洲最大时尚电商，总部柏林"
+},
+{
+"region": "欧洲-西欧",
+"country": "比利时",
+"name": "Vinted",
+"url": "vinted.be",
+"type": "二手(时尚)",
+"scope": "区域",
+"note": "立陶宛创立的欧洲最大二手服饰平台"
+},
+{
+"region": "欧洲-西欧",
+"country": "德国",
+"name": "Amazon",
+"url": "amazon.de",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "德国第一大电商，份额远超对手"
+},
+{
+"region": "欧洲-西欧",
+"country": "德国",
+"name": "Otto",
+"url": "otto.de",
+"type": "综合",
+"scope": "本土",
+"note": "德国第二大电商，Otto集团"
+},
+{
+"region": "欧洲-西欧",
+"country": "德国",
+"name": "eBay",
+"url": "ebay.de",
+"type": "C2C/拍卖",
+"scope": "国际",
+"note": "德国第三大电商市场"
+},
+{
+"region": "欧洲-西欧",
+"country": "德国",
+"name": "Zalando",
+"url": "zalando.de",
+"type": "垂直类(时尚)",
+"scope": "本土",
+"note": "欧洲最大时尚电商，总部柏林"
+},
+{
+"region": "欧洲-西欧",
+"country": "德国",
+"name": "Kleinanzeigen",
+"url": "kleinanzeigen.de",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "原eBay Kleinanzeigen，最大分类平台"
+},
+{
+"region": "欧洲-西欧",
+"country": "德国",
+"name": "MediaMarkt",
+"url": "mediamarkt.de",
+"type": "垂直类(电子)",
+"scope": "本土",
+"note": "欧洲最大电子零售商"
+},
+{
+"region": "欧洲-西欧",
+"country": "法国",
+"name": "Amazon",
+"url": "amazon.fr",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "法国第一大电商"
+},
+{
+"region": "欧洲-西欧",
+"country": "法国",
+"name": "Leboncoin",
+"url": "leboncoin.fr",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "法国最大分类信息与二手平台"
+},
+{
+"region": "欧洲-西欧",
+"country": "法国",
+"name": "Cdiscount",
+"url": "cdiscount.com",
+"type": "综合",
+"scope": "本土",
+"note": "法国本土综合电商（Casino集团）"
+},
+{
+"region": "欧洲-西欧",
+"country": "法国",
+"name": "Fnac",
+"url": "fnac.com",
+"type": "垂直类(文化/电子)",
+"scope": "本土",
+"note": "Fnac Darty旗下"
+},
+{
+"region": "欧洲-西欧",
+"country": "法国",
+"name": "Vinted",
+"url": "vinted.fr",
+"type": "二手(时尚)",
+"scope": "区域",
+"note": "法国是Vinted最大市场之一"
+},
+{
+"region": "欧洲-西欧",
+"country": "法国",
+"name": "Veepee",
+"url": "veepee.fr",
+"type": "闪购",
+"scope": "本土",
+"note": "原Vente-privée，欧洲闪购龙头"
+},
+{
+"region": "欧洲-西欧",
+"country": "荷兰",
+"name": "Bol",
+"url": "bol.com",
+"type": "综合",
+"scope": "本土",
+"note": "荷比最大电商，Ahold Delhaize旗下"
+},
+{
+"region": "欧洲-西欧",
+"country": "荷兰",
+"name": "Amazon",
+"url": "amazon.nl",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "2020年上线"
+},
+{
+"region": "欧洲-西欧",
+"country": "荷兰",
+"name": "Coolblue",
+"url": "coolblue.nl",
+"type": "垂直类(电子)",
+"scope": "本土",
+"note": "以服务著称的电子家电电商"
+},
+{
+"region": "欧洲-西欧",
+"country": "荷兰",
+"name": "Marktplaats",
+"url": "marktplaats.nl",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "荷兰最大分类信息平台"
+},
+{
+"region": "欧洲-西欧",
+"country": "荷兰",
+"name": "Albert Heijn",
+"url": "ah.nl",
+"type": "生鲜/超市",
+"scope": "本土",
+"note": "最大连锁超市线上渠道"
+},
+{
+"region": "欧洲-西欧",
+"country": "荷兰",
+"name": "Zalando",
+"url": "zalando.nl",
+"type": "垂直类(时尚)",
+"scope": "区域",
+"note": "欧洲最大时尚电商，总部柏林"
+},
+{
+"region": "欧洲-西欧",
+"country": "列支敦士登",
+"name": "Digitec Galaxus",
+"url": "galaxus.ch",
+"type": "综合",
+"scope": "区域",
+"note": "与瑞士共享关税区，使用瑞士平台"
+},
+{
+"region": "欧洲-西欧",
+"country": "列支敦士登",
+"name": "Ricardo",
+"url": "ricardo.ch",
+"type": "C2C/拍卖",
+"scope": "区域",
+"note": "瑞士二手拍卖平台"
+},
+{
+"region": "欧洲-西欧",
+"country": "列支敦士登",
+"name": "Amazon",
+"url": "amazon.de",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "美国亚马逊，可跨境直邮或经转运使用"
+},
+{
+"region": "欧洲-西欧",
+"country": "卢森堡",
+"name": "Amazon",
+"url": "amazon.de",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "多使用德国/法国站"
+},
+{
+"region": "欧洲-西欧",
+"country": "卢森堡",
+"name": "Zalando",
+"url": "zalando.com",
+"type": "垂直类(时尚)",
+"scope": "区域",
+"note": "欧洲最大时尚电商，总部柏林"
+},
+{
+"region": "欧洲-西欧",
+"country": "卢森堡",
+"name": "Vinted",
+"url": "vinted.com",
+"type": "二手(时尚)",
+"scope": "区域",
+"note": "立陶宛创立的欧洲最大二手服饰平台"
+},
+{
+"region": "欧洲-西欧",
+"country": "卢森堡",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "欧洲-西欧",
+"country": "摩纳哥",
+"name": "Amazon",
+"url": "amazon.fr",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "使用法国站"
+},
+{
+"region": "欧洲-西欧",
+"country": "摩纳哥",
+"name": "Leboncoin",
+"url": "leboncoin.fr",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "法国分类平台"
+},
+{
+"region": "欧洲-西欧",
+"country": "摩纳哥",
+"name": "Cdiscount",
+"url": "cdiscount.com",
+"type": "综合",
+"scope": "区域",
+"note": "法国综合电商"
+},
+{
+"region": "欧洲-西欧",
+"country": "瑞士",
+"name": "Digitec Galaxus",
+"url": "galaxus.ch",
+"type": "综合",
+"scope": "本土",
+"note": "瑞士最大电商，Migros集团旗下"
+},
+{
+"region": "欧洲-西欧",
+"country": "瑞士",
+"name": "Ricardo",
+"url": "ricardo.ch",
+"type": "C2C/拍卖",
+"scope": "本土",
+"note": "瑞士最大二手拍卖平台"
+},
+{
+"region": "欧洲-西欧",
+"country": "瑞士",
+"name": "Zalando",
+"url": "zalando.ch",
+"type": "垂直类(时尚)",
+"scope": "区域",
+"note": "欧洲最大时尚电商，总部柏林"
+},
+{
+"region": "欧洲-西欧",
+"country": "瑞士",
+"name": "Migros Online",
+"url": "migros.ch",
+"type": "生鲜/超市",
+"scope": "本土",
+"note": "最大零售商线上渠道"
+},
+{
+"region": "欧洲-西欧",
+"country": "瑞士",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "欧洲-西欧",
+"country": "英国",
+"name": "Amazon",
+"url": "amazon.co.uk",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "英国最大电商平台"
+},
+{
+"region": "欧洲-西欧",
+"country": "英国",
+"name": "eBay",
+"url": "ebay.co.uk",
+"type": "C2C/拍卖",
+"scope": "国际",
+"note": "英国第二大电商市场"
+},
+{
+"region": "欧洲-西欧",
+"country": "英国",
+"name": "Argos",
+"url": "argos.co.uk",
+"type": "综合/B2C",
+"scope": "本土",
+"note": "Sainsbury's旗下综合零售"
+},
+{
+"region": "欧洲-西欧",
+"country": "英国",
+"name": "Tesco",
+"url": "tesco.com",
+"type": "生鲜/超市",
+"scope": "本土",
+"note": "英国最大超市线上渠道"
+},
+{
+"region": "欧洲-西欧",
+"country": "英国",
+"name": "ASOS",
+"url": "asos.com",
+"type": "垂直类(时尚)",
+"scope": "本土",
+"note": "英国时尚电商"
+},
+{
+"region": "欧洲-西欧",
+"country": "英国",
+"name": "Vinted",
+"url": "vinted.co.uk",
+"type": "二手(时尚)",
+"scope": "区域",
+"note": "英国增长最快的二手服饰平台"
+},
+{
+"region": "欧洲-北欧",
+"country": "爱沙尼亚",
+"name": "Kaup24",
+"url": "kaup24.ee",
+"type": "综合",
+"scope": "区域",
+"note": "Pigu集团旗下爱沙尼亚站"
+},
+{
+"region": "欧洲-北欧",
+"country": "爱沙尼亚",
+"name": "Hansapost",
+"url": "hansapost.ee",
+"type": "综合",
+"scope": "区域",
+"note": "Pigu集团旗下"
+},
+{
+"region": "欧洲-北欧",
+"country": "爱沙尼亚",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "欧洲-北欧",
+"country": "奥兰群岛（芬",
+"name": "Tori",
+"url": "tori.fi",
+"type": "分类/C2C",
+"scope": "国际",
+"note": "芬兰分类平台，覆盖奥兰"
+},
+{
+"region": "欧洲-北欧",
+"country": "冰岛",
+"name": "Heimkaup",
+"url": "heimkaup.is",
+"type": "综合",
+"scope": "本土",
+"note": "待核实：冰岛本土较大网购平台"
+},
+{
+"region": "欧洲-北欧",
+"country": "冰岛",
+"name": "Elko",
+"url": "elko.is",
+"type": "垂直类(电子)",
+"scope": "本土",
+"note": "电子零售商"
+},
+{
+"region": "欧洲-北欧",
+"country": "冰岛",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "欧洲-北欧",
+"country": "冰岛",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经转运使用"
+},
+{
+"region": "欧洲-北欧",
+"country": "丹麦",
+"name": "DBA",
+"url": "dba.dk",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "丹麦最大二手分类平台"
+},
+{
+"region": "欧洲-北欧",
+"country": "丹麦",
+"name": "Bilka",
+"url": "bilka.dk",
+"type": "综合",
+"scope": "本土",
+"note": "Salling集团大卖场线上渠道"
+},
+{
+"region": "欧洲-北欧",
+"country": "丹麦",
+"name": "Elgiganten",
+"url": "elgiganten.dk",
+"type": "垂直类(电子)",
+"scope": "区域",
+"note": "电子零售"
+},
+{
+"region": "欧洲-北欧",
+"country": "丹麦",
+"name": "Coolshop",
+"url": "coolshop.dk",
+"type": "综合",
+"scope": "本土",
+"note": "本土综合电商"
+},
+{
+"region": "欧洲-北欧",
+"country": "丹麦",
+"name": "Zalando",
+"url": "zalando.dk",
+"type": "垂直类(时尚)",
+"scope": "区域",
+"note": "欧洲最大时尚电商，总部柏林"
+},
+{
+"region": "欧洲-北欧",
+"country": "丹麦",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "欧洲-北欧",
+"country": "法罗群岛（丹",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "欧洲-北欧",
+"country": "法罗群岛（丹",
+"name": "芬兰",
+"url": "Verkkokauppa.com",
+"type": "verkkokauppa.com",
+"scope": "综合/电子",
+"note": "本土"
+},
+{
+"region": "欧洲-北欧",
+"country": "法罗群岛（丹",
+"name": "Tori",
+"url": "tori.fi",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "芬兰最大二手分类平台"
+},
+{
+"region": "欧洲-北欧",
+"country": "法罗群岛（丹",
+"name": "Gigantti",
+"url": "gigantti.fi",
+"type": "垂直类(电子)",
+"scope": "区域",
+"note": "Elkjøp集团"
+},
+{
+"region": "欧洲-北欧",
+"country": "法罗群岛（丹",
+"name": "Zalando",
+"url": "zalando.fi",
+"type": "垂直类(时尚)",
+"scope": "区域",
+"note": "欧洲最大时尚电商，总部柏林"
+},
+{
+"region": "欧洲-北欧",
+"country": "法罗群岛（丹",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "欧洲-北欧",
+"country": "根西岛（英）",
+"name": "Amazon",
+"url": "amazon.co.uk",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "英国站可配送（部分商品受限）"
+},
+{
+"region": "欧洲-北欧",
+"country": "根西岛（英）",
+"name": "eBay",
+"url": "ebay.co.uk",
+"type": "C2C/拍卖",
+"scope": "国际",
+"note": "英国eBay广泛使用"
+},
+{
+"region": "欧洲-北欧",
+"country": "根西岛（英）",
+"name": "拉脱维亚",
+"url": "220.lv",
+"type": "220.lv",
+"scope": "综合",
+"note": "区域"
+},
+{
+"region": "欧洲-北欧",
+"country": "根西岛（英）",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "欧洲-北欧",
+"country": "立陶宛",
+"name": "Pigu",
+"url": "pigu.lt",
+"type": "综合",
+"scope": "本土",
+"note": "波罗的海最大电商集团"
+},
+{
+"region": "欧洲-北欧",
+"country": "立陶宛",
+"name": "Vinted",
+"url": "vinted.lt",
+"type": "二手(时尚)",
+"scope": "本土",
+"note": "立陶宛起家的独角兽"
+},
+{
+"region": "欧洲-北欧",
+"country": "立陶宛",
+"name": "Skelbiu",
+"url": "skelbiu.lt",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "最大分类信息平台"
+},
+{
+"region": "欧洲-北欧",
+"country": "立陶宛",
+"name": "Varle",
+"url": "varle.lt",
+"type": "综合",
+"scope": "本土",
+"note": "本土综合电商"
+},
+{
+"region": "欧洲-北欧",
+"country": "立陶宛",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "欧洲-北欧",
+"country": "马恩岛（英）",
+"name": "Amazon",
+"url": "amazon.co.uk",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "英国站可配送（部分商品受限）"
+},
+{
+"region": "欧洲-北欧",
+"country": "马恩岛（英）",
+"name": "eBay",
+"url": "ebay.co.uk",
+"type": "C2C/拍卖",
+"scope": "国际",
+"note": "英国eBay广泛使用"
+},
+{
+"region": "欧洲-北欧",
+"country": "马恩岛（英）",
+"name": "Argos",
+"url": "argos.co.uk",
+"type": "综合/B2C",
+"scope": "国际",
+"note": "待核实：英国综合零售"
+},
+{
+"region": "欧洲-北欧",
+"country": "马恩岛（英）",
+"name": "挪威",
+"url": "FINN.no",
+"type": "finn.no",
+"scope": "分类/C2C",
+"note": "本土"
+},
+{
+"region": "欧洲-北欧",
+"country": "马恩岛（英）",
+"name": "Komplett",
+"url": "komplett.no",
+"type": "垂直类(电子)",
+"scope": "本土",
+"note": "挪威最大电子电商"
+},
+{
+"region": "欧洲-北欧",
+"country": "马恩岛（英）",
+"name": "Elkjøp",
+"url": "elkjop.no",
+"type": "垂直类(电子)",
+"scope": "本土",
+"note": "北欧最大电子零售商"
+},
+{
+"region": "欧洲-北欧",
+"country": "马恩岛（英）",
+"name": "Zalando",
+"url": "zalando.no",
+"type": "垂直类(时尚)",
+"scope": "区域",
+"note": "欧洲最大时尚电商，总部柏林"
+},
+{
+"region": "欧洲-北欧",
+"country": "马恩岛（英）",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "欧洲-北欧",
+"country": "瑞典",
+"name": "Amazon",
+"url": "amazon.se",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "2020年上线"
+},
+{
+"region": "欧洲-北欧",
+"country": "瑞典",
+"name": "Blocket",
+"url": "blocket.se",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "瑞典最大分类信息平台（Schibsted）"
+},
+{
+"region": "欧洲-北欧",
+"country": "瑞典",
+"name": "Tradera",
+"url": "tradera.com",
+"type": "C2C/拍卖",
+"scope": "本土",
+"note": "瑞典最大拍卖平台"
+},
+{
+"region": "欧洲-北欧",
+"country": "瑞典",
+"name": "CDON",
+"url": "cdon.se",
+"type": "综合",
+"scope": "本土",
+"note": "北欧本土开放市场"
+},
+{
+"region": "欧洲-北欧",
+"country": "瑞典",
+"name": "Elgiganten",
+"url": "elgiganten.se",
+"type": "垂直类(电子)",
+"scope": "本土",
+"note": "Elkjøp集团电子零售"
+},
+{
+"region": "欧洲-北欧",
+"country": "瑞典",
+"name": "Zalando",
+"url": "zalando.se",
+"type": "垂直类(时尚)",
+"scope": "区域",
+"note": "欧洲最大时尚电商，总部柏林"
+},
+{
+"region": "欧洲-北欧",
+"country": "瑞典",
+"name": "斯瓦尔巴和扬马",
+"url": "FINN.no",
+"type": "finn.no",
+"scope": "分类/C2C",
+"note": "国际"
+},
+{
+"region": "欧洲-北欧",
+"country": "瑞典",
+"name": "Komplett",
+"url": "komplett.no",
+"type": "垂直类(电子)",
+"scope": "国际",
+"note": "待核实：挪威电商，斯瓦尔巴配送受限"
+},
+{
+"region": "欧洲-北欧",
+"country": "泽西岛（英）",
+"name": "Amazon",
+"url": "amazon.co.uk",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "英国站可配送（部分商品受限）"
+},
+{
+"region": "欧洲-北欧",
+"country": "泽西岛（英）",
+"name": "eBay",
+"url": "ebay.co.uk",
+"type": "C2C/拍卖",
+"scope": "国际",
+"note": "英国eBay广泛使用"
+},
+{
+"region": "欧洲-南欧",
+"country": "阿尔巴尼亚",
+"name": "Merrjep",
+"url": "merrjep.al",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "最大分类信息平台"
+},
+{
+"region": "欧洲-南欧",
+"country": "阿尔巴尼亚",
+"name": "Neptun",
+"url": "neptun.al",
+"type": "垂直类(电子)",
+"scope": "区域",
+"note": "电子零售"
+},
+{
+"region": "欧洲-南欧",
+"country": "阿尔巴尼亚",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "欧洲-南欧",
+"country": "阿尔巴尼亚",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "待核实：PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "欧洲-南欧",
+"country": "安道尔",
+"name": "Amazon",
+"url": "amazon.es",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "使用西班牙/法国站"
+},
+{
+"region": "欧洲-南欧",
+"country": "安道尔",
+"name": "Wallapop",
+"url": "wallapop.com",
+"type": "二手/C2C",
+"scope": "区域",
+"note": "西班牙二手平台"
+},
+{
+"region": "欧洲-南欧",
+"country": "北马其顿",
+"name": "Pazar3",
+"url": "pazar3.mk",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "最大分类信息平台"
+},
+{
+"region": "欧洲-南欧",
+"country": "北马其顿",
+"name": "Reklama5",
+"url": "reklama5.mk",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "分类信息平台"
+},
+{
+"region": "欧洲-南欧",
+"country": "北马其顿",
+"name": "Neptun",
+"url": "neptun.mk",
+"type": "垂直类(电子)",
+"scope": "本土",
+"note": "电子零售"
+},
+{
+"region": "欧洲-南欧",
+"country": "北马其顿",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "欧洲-南欧",
+"country": "北马其顿",
+"name": "波黑",
+"url": "OLX.ba",
+"type": "olx.ba",
+"scope": "分类/C2C",
+"note": "本土"
+},
+{
+"region": "欧洲-南欧",
+"country": "北马其顿",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "欧洲-南欧",
+"country": "北马其顿",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "待核实：PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "欧洲-南欧",
+"country": "梵蒂冈",
+"name": "Amazon",
+"url": "amazon.it",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "使用意大利站"
+},
+{
+"region": "欧洲-南欧",
+"country": "梵蒂冈",
+"name": "Subito",
+"url": "subito.it",
+"type": "分类/C2C",
+"scope": "国际",
+"note": "意大利分类平台"
+},
+{
+"region": "欧洲-南欧",
+"country": "黑山",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "欧洲-南欧",
+"country": "黑山",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "欧洲-南欧",
+"country": "克罗地亚",
+"name": "Njusškalo",
+"url": "njuskalo.hr",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "最大分类信息平台"
+},
+{
+"region": "欧洲-南欧",
+"country": "克罗地亚",
+"name": "Links",
+"url": "links.hr",
+"type": "垂直类(电子)",
+"scope": "本土",
+"note": "待核实：电子产品零售商"
+},
+{
+"region": "欧洲-南欧",
+"country": "克罗地亚",
+"name": "eKupi",
+"url": "ekupi.hr",
+"type": "综合",
+"scope": "本土",
+"note": "本土综合电商"
+},
+{
+"region": "欧洲-南欧",
+"country": "克罗地亚",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "欧洲-南欧",
+"country": "科索沃",
+"name": "Gjirafa50",
+"url": "gjirafa50.com",
+"type": "综合/电子",
+"scope": "本土",
+"note": "科索沃最大本土电商（Gjirafa集团）"
+},
+{
+"region": "欧洲-南欧",
+"country": "科索沃",
+"name": "Merrjep",
+"url": "merrjep.com",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "分类信息平台"
+},
+{
+"region": "欧洲-南欧",
+"country": "科索沃",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "欧洲-南欧",
+"country": "马耳他",
+"name": "Maltapark",
+"url": "maltapark.com",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "马耳他最大分类交易平台"
+},
+{
+"region": "欧洲-南欧",
+"country": "马耳他",
+"name": "Amazon",
+"url": "amazon.de",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "多使用德/意站"
+},
+{
+"region": "欧洲-南欧",
+"country": "马耳他",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "欧洲-南欧",
+"country": "马耳他",
+"name": "Shein",
+"url": "shein.com",
+"type": "垂直类(时尚)/跨境",
+"scope": "国际",
+"note": "快时尚跨境平台，总部新加坡"
+},
+{
+"region": "欧洲-南欧",
+"country": "葡萄牙",
+"name": "Amazon",
+"url": "amazon.es",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "无本地站，多使用西班牙站"
+},
+{
+"region": "欧洲-南欧",
+"country": "葡萄牙",
+"name": "Worten",
+"url": "worten.pt",
+"type": "综合/电子",
+"scope": "本土",
+"note": "Sonae集团，最大本土电商之一"
+},
+{
+"region": "欧洲-南欧",
+"country": "葡萄牙",
+"name": "OLX Portugal",
+"url": "olx.pt",
+"type": "分类/C2C",
+"scope": "国际",
+"note": "最大分类信息平台"
+},
+{
+"region": "欧洲-南欧",
+"country": "葡萄牙",
+"name": "Fnac Portugal",
+"url": "fnac.pt",
+"type": "垂直类(文化/电子)",
+"scope": "国际",
+"note": ""
+},
+{
+"region": "欧洲-南欧",
+"country": "葡萄牙",
+"name": "Continente",
+"url": "continente.pt",
+"type": "生鲜/超市",
+"scope": "本土",
+"note": "最大超市线上渠道"
+},
+{
+"region": "欧洲-南欧",
+"country": "葡萄牙",
+"name": "KuantoKusta",
+"url": "kuantokusta.pt",
+"type": "比价/市场",
+"scope": "本土",
+"note": "比价与开放市场"
+},
+{
+"region": "欧洲-南欧",
+"country": "塞尔维亚",
+"name": "KupujemProdajem",
+"url": "kupujemprodajem.com",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "塞尔维亚最大分类交易平台"
+},
+{
+"region": "欧洲-南欧",
+"country": "塞尔维亚",
+"name": "Gigatron",
+"url": "gigatron.rs",
+"type": "垂直类(电子)",
+"scope": "本土",
+"note": "电子零售"
+},
+{
+"region": "欧洲-南欧",
+"country": "塞尔维亚",
+"name": "Limundo",
+"url": "limundo.com",
+"type": "C2C/拍卖",
+"scope": "本土",
+"note": "在线拍卖平台"
+},
+{
+"region": "欧洲-南欧",
+"country": "塞尔维亚",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "欧洲-南欧",
+"country": "圣马力诺",
+"name": "Amazon",
+"url": "amazon.it",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "使用意大利站"
+},
+{
+"region": "欧洲-南欧",
+"country": "圣马力诺",
+"name": "Subito",
+"url": "subito.it",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "意大利分类平台"
+},
+{
+"region": "欧洲-南欧",
+"country": "斯洛文尼亚",
+"name": "Mimovrste",
+"url": "mimovrste.com",
+"type": "综合",
+"scope": "本土",
+"note": "斯洛文尼亚最大电商，2026年由Allegro出售予Mutares"
+},
+{
+"region": "欧洲-南欧",
+"country": "斯洛文尼亚",
+"name": "Bolha",
+"url": "bolha.com",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "最大分类信息平台"
+},
+{
+"region": "欧洲-南欧",
+"country": "斯洛文尼亚",
+"name": "Big Bang",
+"url": "bigbang.si",
+"type": "垂直类(电子)",
+"scope": "本土",
+"note": "电子零售"
+},
+{
+"region": "欧洲-南欧",
+"country": "斯洛文尼亚",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "欧洲-南欧",
+"country": "西班牙",
+"name": "Amazon",
+"url": "amazon.es",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "西班牙第一大电商"
+},
+{
+"region": "欧洲-南欧",
+"country": "西班牙",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "西班牙是速卖通欧洲核心市场"
+},
+{
+"region": "欧洲-南欧",
+"country": "西班牙",
+"name": "El Corte Inglés",
+"url": "elcorteingles.es",
+"type": "综合/百货",
+"scope": "本土",
+"note": "最大百货集团线上渠道"
+},
+{
+"region": "欧洲-南欧",
+"country": "西班牙",
+"name": "Wallapop",
+"url": "wallapop.com",
+"type": "二手/C2C",
+"scope": "本土",
+"note": "西班牙最大二手交易App"
+},
+{
+"region": "欧洲-南欧",
+"country": "西班牙",
+"name": "PcComponentes",
+"url": "pccomponentes.com",
+"type": "垂直类(电子)",
+"scope": "本土",
+"note": "电子产品电商"
+},
+{
+"region": "欧洲-南欧",
+"country": "西班牙",
+"name": "Shein",
+"url": "shein.com",
+"type": "垂直类(时尚)/跨境",
+"scope": "国际",
+"note": "快时尚跨境平台，总部新加坡"
+},
+{
+"region": "欧洲-南欧",
+"country": "希腊",
+"name": "Skroutz",
+"url": "skroutz.gr",
+"type": "比价/综合",
+"scope": "本土",
+"note": "希腊最大电商与比价平台"
+},
+{
+"region": "欧洲-南欧",
+"country": "希腊",
+"name": "Public",
+"url": "public.gr",
+"type": "综合/电子",
+"scope": "本土",
+"note": "电子文化零售"
+},
+{
+"region": "欧洲-南欧",
+"country": "希腊",
+"name": "Plaisio",
+"url": "plaisio.gr",
+"type": "垂直类(电子)",
+"scope": "本土",
+"note": "电子零售"
+},
+{
+"region": "欧洲-南欧",
+"country": "希腊",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "欧洲-南欧",
+"country": "希腊",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "欧洲-南欧",
+"country": "意大利",
+"name": "Amazon",
+"url": "amazon.it",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "意大利第一大电商"
+},
+{
+"region": "欧洲-南欧",
+"country": "意大利",
+"name": "eBay",
+"url": "ebay.it",
+"type": "C2C/拍卖",
+"scope": "国际",
+"note": "美国老牌在线拍卖与交易平台"
+},
+{
+"region": "欧洲-南欧",
+"country": "意大利",
+"name": "Subito",
+"url": "subito.it",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "最大分类信息平台"
+},
+{
+"region": "欧洲-南欧",
+"country": "意大利",
+"name": "Zalando",
+"url": "zalando.it",
+"type": "垂直类(时尚)",
+"scope": "区域",
+"note": "欧洲最大时尚电商，总部柏林"
+},
+{
+"region": "欧洲-南欧",
+"country": "意大利",
+"name": "Unieuro",
+"url": "unieuro.it",
+"type": "垂直类(电子)",
+"scope": "本土",
+"note": "电子零售商"
+},
+{
+"region": "欧洲-南欧",
+"country": "意大利",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "欧洲-南欧",
+"country": "直布罗陀（英）",
+"name": "Amazon",
+"url": "amazon.co.uk",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "英国/西班牙站均可使用"
+},
+{
+"region": "欧洲-南欧",
+"country": "直布罗陀（英）",
+"name": "eBay",
+"url": "ebay.co.uk",
+"type": "C2C/拍卖",
+"scope": "国际",
+"note": "美国老牌在线拍卖与交易平台"
+},
+{
+"region": "欧洲-中东欧",
+"country": "白俄罗斯",
+"name": "Wildberries",
+"url": "wildberries.by",
+"type": "综合",
+"scope": "区域",
+"note": "白俄罗斯最大网购平台之一"
+},
+{
+"region": "欧洲-中东欧",
+"country": "白俄罗斯",
+"name": "Ozon",
+"url": "ozon.by",
+"type": "综合",
+"scope": "区域",
+"note": "俄罗斯头部电商，拓展至独联体"
+},
+{
+"region": "欧洲-中东欧",
+"country": "白俄罗斯",
+"name": "Kufar",
+"url": "kufar.by",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "最大分类信息平台"
+},
+{
+"region": "欧洲-中东欧",
+"country": "白俄罗斯",
+"name": "Onliner",
+"url": "catalog.onliner.by",
+"type": "比价",
+"scope": "本土",
+"note": "门户及比价目录"
+},
+{
+"region": "欧洲-中东欧",
+"country": "保加利亚",
+"name": "eMAG",
+"url": "emag.bg",
+"type": "综合",
+"scope": "区域",
+"note": "eMAG保加利亚站"
+},
+{
+"region": "欧洲-中东欧",
+"country": "保加利亚",
+"name": "OLX Bulgaria",
+"url": "olx.bg",
+"type": "分类/C2C",
+"scope": "国际",
+"note": "最大分类信息平台"
+},
+{
+"region": "欧洲-中东欧",
+"country": "保加利亚",
+"name": "Technopolis",
+"url": "technopolis.bg",
+"type": "垂直类(电子)",
+"scope": "本土",
+"note": "电子零售"
+},
+{
+"region": "欧洲-中东欧",
+"country": "保加利亚",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "欧洲-中东欧",
+"country": "波兰",
+"name": "Allegro",
+"url": "allegro.pl",
+"type": "综合",
+"scope": "本土",
+"note": "波兰最大电商，市场份额遥遥领先"
+},
+{
+"region": "欧洲-中东欧",
+"country": "波兰",
+"name": "Amazon",
+"url": "amazon.pl",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "2021年上线"
+},
+{
+"region": "欧洲-中东欧",
+"country": "波兰",
+"name": "OLX Polska",
+"url": "olx.pl",
+"type": "分类/C2C",
+"scope": "国际",
+"note": "最大分类信息平台"
+},
+{
+"region": "欧洲-中东欧",
+"country": "波兰",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "波兰是Temu欧洲重点市场"
+},
+{
+"region": "欧洲-中东欧",
+"country": "波兰",
+"name": "Media Expert",
+"url": "mediaexpert.pl",
+"type": "垂直类(电子)",
+"scope": "本土",
+"note": "最大电子零售商"
+},
+{
+"region": "欧洲-中东欧",
+"country": "波兰",
+"name": "Zalando",
+"url": "zalando.pl",
+"type": "垂直类(时尚)",
+"scope": "区域",
+"note": "欧洲最大时尚电商，总部柏林"
+},
+{
+"region": "欧洲-中东欧",
+"country": "俄罗斯",
+"name": "Wildberries",
+"url": "wildberries.ru",
+"type": "综合",
+"scope": "区域",
+"note": "俄罗斯第一大电商（与Russ合并为RWB）"
+},
+{
+"region": "欧洲-中东欧",
+"country": "俄罗斯",
+"name": "Ozon",
+"url": "ozon.ru",
+"type": "综合",
+"scope": "区域",
+"note": "俄罗斯第二大电商"
+},
+{
+"region": "欧洲-中东欧",
+"country": "俄罗斯",
+"name": "Yandex Market",
+"url": "market.yandex.ru",
+"type": "综合",
+"scope": "本土",
+"note": "Yandex旗下电商"
+},
+{
+"region": "欧洲-中东欧",
+"country": "俄罗斯",
+"name": "Avito",
+"url": "avito.ru",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "全球最大分类信息平台之一"
+},
+{
+"region": "欧洲-中东欧",
+"country": "俄罗斯",
+"name": "Megamarket",
+"url": "megamarket.ru",
+"type": "综合",
+"scope": "本土",
+"note": "俄储蓄银行(Sber)旗下"
+},
+{
+"region": "欧洲-中东欧",
+"country": "俄罗斯",
+"name": "AliExpress Russia",
+"url": "aliexpress.ru",
+"type": "跨境",
+"scope": "国际",
+"note": "速卖通俄罗斯合资公司"
+},
+{
+"region": "欧洲-中东欧",
+"country": "捷克",
+"name": "Alza",
+"url": "alza.cz",
+"type": "综合/电子",
+"scope": "本土",
+"note": "捷克最大电商"
+},
+{
+"region": "欧洲-中东欧",
+"country": "捷克",
+"name": "Allegro",
+"url": "allegro.cz",
+"type": "综合",
+"scope": "国际",
+"note": "波兰Allegro捷克站（整合原Mall.cz）"
+},
+{
+"region": "欧洲-中东欧",
+"country": "捷克",
+"name": "Heureka",
+"url": "heureka.cz",
+"type": "比价",
+"scope": "本土",
+"note": "中欧最大比价平台"
+},
+{
+"region": "欧洲-中东欧",
+"country": "捷克",
+"name": "Bazosš",
+"url": "bazos.cz",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "最大分类信息平台"
+},
+{
+"region": "欧洲-中东欧",
+"country": "捷克",
+"name": "Rohlik",
+"url": "rohlik.cz",
+"type": "生鲜",
+"scope": "本土",
+"note": "生鲜电商独角兽"
+},
+{
+"region": "欧洲-中东欧",
+"country": "捷克",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "欧洲-中东欧",
+"country": "罗马尼亚",
+"name": "eMAG",
+"url": "emag.ro",
+"type": "综合",
+"scope": "本土",
+"note": "罗马尼亚最大电商（Naspers/Prosus控股）"
+},
+{
+"region": "欧洲-中东欧",
+"country": "罗马尼亚",
+"name": "OLX Romania",
+"url": "olx.ro",
+"type": "分类/C2C",
+"scope": "国际",
+"note": "最大分类信息平台"
+},
+{
+"region": "欧洲-中东欧",
+"country": "罗马尼亚",
+"name": "Altex",
+"url": "altex.ro",
+"type": "垂直类(电子)",
+"scope": "本土",
+"note": "电子零售"
+},
+{
+"region": "欧洲-中东欧",
+"country": "罗马尼亚",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "欧洲-中东欧",
+"country": "罗马尼亚",
+"name": "Trendyol",
+"url": "trendyol.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "跨境覆盖罗马尼亚"
+},
+{
+"region": "欧洲-中东欧",
+"country": "罗马尼亚",
+"name": "摩尔多瓦",
+"url": "999.md",
+"type": "999.md",
+"scope": "分类/C2C",
+"note": "本土"
+},
+{
+"region": "欧洲-中东欧",
+"country": "罗马尼亚",
+"name": "Darwin",
+"url": "darwin.md",
+"type": "垂直类(电子)",
+"scope": "本土",
+"note": "待核实：电子产品零售商"
+},
+{
+"region": "欧洲-中东欧",
+"country": "罗马尼亚",
+"name": "Enter",
+"url": "enter.online",
+"type": "垂直类(电子)",
+"scope": "本土",
+"note": "待核实：电子产品零售商"
+},
+{
+"region": "欧洲-中东欧",
+"country": "罗马尼亚",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "欧洲-中东欧",
+"country": "罗马尼亚",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "待核实：PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "欧洲-中东欧",
+"country": "斯洛伐克",
+"name": "Alza",
+"url": "alza.sk",
+"type": "综合/电子",
+"scope": "区域",
+"note": "捷克Alza斯洛伐克站"
+},
+{
+"region": "欧洲-中东欧",
+"country": "斯洛伐克",
+"name": "Allegro",
+"url": "allegro.sk",
+"type": "综合",
+"scope": "国际",
+"note": "Allegro斯洛伐克站"
+},
+{
+"region": "欧洲-中东欧",
+"country": "斯洛伐克",
+"name": "Bazosš",
+"url": "bazos.sk",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "分类信息平台"
+},
+{
+"region": "欧洲-中东欧",
+"country": "斯洛伐克",
+"name": "Heureka",
+"url": "heureka.sk",
+"type": "比价",
+"scope": "区域",
+"note": "比价平台"
+},
+{
+"region": "欧洲-中东欧",
+"country": "斯洛伐克",
+"name": "Notino",
+"url": "notino.sk",
+"type": "垂直类(美妆)",
+"scope": "区域",
+"note": "中欧美妆电商"
+},
+{
+"region": "欧洲-中东欧",
+"country": "乌克兰",
+"name": "Rozetka",
+"url": "rozetka.com.ua",
+"type": "综合",
+"scope": "本土",
+"note": "乌克兰最大电商"
+},
+{
+"region": "欧洲-中东欧",
+"country": "乌克兰",
+"name": "OLX Ukraine",
+"url": "olx.ua",
+"type": "分类/C2C",
+"scope": "国际",
+"note": "最大分类信息平台"
+},
+{
+"region": "欧洲-中东欧",
+"country": "乌克兰",
+"name": "Epicentr",
+"url": "epicentrk.ua",
+"type": "综合/建材",
+"scope": "本土",
+"note": "大型零售集团线上渠道"
+},
+{
+"region": "欧洲-中东欧",
+"country": "乌克兰",
+"name": "Allo",
+"url": "allo.ua",
+"type": "垂直类(电子)",
+"scope": "本土",
+"note": "电子零售"
+},
+{
+"region": "欧洲-中东欧",
+"country": "匈牙利",
+"name": "eMAG",
+"url": "emag.hu",
+"type": "综合",
+"scope": "区域",
+"note": "罗马尼亚eMAG匈牙利站"
+},
+{
+"region": "欧洲-中东欧",
+"country": "匈牙利",
+"name": "Allegro",
+"url": "allegro.hu",
+"type": "综合",
+"scope": "国际",
+"note": "Allegro匈牙利站，增长迅速"
+},
+{
+"region": "欧洲-中东欧",
+"country": "匈牙利",
+"name": "Jófogás",
+"url": "jofogas.hu",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "最大分类信息平台"
+},
+{
+"region": "欧洲-中东欧",
+"country": "匈牙利",
+"name": "Árukereső",
+"url": "arukereso.hu",
+"type": "比价",
+"scope": "本土",
+"note": "主流比价平台"
+},
+{
+"region": "欧洲-中东欧",
+"country": "匈牙利",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "非洲-北非",
+"country": "阿尔及利亚",
+"name": "Ouedkniss",
+"url": "ouedkniss.com",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "阿尔及利亚最大交易平台"
+},
+{
+"region": "非洲-北非",
+"country": "阿尔及利亚",
+"name": "Yassir",
+"url": "yassir.com",
+"type": "即时零售/超级App",
+"scope": "本土",
+"note": "本土出行及配送超级App"
+},
+{
+"region": "非洲-北非",
+"country": "阿尔及利亚",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "社交电商普遍"
+},
+{
+"region": "非洲-北非",
+"country": "阿尔及利亚",
+"name": "Jumia Algeria",
+"url": "jumia.dz",
+"type": "综合",
+"scope": "区域",
+"note": "已于2026年2月停止运营（仅供参考）"
+},
+{
+"region": "非洲-北非",
+"country": "埃及",
+"name": "Amazon",
+"url": "amazon.eg",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "2021年由Souq升级"
+},
+{
+"region": "非洲-北非",
+"country": "埃及",
+"name": "noon",
+"url": "noon.com",
+"type": "综合",
+"scope": "区域",
+"note": "中东本土电商，Alabbar与沙特PIF共同创立"
+},
+{
+"region": "非洲-北非",
+"country": "埃及",
+"name": "Jumia",
+"url": "jumia.com.eg",
+"type": "综合",
+"scope": "区域",
+"note": "泛非电商平台，纽交所上市，现运营8国"
+},
+{
+"region": "非洲-北非",
+"country": "埃及",
+"name": "Dubizzle Egypt",
+"url": "dubizzle.com.eg",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "原OLX埃及"
+},
+{
+"region": "非洲-北非",
+"country": "埃及",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "待核实：PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "非洲-北非",
+"country": "利比亚",
+"name": "OpenSooq",
+"url": "ly.opensooq.com",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "中东北非分类信息平台，约旦创立"
+},
+{
+"region": "非洲-北非",
+"country": "利比亚",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "社交平台交易为主"
+},
+{
+"region": "非洲-北非",
+"country": "摩洛哥",
+"name": "Jumia",
+"url": "jumia.ma",
+"type": "综合",
+"scope": "区域",
+"note": "摩洛哥领先电商"
+},
+{
+"region": "非洲-北非",
+"country": "摩洛哥",
+"name": "Marjane Mall",
+"url": "marjanemall.ma",
+"type": "综合",
+"scope": "本土",
+"note": "Marjane超市集团线上市场"
+},
+{
+"region": "非洲-北非",
+"country": "摩洛哥",
+"name": "Electroplanet",
+"url": "electroplanet.ma",
+"type": "垂直类(电子)",
+"scope": "本土",
+"note": "电子零售"
+},
+{
+"region": "非洲-北非",
+"country": "摩洛哥",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "非洲-北非",
+"country": "摩洛哥",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "非洲-北非",
+"country": "苏丹",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "社交平台交易为主（受战乱影响）"
+},
+{
+"region": "非洲-北非",
+"country": "突尼斯",
+"name": "Tunisianet",
+"url": "tunisianet.com.tn",
+"type": "垂直类(电子)",
+"scope": "本土",
+"note": "最大电子产品电商"
+},
+{
+"region": "非洲-北非",
+"country": "突尼斯",
+"name": "Mytek",
+"url": "mytek.tn",
+"type": "垂直类(电子)",
+"scope": "本土",
+"note": "电子零售"
+},
+{
+"region": "非洲-北非",
+"country": "突尼斯",
+"name": "Tayara",
+"url": "tayara.tn",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "最大分类信息平台"
+},
+{
+"region": "非洲-北非",
+"country": "突尼斯",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Jumia已于2024年底退出突尼斯"
+},
+{
+"region": "非洲-北非",
+"country": "突尼斯",
+"name": "西撒哈拉",
+"url": "Avito.ma",
+"type": "avito.ma",
+"scope": "分类/C2C",
+"note": "国际"
+},
+{
+"region": "非洲-北非",
+"country": "突尼斯",
+"name": "Jumia",
+"url": "jumia.ma",
+"type": "综合",
+"scope": "区域",
+"note": "待核实：摩洛哥站对该地区配送"
+},
+{
+"region": "非洲-西非",
+"country": "贝宁",
+"name": "CoinAfrique",
+"url": "coinafrique.com",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "法语非洲分类信息平台"
+},
+{
+"region": "非洲-西非",
+"country": "贝宁",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-西非",
+"country": "贝宁",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "非洲-西非",
+"country": "布基纳法索",
+"name": "CoinAfrique",
+"url": "coinafrique.com",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "法语非洲分类信息平台"
+},
+{
+"region": "非洲-西非",
+"country": "布基纳法索",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-西非",
+"country": "多哥",
+"name": "CoinAfrique",
+"url": "coinafrique.com",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "法语非洲分类信息平台"
+},
+{
+"region": "非洲-西非",
+"country": "多哥",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-西非",
+"country": "多哥",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "非洲-西非",
+"country": "佛得角",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-西非",
+"country": "佛得角",
+"name": "Amazon",
+"url": "amazon.es",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "待核实：经葡/西转运"
+},
+{
+"region": "非洲-西非",
+"country": "冈比亚",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-西非",
+"country": "冈比亚",
+"name": "Instagram / WhatsApp",
+"url": "instagram.com",
+"type": "社交电商",
+"scope": "国际",
+"note": "大量中小商户通过社交媒体接单、货到付款"
+},
+{
+"region": "非洲-西非",
+"country": "几内亚",
+"name": "CoinAfrique",
+"url": "coinafrique.com",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "待核实：法语非洲分类信息平台"
+},
+{
+"region": "非洲-西非",
+"country": "几内亚",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-西非",
+"country": "几内亚比绍",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-西非",
+"country": "加纳",
+"name": "Jumia",
+"url": "jumia.com.gh",
+"type": "综合",
+"scope": "区域",
+"note": "泛非电商平台，纽交所上市，现运营8国"
+},
+{
+"region": "非洲-西非",
+"country": "加纳",
+"name": "Jiji",
+"url": "jiji.com.gh",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "已合并Tonaton"
+},
+{
+"region": "非洲-西非",
+"country": "加纳",
+"name": "Kikuu",
+"url": "kikuu.com",
+"type": "跨境",
+"scope": "区域",
+"note": "待核实：中国背景的非洲跨境电商"
+},
+{
+"region": "非洲-西非",
+"country": "加纳",
+"name": "Instagram / WhatsApp",
+"url": "instagram.com",
+"type": "社交电商",
+"scope": "国际",
+"note": "大量中小商户通过社交媒体接单、货到付款"
+},
+{
+"region": "非洲-西非",
+"country": "科特迪瓦",
+"name": "Jumia",
+"url": "jumia.ci",
+"type": "综合",
+"scope": "区域",
+"note": "法语西非最大电商之一"
+},
+{
+"region": "非洲-西非",
+"country": "科特迪瓦",
+"name": "CoinAfrique",
+"url": "coinafrique.com",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "法语非洲分类信息平台"
+},
+{
+"region": "非洲-西非",
+"country": "科特迪瓦",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "非洲-西非",
+"country": "科特迪瓦",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-西非",
+"country": "利比里亚",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-西非",
+"country": "利比里亚",
+"name": "Instagram / WhatsApp",
+"url": "instagram.com",
+"type": "社交电商",
+"scope": "国际",
+"note": "大量中小商户通过社交媒体接单、货到付款"
+},
+{
+"region": "非洲-西非",
+"country": "马里",
+"name": "CoinAfrique",
+"url": "coinafrique.com",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "法语非洲分类信息平台"
+},
+{
+"region": "非洲-西非",
+"country": "马里",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-西非",
+"country": "马里",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "非洲-西非",
+"country": "毛里塔尼亚",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-西非",
+"country": "毛里塔尼亚",
+"name": "OpenSooq",
+"url": "opensooq.com",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "待核实：中东北非分类信息平台，约旦创立"
+},
+{
+"region": "非洲-西非",
+"country": "尼日尔",
+"name": "CoinAfrique",
+"url": "coinafrique.com",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "待核实：法语非洲分类信息平台"
+},
+{
+"region": "非洲-西非",
+"country": "尼日尔",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-西非",
+"country": "尼日利亚",
+"name": "Jumia",
+"url": "jumia.com.ng",
+"type": "综合",
+"scope": "区域",
+"note": "尼日利亚最大电商"
+},
+{
+"region": "非洲-西非",
+"country": "尼日利亚",
+"name": "Konga",
+"url": "konga.com",
+"type": "综合",
+"scope": "本土",
+"note": "本土综合电商"
+},
+{
+"region": "非洲-西非",
+"country": "尼日利亚",
+"name": "Jiji",
+"url": "jiji.ng",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "尼日利亚最大分类平台"
+},
+{
+"region": "非洲-西非",
+"country": "尼日利亚",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "2024年进入尼日利亚"
+},
+{
+"region": "非洲-西非",
+"country": "尼日利亚",
+"name": "Slot",
+"url": "slot.ng",
+"type": "垂直类(电子)",
+"scope": "本土",
+"note": "手机电子零售"
+},
+{
+"region": "非洲-西非",
+"country": "尼日利亚",
+"name": "Instagram / WhatsApp",
+"url": "instagram.com",
+"type": "社交电商",
+"scope": "国际",
+"note": "大量中小商户通过社交媒体接单、货到付款"
+},
+{
+"region": "非洲-西非",
+"country": "塞拉利昂",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-西非",
+"country": "塞拉利昂",
+"name": "Instagram / WhatsApp",
+"url": "instagram.com",
+"type": "社交电商",
+"scope": "国际",
+"note": "大量中小商户通过社交媒体接单、货到付款"
+},
+{
+"region": "非洲-西非",
+"country": "塞内加尔",
+"name": "Jumia",
+"url": "jumia.sn",
+"type": "综合",
+"scope": "区域",
+"note": "泛非电商平台，纽交所上市，现运营8国"
+},
+{
+"region": "非洲-西非",
+"country": "塞内加尔",
+"name": "CoinAfrique",
+"url": "coinafrique.com",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "CoinAfrique发源地"
+},
+{
+"region": "非洲-西非",
+"country": "塞内加尔",
+"name": "Expat-Dakar",
+"url": "expat-dakar.com",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "达喀尔分类信息平台"
+},
+{
+"region": "非洲-西非",
+"country": "塞内加尔",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "非洲-西非",
+"country": "圣赫勒拿、阿森",
+"name": "Amazon",
+"url": "amazon.co.uk",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "待核实：配送极为有限"
+},
+{
+"region": "非洲-中非",
+"country": "安哥拉",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "社交电商为主"
+},
+{
+"region": "非洲-中非",
+"country": "安哥拉",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "非洲-中非",
+"country": "赤道几内亚",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-中非",
+"country": "刚果（布）",
+"name": "CoinAfrique",
+"url": "coinafrique.com",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "待核实：法语非洲分类信息平台"
+},
+{
+"region": "非洲-中非",
+"country": "刚果（布）",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-中非",
+"country": "刚果（金）",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "社交电商为主"
+},
+{
+"region": "非洲-中非",
+"country": "刚果（金）",
+"name": "CoinAfrique",
+"url": "coinafrique.com",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "待核实：法语非洲分类信息平台"
+},
+{
+"region": "非洲-中非",
+"country": "刚果（金）",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "非洲-中非",
+"country": "加蓬",
+"name": "CoinAfrique",
+"url": "coinafrique.com",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "待核实：法语非洲分类信息平台"
+},
+{
+"region": "非洲-中非",
+"country": "加蓬",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-中非",
+"country": "喀麦隆",
+"name": "CoinAfrique",
+"url": "coinafrique.com",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "法语非洲分类信息平台"
+},
+{
+"region": "非洲-中非",
+"country": "喀麦隆",
+"name": "Glotelho",
+"url": "glotelho.cm",
+"type": "综合",
+"scope": "本土",
+"note": "待核实：喀麦隆本土电商"
+},
+{
+"region": "非洲-中非",
+"country": "喀麦隆",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-中非",
+"country": "喀麦隆",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "非洲-中非",
+"country": "圣多美和普林西",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-中非",
+"country": "乍得",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-中非",
+"country": "中非共和国",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-东非",
+"country": "埃塞俄比亚",
+"name": "Jiji",
+"url": "jiji.com.et",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "非洲分类信息平台"
+},
+{
+"region": "非洲-东非",
+"country": "埃塞俄比亚",
+"name": "Telegram 频道卖家",
+"url": "telegram.org",
+"type": "社交电商",
+"scope": "国际",
+"note": "埃塞俄比亚网购大量通过Telegram频道进行"
+},
+{
+"region": "非洲-东非",
+"country": "布隆迪",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-东非",
+"country": "吉布提",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-东非",
+"country": "吉布提",
+"name": "津巴布韦",
+"url": "Classifieds.co.zw",
+"type": "classifieds.co.zw",
+"scope": "分类/C2C",
+"note": "本土"
+},
+{
+"region": "非洲-东非",
+"country": "吉布提",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-东非",
+"country": "吉布提",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "非洲-东非",
+"country": "科摩罗",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-东非",
+"country": "肯尼亚",
+"name": "Jumia",
+"url": "jumia.co.ke",
+"type": "综合",
+"scope": "区域",
+"note": "肯尼亚最大电商"
+},
+{
+"region": "非洲-东非",
+"country": "肯尼亚",
+"name": "Kilimall",
+"url": "kilimall.co.ke",
+"type": "综合",
+"scope": "区域",
+"note": "中国背景的东非电商平台"
+},
+{
+"region": "非洲-东非",
+"country": "肯尼亚",
+"name": "Jiji",
+"url": "jiji.co.ke",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "非洲分类信息平台"
+},
+{
+"region": "非洲-东非",
+"country": "肯尼亚",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "待核实：PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "非洲-东非",
+"country": "肯尼亚",
+"name": "Instagram / WhatsApp",
+"url": "instagram.com",
+"type": "社交电商",
+"scope": "国际",
+"note": "大量中小商户通过社交媒体接单、货到付款"
+},
+{
+"region": "非洲-东非",
+"country": "留尼汪（法）",
+"name": "Amazon",
+"url": "amazon.fr",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "法国站，部分商品可配送至海外省，运费及限制较多"
+},
+{
+"region": "非洲-东非",
+"country": "留尼汪（法）",
+"name": "Leboncoin",
+"url": "leboncoin.fr",
+"type": "分类/C2C",
+"scope": "国际",
+"note": "法国分类平台，覆盖法国海外省本地交易"
+},
+{
+"region": "非洲-东非",
+"country": "留尼汪（法）",
+"name": "Cdiscount",
+"url": "cdiscount.com",
+"type": "综合",
+"scope": "国际",
+"note": "待核实：法国综合电商，对海外省配送范围有限"
+},
+{
+"region": "非洲-东非",
+"country": "留尼汪（法）",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-东非",
+"country": "卢旺达",
+"name": "Kasha",
+"url": "kasha.co",
+"type": "垂直类(健康/个护)",
+"scope": "本土",
+"note": "待核实：面向女性的健康个护电商"
+},
+{
+"region": "非洲-东非",
+"country": "卢旺达",
+"name": "Instagram / WhatsApp",
+"url": "instagram.com",
+"type": "社交电商",
+"scope": "国际",
+"note": "大量中小商户通过社交媒体接单、货到付款"
+},
+{
+"region": "非洲-东非",
+"country": "卢旺达",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "非洲-东非",
+"country": "马达加斯加",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "社交电商为主"
+},
+{
+"region": "非洲-东非",
+"country": "马达加斯加",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "非洲-东非",
+"country": "马拉维",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-东非",
+"country": "马约特（法）",
+"name": "Amazon",
+"url": "amazon.fr",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "法国站，部分商品可配送至海外省，运费及限制较多"
+},
+{
+"region": "非洲-东非",
+"country": "马约特（法）",
+"name": "Leboncoin",
+"url": "leboncoin.fr",
+"type": "分类/C2C",
+"scope": "国际",
+"note": "法国分类平台，覆盖法国海外省本地交易"
+},
+{
+"region": "非洲-东非",
+"country": "马约特（法）",
+"name": "Cdiscount",
+"url": "cdiscount.com",
+"type": "综合",
+"scope": "国际",
+"note": "待核实：法国综合电商，对海外省配送范围有限"
+},
+{
+"region": "非洲-东非",
+"country": "马约特（法）",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-东非",
+"country": "毛里求斯",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-东非",
+"country": "毛里求斯",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经转运使用"
+},
+{
+"region": "非洲-东非",
+"country": "毛里求斯",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "非洲-东非",
+"country": "莫桑比克",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-东非",
+"country": "莫桑比克",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "非洲-东非",
+"country": "南苏丹",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-东非",
+"country": "塞舌尔",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-东非",
+"country": "塞舌尔",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经转运使用"
+},
+{
+"region": "非洲-东非",
+"country": "索马里",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-东非",
+"country": "坦桑尼亚",
+"name": "Jiji",
+"url": "jiji.co.tz",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "非洲分类信息平台"
+},
+{
+"region": "非洲-东非",
+"country": "坦桑尼亚",
+"name": "Kikuu",
+"url": "kikuu.com",
+"type": "跨境",
+"scope": "区域",
+"note": "待核实：中国背景的非洲跨境电商"
+},
+{
+"region": "非洲-东非",
+"country": "坦桑尼亚",
+"name": "Instagram / WhatsApp",
+"url": "instagram.com",
+"type": "社交电商",
+"scope": "国际",
+"note": "Jumia已于2019年退出"
+},
+{
+"region": "非洲-东非",
+"country": "乌干达",
+"name": "Jumia",
+"url": "jumia.ug",
+"type": "综合",
+"scope": "区域",
+"note": "泛非电商平台，纽交所上市，现运营8国"
+},
+{
+"region": "非洲-东非",
+"country": "乌干达",
+"name": "Jiji",
+"url": "jiji.ug",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "非洲分类信息平台"
+},
+{
+"region": "非洲-东非",
+"country": "乌干达",
+"name": "Kilimall",
+"url": "kilimall.com",
+"type": "综合",
+"scope": "区域",
+"note": "待核实：中国背景的东非电商平台"
+},
+{
+"region": "非洲-东非",
+"country": "乌干达",
+"name": "Instagram / WhatsApp",
+"url": "instagram.com",
+"type": "社交电商",
+"scope": "国际",
+"note": "大量中小商户通过社交媒体接单、货到付款"
+},
+{
+"region": "非洲-东非",
+"country": "英属印度洋领地",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "待核实：迪戈加西亚为美军基地，经美军邮政(FPO)收货"
+},
+{
+"region": "非洲-东非",
+"country": "赞比亚",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-东非",
+"country": "赞比亚",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "非洲-南部非洲",
+"country": "博茨瓦纳",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-南部非洲",
+"country": "博茨瓦纳",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "非洲-南部非洲",
+"country": "莱索托",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-南部非洲",
+"country": "纳米比亚",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "非洲-南部非洲",
+"country": "纳米比亚",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "非洲-南部非洲",
+"country": "南非",
+"name": "Takealot",
+"url": "takealot.com",
+"type": "综合",
+"scope": "本土",
+"note": "南非最大电商，Naspers旗下"
+},
+{
+"region": "非洲-南部非洲",
+"country": "南非",
+"name": "Amazon",
+"url": "amazon.co.za",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "2024年5月上线"
+},
+{
+"region": "非洲-南部非洲",
+"country": "南非",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "南非增长最快的平台之一"
+},
+{
+"region": "非洲-南部非洲",
+"country": "南非",
+"name": "Shein",
+"url": "shein.com",
+"type": "垂直类(时尚)/跨境",
+"scope": "国际",
+"note": "快时尚跨境平台，总部新加坡"
+},
+{
+"region": "非洲-南部非洲",
+"country": "南非",
+"name": "Makro",
+"url": "makro.co.za",
+"type": "综合/批发",
+"scope": "本土",
+"note": "沃尔玛旗下Massmart运营"
+},
+{
+"region": "非洲-南部非洲",
+"country": "南非",
+"name": "Gumtree",
+"url": "gumtree.co.za",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "分类信息平台"
+},
+{
+"region": "非洲-南部非洲",
+"country": "斯威士兰",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "美洲-北美洲",
+"country": "百慕大（英）",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经美国转运公司使用，为主要网购渠道"
+},
+{
+"region": "美洲-北美洲",
+"country": "百慕大（英）",
+"name": "eBay",
+"url": "ebay.com",
+"type": "C2C/拍卖",
+"scope": "国际",
+"note": "美国老牌在线拍卖与交易平台"
+},
+{
+"region": "美洲-北美洲",
+"country": "波多黎各（美",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "适用美国国内配送"
+},
+{
+"region": "美洲-北美洲",
+"country": "波多黎各（美",
+"name": "Walmart",
+"url": "walmart.com",
+"type": "综合",
+"scope": "国际",
+"note": ""
+},
+{
+"region": "美洲-北美洲",
+"country": "波多黎各（美",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "美洲-北美洲",
+"country": "波多黎各（美",
+"name": "Shein",
+"url": "shein.com",
+"type": "垂直类(时尚)/跨境",
+"scope": "国际",
+"note": "快时尚跨境平台，总部新加坡"
+},
+{
+"region": "美洲-北美洲",
+"country": "格陵兰（丹麦）",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "阿里巴巴旗下跨境零售平台，覆盖200+国家和地区"
+},
+{
+"region": "美洲-北美洲",
+"country": "加拿大",
+"name": "Amazon",
+"url": "amazon.ca",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "加拿大最大电商"
+},
+{
+"region": "美洲-北美洲",
+"country": "加拿大",
+"name": "Walmart Canada",
+"url": "walmart.ca",
+"type": "综合",
+"scope": "国际",
+"note": ""
+},
+{
+"region": "美洲-北美洲",
+"country": "加拿大",
+"name": "Canadian Tire",
+"url": "canadiantire.ca",
+"type": "综合",
+"scope": "本土",
+"note": "本土大型零售"
+},
+{
+"region": "美洲-北美洲",
+"country": "加拿大",
+"name": "Best Buy Canada",
+"url": "bestbuy.ca",
+"type": "垂直类(电子)",
+"scope": "国际",
+"note": ""
+},
+{
+"region": "美洲-北美洲",
+"country": "加拿大",
+"name": "Kijiji",
+"url": "kijiji.ca",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "最大分类信息平台"
+},
+{
+"region": "美洲-北美洲",
+"country": "加拿大",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "美洲-北美洲",
+"country": "美国",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "美国最大电商，份额约四成"
+},
+{
+"region": "美洲-北美洲",
+"country": "美国",
+"name": "Walmart",
+"url": "walmart.com",
+"type": "综合",
+"scope": "本土",
+"note": "美国第二大电商"
+},
+{
+"region": "美洲-北美洲",
+"country": "美国",
+"name": "eBay",
+"url": "ebay.com",
+"type": "C2C/拍卖",
+"scope": "国际",
+"note": "美国老牌在线拍卖与交易平台"
+},
+{
+"region": "美洲-北美洲",
+"country": "美国",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "美洲-北美洲",
+"country": "美国",
+"name": "Etsy",
+"url": "etsy.com",
+"type": "垂直类(手工/创意)",
+"scope": "本土",
+"note": "手工及创意商品市场"
+},
+{
+"region": "美洲-北美洲",
+"country": "美国",
+"name": "Target",
+"url": "target.com",
+"type": "综合",
+"scope": "本土",
+"note": "大型零售商线上渠道"
+},
+{
+"region": "美洲-北美洲",
+"country": "墨西哥",
+"name": "Mercado Libre",
+"url": "mercadolibre.com.mx",
+"type": "综合",
+"scope": "区域",
+"note": "墨西哥最大电商"
+},
+{
+"region": "美洲-北美洲",
+"country": "墨西哥",
+"name": "Amazon",
+"url": "amazon.com.mx",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "美国亚马逊，可跨境直邮或经转运使用"
+},
+{
+"region": "美洲-北美洲",
+"country": "墨西哥",
+"name": "Walmart México",
+"url": "walmart.com.mx",
+"type": "综合",
+"scope": "国际",
+"note": "Walmex"
+},
+{
+"region": "美洲-北美洲",
+"country": "墨西哥",
+"name": "Liverpool",
+"url": "liverpool.com.mx",
+"type": "综合/百货",
+"scope": "本土",
+"note": "百货集团"
+},
+{
+"region": "美洲-北美洲",
+"country": "墨西哥",
+"name": "Coppel",
+"url": "coppel.com",
+"type": "综合",
+"scope": "本土",
+"note": "面向大众的零售与信贷"
+},
+{
+"region": "美洲-北美洲",
+"country": "墨西哥",
+"name": "Shein",
+"url": "shein.com",
+"type": "垂直类(时尚)/跨境",
+"scope": "国际",
+"note": "快时尚跨境平台，总部新加坡"
+},
+{
+"region": "美洲-北美洲",
+"country": "圣皮埃尔和密克",
+"name": "Amazon",
+"url": "amazon.fr",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "待核实：法国/加拿大站配送受限"
+},
+{
+"region": "美洲-中美洲",
+"country": "巴拿马",
+"name": "Encuentra24",
+"url": "encuentra24.com",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "巴拿马最大分类平台"
+},
+{
+"region": "美洲-中美洲",
+"country": "巴拿马",
+"name": "Mercado Libre",
+"url": "mercadolibre.com.pa",
+"type": "综合",
+"scope": "区域",
+"note": "拉美最大电商，阿根廷创立，纳斯达克上市"
+},
+{
+"region": "美洲-中美洲",
+"country": "巴拿马",
+"name": "Aeropost",
+"url": "aeropost.com",
+"type": "跨境代购/转运",
+"scope": "区域",
+"note": "中美洲及加勒比跨境购物与转运服务，PriceSmart旗下"
+},
+{
+"region": "美洲-中美洲",
+"country": "巴拿马",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经转运使用"
+},
+{
+"region": "美洲-中美洲",
+"country": "伯利兹",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经美国转运使用"
+},
+{
+"region": "美洲-中美洲",
+"country": "伯利兹",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "美洲-中美洲",
+"country": "哥斯达黎加",
+"name": "Aeropost",
+"url": "aeropost.com",
+"type": "跨境代购/转运",
+"scope": "区域",
+"note": "哥斯达黎加最常用跨境购物方式之一"
+},
+{
+"region": "美洲-中美洲",
+"country": "哥斯达黎加",
+"name": "Walmart Costa Rica",
+"url": "walmart.co.cr",
+"type": "综合",
+"scope": "国际",
+"note": ""
+},
+{
+"region": "美洲-中美洲",
+"country": "哥斯达黎加",
+"name": "Mercado Libre",
+"url": "mercadolibre.co.cr",
+"type": "综合",
+"scope": "区域",
+"note": "拉美最大电商，阿根廷创立，纳斯达克上市"
+},
+{
+"region": "美洲-中美洲",
+"country": "哥斯达黎加",
+"name": "Encuentra24",
+"url": "encuentra24.com",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "中美洲分类信息平台"
+},
+{
+"region": "美洲-中美洲",
+"country": "哥斯达黎加",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "美洲-中美洲",
+"country": "洪都拉斯",
+"name": "Mercado Libre",
+"url": "mercadolibre.com.hn",
+"type": "综合",
+"scope": "区域",
+"note": "拉美最大电商，阿根廷创立，纳斯达克上市"
+},
+{
+"region": "美洲-中美洲",
+"country": "洪都拉斯",
+"name": "Encuentra24",
+"url": "encuentra24.com",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "中美洲分类信息平台"
+},
+{
+"region": "美洲-中美洲",
+"country": "洪都拉斯",
+"name": "Aeropost",
+"url": "aeropost.com",
+"type": "跨境代购/转运",
+"scope": "区域",
+"note": "中美洲及加勒比跨境购物与转运服务，PriceSmart旗下"
+},
+{
+"region": "美洲-中美洲",
+"country": "洪都拉斯",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "美洲-中美洲",
+"country": "尼加拉瓜",
+"name": "Mercado Libre",
+"url": "mercadolibre.com.ni",
+"type": "综合",
+"scope": "区域",
+"note": "拉美最大电商，阿根廷创立，纳斯达克上市"
+},
+{
+"region": "美洲-中美洲",
+"country": "尼加拉瓜",
+"name": "Encuentra24",
+"url": "encuentra24.com",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "中美洲分类信息平台"
+},
+{
+"region": "美洲-中美洲",
+"country": "尼加拉瓜",
+"name": "Aeropost",
+"url": "aeropost.com",
+"type": "跨境代购/转运",
+"scope": "区域",
+"note": "中美洲及加勒比跨境购物与转运服务，PriceSmart旗下"
+},
+{
+"region": "美洲-中美洲",
+"country": "尼加拉瓜",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "美洲-中美洲",
+"country": "萨尔瓦多",
+"name": "Mercado Libre",
+"url": "mercadolibre.com.sv",
+"type": "综合",
+"scope": "区域",
+"note": "拉美最大电商，阿根廷创立，纳斯达克上市"
+},
+{
+"region": "美洲-中美洲",
+"country": "萨尔瓦多",
+"name": "Encuentra24",
+"url": "encuentra24.com",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "中美洲分类信息平台"
+},
+{
+"region": "美洲-中美洲",
+"country": "萨尔瓦多",
+"name": "Aeropost",
+"url": "aeropost.com",
+"type": "跨境代购/转运",
+"scope": "区域",
+"note": "中美洲及加勒比跨境购物与转运服务，PriceSmart旗下"
+},
+{
+"region": "美洲-中美洲",
+"country": "萨尔瓦多",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "待核实：PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "美洲-中美洲",
+"country": "危地马拉",
+"name": "Mercado Libre",
+"url": "mercadolibre.com.gt",
+"type": "综合",
+"scope": "区域",
+"note": "拉美最大电商，阿根廷创立，纳斯达克上市"
+},
+{
+"region": "美洲-中美洲",
+"country": "危地马拉",
+"name": "Pacifiko",
+"url": "pacifiko.com",
+"type": "综合",
+"scope": "本土",
+"note": "危地马拉本土电商"
+},
+{
+"region": "美洲-中美洲",
+"country": "危地马拉",
+"name": "Cemaco",
+"url": "cemaco.com",
+"type": "综合/家居",
+"scope": "本土",
+"note": ""
+},
+{
+"region": "美洲-中美洲",
+"country": "危地马拉",
+"name": "Aeropost",
+"url": "aeropost.com",
+"type": "跨境代购/转运",
+"scope": "区域",
+"note": "中美洲及加勒比跨境购物与转运服务，PriceSmart旗下"
+},
+{
+"region": "美洲-中美洲",
+"country": "危地马拉",
+"name": "Encuentra24",
+"url": "encuentra24.com",
+"type": "分类/C2C",
+"scope": "区域",
+"note": "中美洲分类信息平台"
+},
+{
+"region": "美洲-加勒比",
+"country": "阿鲁巴（荷）",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经美国转运公司使用"
+},
+{
+"region": "美洲-加勒比",
+"country": "阿鲁巴（荷）",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "本地社交平台交易常见"
+},
+{
+"region": "美洲-加勒比",
+"country": "安圭拉（英）",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经美国转运公司使用"
+},
+{
+"region": "美洲-加勒比",
+"country": "安圭拉（英）",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "本地社交平台交易常见"
+},
+{
+"region": "美洲-加勒比",
+"country": "安提瓜和巴布达",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经转运使用"
+},
+{
+"region": "美洲-加勒比",
+"country": "安提瓜和巴布达",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "美洲-加勒比",
+"country": "巴巴多斯",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经转运使用"
+},
+{
+"region": "美洲-加勒比",
+"country": "巴巴多斯",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "美洲-加勒比",
+"country": "巴哈马",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经美国转运使用"
+},
+{
+"region": "美洲-加勒比",
+"country": "巴哈马",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "美洲-加勒比",
+"country": "多米尼加",
+"name": "Mercado Libre",
+"url": "mercadolibre.com.do",
+"type": "综合",
+"scope": "区域",
+"note": "拉美最大电商，阿根廷创立，纳斯达克上市"
+},
+{
+"region": "美洲-加勒比",
+"country": "多米尼加",
+"name": "Corotos",
+"url": "corotos.com.do",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "最大分类信息平台"
+},
+{
+"region": "美洲-加勒比",
+"country": "多米尼加",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经转运使用"
+},
+{
+"region": "美洲-加勒比",
+"country": "多米尼加",
+"name": "Shein",
+"url": "shein.com",
+"type": "垂直类(时尚)/跨境",
+"scope": "国际",
+"note": "快时尚跨境平台，总部新加坡"
+},
+{
+"region": "美洲-加勒比",
+"country": "多米尼克",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经转运使用"
+},
+{
+"region": "美洲-加勒比",
+"country": "多米尼克",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "美洲-加勒比",
+"country": "法属圣马丁",
+"name": "Amazon",
+"url": "amazon.fr",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "待核实：法国站对该海外集体配送受限"
+},
+{
+"region": "美洲-加勒比",
+"country": "法属圣马丁",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "本地社交平台交易常见"
+},
+{
+"region": "美洲-加勒比",
+"country": "格林纳达",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经转运使用"
+},
+{
+"region": "美洲-加勒比",
+"country": "格林纳达",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "美洲-加勒比",
+"country": "古巴",
+"name": "Revolico",
+"url": "revolico.com",
+"type": "分类/C2C",
+"scope": "本土",
+"note": "古巴最大分类信息网站"
+},
+{
+"region": "美洲-加勒比",
+"country": "古巴",
+"name": "Supermarket23",
+"url": "supermarket23.com",
+"type": "跨境代购",
+"scope": "国际",
+"note": "待核实：海外侨民为古巴家人下单的平台"
+},
+{
+"region": "美洲-加勒比",
+"country": "古巴",
+"name": "TuEnvío",
+"url": "tuenvio.cu",
+"type": "B2C",
+"scope": "本土",
+"note": "待核实：国营零售CIMEX线上商店"
+},
+{
+"region": "美洲-加勒比",
+"country": "瓜德罗普（法）",
+"name": "Amazon",
+"url": "amazon.fr",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "法国站，部分商品可配送至海外省，运费及限制较多"
+},
+{
+"region": "美洲-加勒比",
+"country": "瓜德罗普（法）",
+"name": "Leboncoin",
+"url": "leboncoin.fr",
+"type": "分类/C2C",
+"scope": "国际",
+"note": "法国分类平台，覆盖法国海外省本地交易"
+},
+{
+"region": "美洲-加勒比",
+"country": "瓜德罗普（法）",
+"name": "Cdiscount",
+"url": "cdiscount.com",
+"type": "综合",
+"scope": "国际",
+"note": "待核实：法国综合电商，对海外省配送范围有限"
+},
+{
+"region": "美洲-加勒比",
+"country": "瓜德罗普（法）",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "美洲-加勒比",
+"country": "海地",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "美洲-加勒比",
+"country": "荷兰加勒比区",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经美国转运公司使用"
+},
+{
+"region": "美洲-加勒比",
+"country": "荷兰加勒比区",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "本地社交平台交易常见"
+},
+{
+"region": "美洲-加勒比",
+"country": "荷属圣马丁",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经美国转运公司使用"
+},
+{
+"region": "美洲-加勒比",
+"country": "荷属圣马丁",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "本地社交平台交易常见"
+},
+{
+"region": "美洲-加勒比",
+"country": "开曼群岛（英）",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经美国转运公司使用"
+},
+{
+"region": "美洲-加勒比",
+"country": "开曼群岛（英）",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "本地社交平台交易常见"
+},
+{
+"region": "美洲-加勒比",
+"country": "库拉索（荷）",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经美国转运公司使用"
+},
+{
+"region": "美洲-加勒比",
+"country": "库拉索（荷）",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "本地社交平台交易常见"
+},
+{
+"region": "美洲-加勒比",
+"country": "马提尼克（法）",
+"name": "Amazon",
+"url": "amazon.fr",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "法国站，部分商品可配送至海外省，运费及限制较多"
+},
+{
+"region": "美洲-加勒比",
+"country": "马提尼克（法）",
+"name": "Leboncoin",
+"url": "leboncoin.fr",
+"type": "分类/C2C",
+"scope": "国际",
+"note": "法国分类平台，覆盖法国海外省本地交易"
+},
+{
+"region": "美洲-加勒比",
+"country": "马提尼克（法）",
+"name": "Cdiscount",
+"url": "cdiscount.com",
+"type": "综合",
+"scope": "国际",
+"note": "待核实：法国综合电商，对海外省配送范围有限"
+},
+{
+"region": "美洲-加勒比",
+"country": "马提尼克（法）",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "美洲-加勒比",
+"country": "美属维尔京群岛",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "美国站，经美国邮政(USPS)按国内方式配送"
+},
+{
+"region": "美洲-加勒比",
+"country": "美属维尔京群岛",
+"name": "eBay",
+"url": "ebay.com",
+"type": "C2C/拍卖",
+"scope": "国际",
+"note": "美国老牌在线拍卖与交易平台"
+},
+{
+"region": "美洲-加勒比",
+"country": "美属维尔京群岛",
+"name": "Walmart",
+"url": "walmart.com",
+"type": "综合",
+"scope": "国际",
+"note": "待核实：部分商品可配送"
+},
+{
+"region": "美洲-加勒比",
+"country": "美属维尔京群岛",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "待核实：PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "美洲-加勒比",
+"country": "蒙特塞拉特",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经美国转运公司使用"
+},
+{
+"region": "美洲-加勒比",
+"country": "蒙特塞拉特",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "本地社交平台交易常见"
+},
+{
+"region": "美洲-加勒比",
+"country": "圣巴泰勒米",
+"name": "Amazon",
+"url": "amazon.fr",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "待核实：法国站对该海外集体配送受限"
+},
+{
+"region": "美洲-加勒比",
+"country": "圣巴泰勒米",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "本地社交平台交易常见"
+},
+{
+"region": "美洲-加勒比",
+"country": "圣基茨和尼维斯",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经转运使用"
+},
+{
+"region": "美洲-加勒比",
+"country": "圣基茨和尼维斯",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "美洲-加勒比",
+"country": "圣卢西亚",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经转运使用"
+},
+{
+"region": "美洲-加勒比",
+"country": "圣卢西亚",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "美洲-加勒比",
+"country": "圣文森特和格林",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经转运使用"
+},
+{
+"region": "美洲-加勒比",
+"country": "圣文森特和格林",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "美洲-加勒比",
+"country": "特克斯和凯科斯",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经美国转运公司使用"
+},
+{
+"region": "美洲-加勒比",
+"country": "特克斯和凯科斯",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "本地社交平台交易常见"
+},
+{
+"region": "美洲-加勒比",
+"country": "特立尼达和多巴",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经转运使用"
+},
+{
+"region": "美洲-加勒比",
+"country": "特立尼达和多巴",
+"name": "Shein",
+"url": "shein.com",
+"type": "垂直类(时尚)/跨境",
+"scope": "国际",
+"note": "快时尚跨境平台，总部新加坡"
+},
+{
+"region": "美洲-加勒比",
+"country": "特立尼达和多巴",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "美洲-加勒比",
+"country": "牙买加",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经转运（如Mailpac）使用"
+},
+{
+"region": "美洲-加勒比",
+"country": "牙买加",
+"name": "Shein",
+"url": "shein.com",
+"type": "垂直类(时尚)/跨境",
+"scope": "国际",
+"note": "快时尚跨境平台，总部新加坡"
+},
+{
+"region": "美洲-加勒比",
+"country": "牙买加",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "美洲-加勒比",
+"country": "英属维尔京群岛",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经美国转运公司使用"
+},
+{
+"region": "美洲-加勒比",
+"country": "英属维尔京群岛",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "本地社交平台交易常见"
+},
+{
+"region": "美洲-南美洲",
+"country": "阿根廷",
+"name": "Mercado Libre",
+"url": "mercadolibre.com.ar",
+"type": "综合",
+"scope": "区域",
+"note": "阿根廷第一，Mercado Libre发源地"
+},
+{
+"region": "美洲-南美洲",
+"country": "阿根廷",
+"name": "Frávega",
+"url": "fravega.com",
+"type": "垂直类(电子)",
+"scope": "本土",
+"note": "电子家电零售"
+},
+{
+"region": "美洲-南美洲",
+"country": "阿根廷",
+"name": "Carrefour Argentina",
+"url": "carrefour.com.ar",
+"type": "生鲜/超市",
+"scope": "国际",
+"note": ""
+},
+{
+"region": "美洲-南美洲",
+"country": "阿根廷",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "进口放宽后快速增长"
+},
+{
+"region": "美洲-南美洲",
+"country": "阿根廷",
+"name": "Shein",
+"url": "shein.com",
+"type": "垂直类(时尚)/跨境",
+"scope": "国际",
+"note": "快时尚跨境平台，总部新加坡"
+},
+{
+"region": "美洲-南美洲",
+"country": "巴拉圭",
+"name": "Mercado Libre",
+"url": "mercadolibre.com.py",
+"type": "综合",
+"scope": "区域",
+"note": "拉美最大电商，阿根廷创立，纳斯达克上市"
+},
+{
+"region": "美洲-南美洲",
+"country": "巴拉圭",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "美洲-南美洲",
+"country": "巴拉圭",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经转运（Courier）使用"
+},
+{
+"region": "美洲-南美洲",
+"country": "巴西",
+"name": "Mercado Livre",
+"url": "mercadolivre.com.br",
+"type": "综合",
+"scope": "区域",
+"note": "巴西最大电商"
+},
+{
+"region": "美洲-南美洲",
+"country": "巴西",
+"name": "Shopee",
+"url": "shopee.com.br",
+"type": "综合/C2C",
+"scope": "区域",
+"note": "巴西订单量最大平台之一"
+},
+{
+"region": "美洲-南美洲",
+"country": "巴西",
+"name": "Amazon",
+"url": "amazon.com.br",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "美国亚马逊，可跨境直邮或经转运使用"
+},
+{
+"region": "美洲-南美洲",
+"country": "巴西",
+"name": "Magazine Luiza",
+"url": "magazineluiza.com.br",
+"type": "综合",
+"scope": "本土",
+"note": "本土零售电商巨头"
+},
+{
+"region": "美洲-南美洲",
+"country": "巴西",
+"name": "Casas Bahia",
+"url": "casasbahia.com.br",
+"type": "综合/电子",
+"scope": "本土",
+"note": ""
+},
+{
+"region": "美洲-南美洲",
+"country": "巴西",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "美洲-南美洲",
+"country": "秘鲁",
+"name": "Mercado Libre",
+"url": "mercadolibre.com.pe",
+"type": "综合",
+"scope": "区域",
+"note": "拉美最大电商，阿根廷创立，纳斯达克上市"
+},
+{
+"region": "美洲-南美洲",
+"country": "秘鲁",
+"name": "Falabella",
+"url": "falabella.com.pe",
+"type": "综合",
+"scope": "区域",
+"note": ""
+},
+{
+"region": "美洲-南美洲",
+"country": "秘鲁",
+"name": "Ripley",
+"url": "simple.ripley.com.pe",
+"type": "综合/百货",
+"scope": "区域",
+"note": ""
+},
+{
+"region": "美洲-南美洲",
+"country": "秘鲁",
+"name": "Plaza Vea",
+"url": "plazavea.com.pe",
+"type": "生鲜/超市",
+"scope": "本土",
+"note": ""
+},
+{
+"region": "美洲-南美洲",
+"country": "秘鲁",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "美洲-南美洲",
+"country": "玻利维亚",
+"name": "Mercado Libre",
+"url": "mercadolibre.com.bo",
+"type": "综合",
+"scope": "区域",
+"note": "拉美最大电商，阿根廷创立，纳斯达克上市"
+},
+{
+"region": "美洲-南美洲",
+"country": "玻利维亚",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "美洲-南美洲",
+"country": "厄瓜多尔",
+"name": "Mercado Libre",
+"url": "mercadolibre.com.ec",
+"type": "综合",
+"scope": "区域",
+"note": "拉美最大电商，阿根廷创立，纳斯达克上市"
+},
+{
+"region": "美洲-南美洲",
+"country": "厄瓜多尔",
+"name": "De Prati",
+"url": "deprati.com.ec",
+"type": "综合/百货",
+"scope": "本土",
+"note": ""
+},
+{
+"region": "美洲-南美洲",
+"country": "厄瓜多尔",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "美洲-南美洲",
+"country": "厄瓜多尔",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经转运使用"
+},
+{
+"region": "美洲-南美洲",
+"country": "法属圭亚那",
+"name": "Amazon",
+"url": "amazon.fr",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "法国站，部分商品可配送至海外省，运费及限制较多"
+},
+{
+"region": "美洲-南美洲",
+"country": "法属圭亚那",
+"name": "Leboncoin",
+"url": "leboncoin.fr",
+"type": "分类/C2C",
+"scope": "国际",
+"note": "法国分类平台，覆盖法国海外省本地交易"
+},
+{
+"region": "美洲-南美洲",
+"country": "法属圭亚那",
+"name": "Cdiscount",
+"url": "cdiscount.com",
+"type": "综合",
+"scope": "国际",
+"note": "待核实：法国综合电商，对海外省配送范围有限"
+},
+{
+"region": "美洲-南美洲",
+"country": "法属圭亚那",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "美洲-南美洲",
+"country": "福克兰群岛（马",
+"name": "Amazon",
+"url": "amazon.co.uk",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "待核实：配送有限"
+},
+{
+"region": "美洲-南美洲",
+"country": "哥伦比亚",
+"name": "Mercado Libre",
+"url": "mercadolibre.com.co",
+"type": "综合",
+"scope": "区域",
+"note": "拉美最大电商，阿根廷创立，纳斯达克上市"
+},
+{
+"region": "美洲-南美洲",
+"country": "哥伦比亚",
+"name": "Falabella",
+"url": "falabella.com.co",
+"type": "综合",
+"scope": "区域",
+"note": ""
+},
+{
+"region": "美洲-南美洲",
+"country": "哥伦比亚",
+"name": "Éxito",
+"url": "exito.com",
+"type": "综合/超市",
+"scope": "本土",
+"note": "最大零售集团"
+},
+{
+"region": "美洲-南美洲",
+"country": "哥伦比亚",
+"name": "Alkosto",
+"url": "alkosto.com",
+"type": "综合/电子",
+"scope": "本土",
+"note": ""
+},
+{
+"region": "美洲-南美洲",
+"country": "哥伦比亚",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "美洲-南美洲",
+"country": "圭亚那",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经转运使用"
+},
+{
+"region": "美洲-南美洲",
+"country": "圭亚那",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "美洲-南美洲",
+"country": "苏里南",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "美洲-南美洲",
+"country": "苏里南",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经转运使用"
+},
+{
+"region": "美洲-南美洲",
+"country": "委内瑞拉",
+"name": "Mercado Libre",
+"url": "mercadolibre.com.ve",
+"type": "综合",
+"scope": "区域",
+"note": "拉美最大电商，阿根廷创立，纳斯达克上市"
+},
+{
+"region": "美洲-南美洲",
+"country": "委内瑞拉",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "社交电商普遍"
+},
+{
+"region": "美洲-南美洲",
+"country": "委内瑞拉",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经转运使用"
+},
+{
+"region": "美洲-南美洲",
+"country": "乌拉圭",
+"name": "Mercado Libre",
+"url": "mercadolibre.com.uy",
+"type": "综合",
+"scope": "区域",
+"note": "拉美最大电商，阿根廷创立，纳斯达克上市"
+},
+{
+"region": "美洲-南美洲",
+"country": "乌拉圭",
+"name": "Tienda Inglesa",
+"url": "tiendainglesa.com.uy",
+"type": "综合/超市",
+"scope": "本土",
+"note": ""
+},
+{
+"region": "美洲-南美洲",
+"country": "乌拉圭",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "美洲-南美洲",
+"country": "乌拉圭",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经转运使用"
+},
+{
+"region": "美洲-南美洲",
+"country": "智利",
+"name": "Mercado Libre",
+"url": "mercadolibre.cl",
+"type": "综合",
+"scope": "区域",
+"note": "拉美最大电商，阿根廷创立，纳斯达克上市"
+},
+{
+"region": "美洲-南美洲",
+"country": "智利",
+"name": "Falabella",
+"url": "falabella.com",
+"type": "综合/百货",
+"scope": "本土",
+"note": "拉美零售集团"
+},
+{
+"region": "美洲-南美洲",
+"country": "智利",
+"name": "Paris",
+"url": "paris.cl",
+"type": "综合/百货",
+"scope": "本土",
+"note": "Cencosud旗下"
+},
+{
+"region": "美洲-南美洲",
+"country": "智利",
+"name": "Ripley",
+"url": "ripley.cl",
+"type": "综合/百货",
+"scope": "本土",
+"note": ""
+},
+{
+"region": "美洲-南美洲",
+"country": "智利",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "国际",
+"note": "智利是速卖通拉美重点市场"
+},
+{
+"region": "美洲-南美洲",
+"country": "智利",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "大洋洲",
+"country": "澳大利亚",
+"name": "Amazon",
+"url": "amazon.com.au",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "美国亚马逊，可跨境直邮或经转运使用"
+},
+{
+"region": "大洋洲",
+"country": "澳大利亚",
+"name": "eBay",
+"url": "ebay.com.au",
+"type": "C2C/拍卖",
+"scope": "国际",
+"note": "美国老牌在线拍卖与交易平台"
+},
+{
+"region": "大洋洲",
+"country": "澳大利亚",
+"name": "Kogan",
+"url": "kogan.com",
+"type": "综合",
+"scope": "本土",
+"note": "本土电商"
+},
+{
+"region": "大洋洲",
+"country": "澳大利亚",
+"name": "JB Hi-Fi",
+"url": "jbhifi.com.au",
+"type": "垂直类(电子)",
+"scope": "本土",
+"note": ""
+},
+{
+"region": "大洋洲",
+"country": "澳大利亚",
+"name": "Woolworths",
+"url": "woolworths.com.au",
+"type": "生鲜/超市",
+"scope": "本土",
+"note": ""
+},
+{
+"region": "大洋洲",
+"country": "澳大利亚",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "Catch于2025年关闭，Temu等跨境平台扩张"
+},
+{
+"region": "大洋洲",
+"country": "巴布亚新几内亚",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "大洋洲",
+"country": "巴布亚新几内亚",
+"name": "Amazon",
+"url": "amazon.com.au",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "待核实：多经澳大利亚转运"
+},
+{
+"region": "大洋洲",
+"country": "北马里亚纳群岛",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "美国站，经美国邮政(USPS)按国内方式配送"
+},
+{
+"region": "大洋洲",
+"country": "北马里亚纳群岛",
+"name": "eBay",
+"url": "ebay.com",
+"type": "C2C/拍卖",
+"scope": "国际",
+"note": "美国老牌在线拍卖与交易平台"
+},
+{
+"region": "大洋洲",
+"country": "北马里亚纳群岛",
+"name": "Walmart",
+"url": "walmart.com",
+"type": "综合",
+"scope": "国际",
+"note": "待核实：部分商品可配送"
+},
+{
+"region": "大洋洲",
+"country": "法属波利尼西亚",
+"name": "Amazon",
+"url": "amazon.fr",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "待核实：法国站对该海外集体配送受限"
+},
+{
+"region": "大洋洲",
+"country": "法属波利尼西亚",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "本地社交平台交易常见"
+},
+{
+"region": "大洋洲",
+"country": "斐济",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "大洋洲",
+"country": "斐济",
+"name": "Amazon",
+"url": "amazon.com.au",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "经转运使用"
+},
+{
+"region": "大洋洲",
+"country": "关岛（美）",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "美国站，经美国邮政(USPS)按国内方式配送"
+},
+{
+"region": "大洋洲",
+"country": "关岛（美）",
+"name": "eBay",
+"url": "ebay.com",
+"type": "C2C/拍卖",
+"scope": "国际",
+"note": "美国老牌在线拍卖与交易平台"
+},
+{
+"region": "大洋洲",
+"country": "关岛（美）",
+"name": "Walmart",
+"url": "walmart.com",
+"type": "综合",
+"scope": "国际",
+"note": "待核实：部分商品可配送"
+},
+{
+"region": "大洋洲",
+"country": "基里巴斯",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "大洋洲",
+"country": "科科斯（基林）",
+"name": "Amazon",
+"url": "amazon.com.au",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "待核实：使用澳大利亚邮编，可经澳大利亚邮政收货"
+},
+{
+"region": "大洋洲",
+"country": "库克群岛（新西",
+"name": "Trade Me",
+"url": "trademe.co.nz",
+"type": "综合/C2C",
+"scope": "国际",
+"note": "待核实：新西兰平台，经转运使用"
+},
+{
+"region": "大洋洲",
+"country": "库克群岛（新西",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "大洋洲",
+"country": "马绍尔群岛",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "使用美国邮政(USPS)配送"
+},
+{
+"region": "大洋洲",
+"country": "美国本土外小岛",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "待核实：仅限驻岛军事/科研人员经美国邮政收货"
+},
+{
+"region": "大洋洲",
+"country": "美属萨摩亚",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "美国站，经美国邮政(USPS)按国内方式配送"
+},
+{
+"region": "大洋洲",
+"country": "美属萨摩亚",
+"name": "eBay",
+"url": "ebay.com",
+"type": "C2C/拍卖",
+"scope": "国际",
+"note": "美国老牌在线拍卖与交易平台"
+},
+{
+"region": "大洋洲",
+"country": "美属萨摩亚",
+"name": "Walmart",
+"url": "walmart.com",
+"type": "综合",
+"scope": "国际",
+"note": "待核实：部分商品可配送"
+},
+{
+"region": "大洋洲",
+"country": "密克罗尼西亚联",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "使用美国邮政(USPS)，可按美国国内运费配送"
+},
+{
+"region": "大洋洲",
+"country": "纽埃（新西兰）",
+"name": "Trade Me",
+"url": "trademe.co.nz",
+"type": "综合/C2C",
+"scope": "国际",
+"note": "待核实：新西兰平台，经转运使用"
+},
+{
+"region": "大洋洲",
+"country": "诺福克岛（澳）",
+"name": "Amazon",
+"url": "amazon.com.au",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "待核实：澳大利亚站配送受限"
+},
+{
+"region": "大洋洲",
+"country": "诺福克岛（澳）",
+"name": "eBay",
+"url": "ebay.com.au",
+"type": "C2C/拍卖",
+"scope": "国际",
+"note": "待核实：美国老牌在线拍卖与交易平台"
+},
+{
+"region": "大洋洲",
+"country": "帕劳",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "使用美国邮政(USPS)配送"
+},
+{
+"region": "大洋洲",
+"country": "萨摩亚",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "大洋洲",
+"country": "圣诞岛（澳）",
+"name": "Amazon",
+"url": "amazon.com.au",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "待核实：使用澳大利亚邮编，可经澳大利亚邮政收货"
+},
+{
+"region": "大洋洲",
+"country": "圣诞岛（澳）",
+"name": "eBay",
+"url": "ebay.com.au",
+"type": "C2C/拍卖",
+"scope": "国际",
+"note": "待核实：美国老牌在线拍卖与交易平台"
+},
+{
+"region": "大洋洲",
+"country": "所罗门群岛",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "大洋洲",
+"country": "汤加",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "大洋洲",
+"country": "瓦利斯和富图纳",
+"name": "Amazon",
+"url": "amazon.fr",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "待核实：法国站对该海外集体配送受限"
+},
+{
+"region": "大洋洲",
+"country": "瓦利斯和富图纳",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "本地社交平台交易常见"
+},
+{
+"region": "大洋洲",
+"country": "瓦努阿图",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "Meta旗下，本地买卖及社交卖家主要渠道"
+},
+{
+"region": "大洋洲",
+"country": "新喀里多尼亚",
+"name": "Amazon",
+"url": "amazon.fr",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "待核实：法国站对该海外集体配送受限"
+},
+{
+"region": "大洋洲",
+"country": "新喀里多尼亚",
+"name": "Facebook Marketplace",
+"url": "facebook.com/",
+"type": "社交电商/二手",
+"scope": "国际",
+"note": "本地社交平台交易常见"
+},
+{
+"region": "大洋洲",
+"country": "新西兰",
+"name": "Trade Me",
+"url": "trademe.co.nz",
+"type": "综合/C2C",
+"scope": "本土",
+"note": "新西兰最大电商与分类平台"
+},
+{
+"region": "大洋洲",
+"country": "新西兰",
+"name": "The Warehouse",
+"url": "thewarehouse.co.nz",
+"type": "综合",
+"scope": "本土",
+"note": ""
+},
+{
+"region": "大洋洲",
+"country": "新西兰",
+"name": "Mighty Ape",
+"url": "mightyape.co.nz",
+"type": "综合",
+"scope": "本土",
+"note": "Kogan旗下"
+},
+{
+"region": "大洋洲",
+"country": "新西兰",
+"name": "Woolworths NZ",
+"url": "woolworths.co.nz",
+"type": "生鲜/超市",
+"scope": "本土",
+"note": "原Countdown"
+},
+{
+"region": "大洋洲",
+"country": "新西兰",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "国际",
+"note": "PDD控股（拼多多母公司）旗下低价跨境平台"
+},
+{
+"region": "大洋洲",
+"country": "新西兰",
+"name": "Amazon",
+"url": "amazon.com.au",
+"type": "综合/跨境",
+"scope": "国际",
+"note": "美国亚马逊，可跨境直邮或经转运使用"
+},
+{
+"region": "全球/区域",
+"country": "23个本地站：美、加、墨、巴西、英、德、法、意、西、荷、比、瑞典、",
+"name": "Amazon",
+"url": "amazon.com",
+"type": "综合/跨境",
+"scope": "区域/全球",
+"note": "全球最大电商；最新站点为南非(2024)与爱尔"
+},
+{
+"region": "全球/区域",
+"country": "覆盖200+国家和地区，西班牙、法国、韩国、以色列、巴西、智利、波兰",
+"name": "AliExpress",
+"url": "aliexpress.com",
+"type": "跨境",
+"scope": "区域/全球",
+"note": "阿里国际核心跨境零售平台"
+},
+{
+"region": "全球/区域",
+"country": "2022年于美国上线，现覆盖90+市场：北美、欧洲、日韩、澳新、海湾、",
+"name": "Temu",
+"url": "temu.com",
+"type": "跨境",
+"scope": "区域/全球",
+"note": "全托管/半托管模式，低价扩张最快"
+},
+{
+"region": "全球/区域",
+"country": "向150+国家和地区配送，美、欧、中东、拉美为主",
+"name": "Shein",
+"url": "shein.com",
+"type": "垂直类(时尚)/跨",
+"scope": "区域/全球",
+"note": "快时尚+开放平台(Marketplace)"
+},
+{
+"region": "全球/区域",
+"country": "美、英、印尼、马来、泰、越、菲、新加坡、西、德、法、意、爱尔兰、",
+"name": "TikTok Shop",
+"url": "shop.tiktok.com",
+"type": "社交/直播电商",
+"scope": "区域/全球",
+"note": "2024年控股Tokopedia"
+},
+{
+"region": "全球/区域",
+"country": "约190个市场，美、英、德、澳为核心",
+"name": "eBay",
+"url": "ebay.com",
+"type": "C2C/拍卖",
+"scope": "区域/全球",
+"note": "老牌拍卖平台，二手与收藏品优势"
+},
+{
+"region": "全球/区域",
+"country": "美国、加拿大、墨西哥、中美洲；控股印度Flipkart、南非Massmart",
+"name": "Walmart",
+"url": "walmart.com",
+"type": "综合",
+"scope": "区域/全球",
+"note": "美国第二大电商"
+},
+{
+"region": "全球/区域",
+"country": "全球，美英德加澳为主",
+"name": "Etsy",
+"url": "etsy.com",
+"type": "垂直类(手工)",
+"scope": "区域/全球",
+"note": "手工、复古与创意商品"
+},
+{
+"region": "全球/区域",
+"country": "新加坡、马来西亚、印尼、泰国、越南、菲律宾、台湾、巴西",
+"name": "Shopee",
+"url": "shopee.com",
+"type": "综合/C2C",
+"scope": "区域/全球",
+"note": "东南亚GMV第一；已退出波兰、西班牙、法"
+},
+{
+"region": "全球/区域",
+"country": "新加坡、马来西亚、印尼、泰国、越南、菲律宾",
+"name": "Lazada",
+"url": "lazada.com",
+"type": "综合/B2C",
+"scope": "区域/全球",
+"note": "东南亚第二梯队"
+},
+{
+"region": "全球/区域",
+"country": "印度尼西亚",
+"name": "Tokopedia",
+"url": "tokopedia.com",
+"type": "综合",
+"scope": "区域/全球",
+"note": "与TikTok Shop整合运营"
+},
+{
+"region": "全球/区域",
+"country": "巴基斯坦、孟加拉国、斯里兰卡、尼泊尔（缅甸站待核实）",
+"name": "Daraz",
+"url": "daraz.com",
+"type": "综合",
+"scope": "区域/全球",
+"note": "南亚领先电商"
+},
+{
+"region": "全球/区域",
+"country": "印度",
+"name": "Flipkart",
+"url": "flipkart.com",
+"type": "综合",
+"scope": "区域/全球",
+"note": "印度最大电商，旗下Myntra"
+},
+{
+"region": "全球/区域",
+"country": "韩国、台湾（另控股Farfetch）",
+"name": "Coupang",
+"url": "coupang.com",
+"type": "综合/自营",
+"scope": "区域/全球",
+"note": "韩国最大电商"
+},
+{
+"region": "全球/区域",
+"country": "日本为主（另有Rakuten France等）",
+"name": "Rakuten 乐天",
+"url": "rakuten.co.jp",
+"type": "综合",
+"scope": "区域/全球",
+"note": "日本两大电商之一"
+},
+{
+"region": "全球/区域",
+"country": "日本、美国",
+"name": "Mercari",
+"url": "mercari.com",
+"type": "二手/C2C",
+"scope": "区域/全球",
+"note": "日本最大二手App"
+},
+{
+"region": "全球/区域",
+"country": "新加坡、日本",
+"name": "Qoo10",
+"url": "qoo10.com",
+"type": "综合",
+"scope": "区域/全球",
+"note": "日本站为eBay Japan运营"
+},
+{
+"region": "全球/区域",
+"country": "新加坡、马来西亚、菲律宾、香港、台湾等",
+"name": "Carousell",
+"url": "carousell.com",
+"type": "二手/C2C",
+"scope": "区域/全球",
+"note": "东南亚领先二手分类平台"
+},
+{
+"region": "全球/区域",
+"country": "18国：阿根廷、巴西、墨西哥、智利、哥伦比亚、秘鲁、乌拉圭、委内瑞",
+"name": "Mercado Libre",
+"url": "mercadolibre.com",
+"type": "综合",
+"scope": "区域/全球",
+"note": "拉美最大电商与金融科技(Mercado Pago)"
+},
+{
+"region": "全球/区域",
+"country": "智利、秘鲁、哥伦比亚",
+"name": "Falabella",
+"url": "falabella.com",
+"type": "综合/百货",
+"scope": "区域/全球",
+"note": "安第斯地区零售巨头"
+},
+{
+"region": "全球/区域",
+"country": "8国：尼日利亚、埃及、肯尼亚、摩洛哥、科特迪瓦、塞内加尔、加纳、乌",
+"name": "Jumia",
+"url": "jumia.com",
+"type": "综合",
+"scope": "区域/全球",
+"note": "2024年底退出南非、突尼斯，2026年2月退出"
+},
+{
+"region": "全球/区域",
+"country": "尼日利亚、加纳、肯尼亚、乌干达、坦桑尼亚、埃塞俄比亚",
+"name": "Jiji",
+"url": "jiji.com",
+"type": "分类/C2C",
+"scope": "区域/全球",
+"note": "非洲最大分类平台之一"
+},
+{
+"region": "全球/区域",
+"country": "南非",
+"name": "Takealot",
+"url": "takealot.com",
+"type": "综合",
+"scope": "区域/全球",
+"note": "南非电商龙头"
+},
+{
+"region": "全球/区域",
+"country": "肯尼亚为主（另有乌干达、尼日利亚，待核实）",
+"name": "Kilimall",
+"url": "kilimall.com",
+"type": "综合",
+"scope": "区域/全球",
+"note": "东非电商"
+},
+{
+"region": "全球/区域",
+"country": "阿联酋、沙特、埃及、科威特、卡塔尔、阿曼、巴林；2026年宣布进军叙",
+"name": "noon",
+"url": "noon.com",
+"type": "综合",
+"scope": "区域/全球",
+"note": "中东本土电商龙头"
+},
+{
+"region": "全球/区域",
+"country": "海湾六国",
+"name": "Namshi",
+"url": "namshi.com",
+"type": "垂直类(时尚)",
+"scope": "区域/全球",
+"note": "中东时尚电商"
+},
+{
+"region": "全球/区域",
+"country": "阿联酋、科威特、卡塔尔、巴林、阿曼、约旦、伊拉克、埃及",
+"name": "talabat",
+"url": "talabat.com",
+"type": "即时零售",
+"scope": "区域/全球",
+"note": "外卖+杂货快送"
+},
+{
+"region": "全球/区域",
+"country": "约旦、沙特、伊拉克、阿曼、科威特、也门、利比亚、叙利亚、巴勒斯坦",
+"name": "OpenSooq",
+"url": "opensooq.com",
+"type": "分类/C2C",
+"scope": "区域/全球",
+"note": "中东北非分类平台"
+},
+{
+"region": "全球/区域",
+"country": "土耳其；跨境覆盖海湾六国、阿塞拜疆及德国、罗马尼亚、希腊等多个欧",
+"name": "Trendyol",
+"url": "trendyol.com",
+"type": "综合/跨境",
+"scope": "区域/全球",
+"note": "土耳其最大电商"
+},
+{
+"region": "全球/区域",
+"country": "土耳其",
+"name": "Hepsiburada",
+"url": "hepsiburada.com",
+"type": "综合",
+"scope": "区域/全球",
+"note": "2025年被哈萨克斯坦Kaspi收购控股权"
+},
+{
+"region": "全球/区域",
+"country": "俄罗斯、白俄罗斯、哈萨克斯坦、乌兹别克斯坦、吉尔吉斯斯坦、亚美尼",
+"name": "Wildberries",
+"url": "wildberries.ru",
+"type": "综合",
+"scope": "区域/全球",
+"note": "俄罗斯第一大电商"
+},
+{
+"region": "全球/区域",
+"country": "俄罗斯、白俄罗斯、哈萨克斯坦、乌兹别克斯坦、吉尔吉斯斯坦、亚美尼",
+"name": "Ozon",
+"url": "ozon.ru",
+"type": "综合",
+"scope": "区域/全球",
+"note": "俄罗斯第二大电商"
+},
+{
+"region": "全球/区域",
+"country": "乌兹别克斯坦",
+"name": "Uzum Market",
+"url": "uzum.uz",
+"type": "综合",
+"scope": "区域/全球",
+"note": "中亚首个电商独角兽"
+},
+{
+"region": "全球/区域",
+"country": "波兰、捷克、斯洛伐克、匈牙利",
+"name": "Allegro",
+"url": "allegro.pl",
+"type": "综合",
+"scope": "区域/全球",
+"note": "2026年2月出售斯洛文尼亚Mimovrste与克罗"
+},
+{
+"region": "全球/区域",
+"country": "罗马尼亚、保加利亚、匈牙利",
+"name": "eMAG",
+"url": "emag.ro",
+"type": "综合",
+"scope": "区域/全球",
+"note": "东南欧领先电商"
+},
+{
+"region": "全球/区域",
+"country": "捷克、斯洛伐克、匈牙利、奥地利、德国",
+"name": "Alza",
+"url": "alza.cz",
+"type": "综合/电子",
+"scope": "区域/全球",
+"note": "中欧电子综合电商"
+},
+{
+"region": "全球/区域",
+"country": "欧洲25+国家",
+"name": "Zalando",
+"url": "zalando.com",
+"type": "垂直类(时尚)",
+"scope": "区域/全球",
+"note": "欧洲最大时尚电商"
+},
+{
+"region": "全球/区域",
+"country": "欧洲20+国家（法、英、德、意、西、波兰等）",
+"name": "Vinted",
+"url": "vinted.com",
+"type": "二手(时尚)",
+"scope": "区域/全球",
+"note": "欧洲最大二手服饰平台"
+},
+{
+"region": "全球/区域",
+"country": "荷兰、比利时",
+"name": "Bol",
+"url": "bol.com",
+"type": "综合",
+"scope": "区域/全球",
+"note": "荷比卢龙头"
+},
+{
+"region": "全球/区域",
+"country": "希腊、塞浦路斯",
+"name": "Skroutz",
+"url": "skroutz.gr",
+"type": "比价/综合",
+"scope": "区域/全球",
+"note": "希腊最大电商平台"
+},
+{
+"region": "全球/区域",
+"country": "立陶宛、拉脱维亚(220.lv)、爱沙尼亚(kaup24/hansapost)、芬兰",
+"name": "Pigu Group",
+"url": "pigu.lt",
+"type": "综合",
+"scope": "区域/全球",
+"note": "波罗的海最大电商集团"
+},
+{
+"region": "全球/区域",
+"country": "波兰、葡萄牙、罗马尼亚、保加利亚、乌克兰、哈萨克斯坦、乌兹别克斯",
+"name": "OLX",
+"url": "olx.com",
+"type": "分类/C2C",
+"scope": "区域/全球",
+"note": "中东欧及中亚分类平台"
+},
+{
+"region": "全球/区域",
+"country": "塞内加尔、科特迪瓦、喀麦隆、贝宁、多哥、马里、布基纳法索等法语非",
+"name": "CoinAfrique",
+"url": "coinafrique.com",
+"type": "分类/C2C",
+"scope": "区域/全球",
+"note": "法语非洲分类平台"
+},
+{
+"region": "全球/区域",
+"country": "巴拿马、哥斯达黎加、危地马拉、萨尔瓦多、洪都拉斯、尼加拉瓜",
+"name": "Encuentra24",
+"url": "encuentra24.com",
+"type": "分类/C2C",
+"scope": "区域/全球",
+"note": "中美洲分类平台"
+},
+{
+"region": "全球/区域",
+"country": "中美洲及加勒比多国",
+"name": "Aeropost",
+"url": "aeropost.com",
+"type": "跨境代购/转运",
+"scope": "区域/全球",
+"note": "帮助当地消费者购买美国电商商品"
+}
+]
