@@ -1,0 +1,192 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PriceHub · 全球价格全生命周期管理</title><link rel="icon" href="data:,">
+<script src="/static/vendor/tailwind.js"></script><script src="/static/vendor/chart.js"></script>
+<script defer src="/static/app.js"></script><script defer src="/static/vendor/alpine.js"></script>
+<style>[x-cloak]{display:none!important}body{font-family:system-ui,-apple-system,"PingFang SC","Noto Sans CJK SC",sans-serif}</style></head>
+<body class="bg-slate-50 text-slate-800" x-data="App()" x-init="init()">
+<div class="flex min-h-screen">
+<!-- 侧栏 -->
+<aside :class="nav?'translate-x-0':'-translate-x-full'" class="fixed md:static md:translate-x-0 z-30 w-56 shrink-0 bg-slate-900 text-slate-300 min-h-screen transition-transform">
+ <div class="px-5 py-5 text-white text-lg font-bold flex items-center gap-2"><span class="bg-indigo-500 rounded-lg w-8 h-8 grid place-items-center">¥</span>PriceHub</div>
+ <nav class="px-2 space-y-1"><template x-for="m in menu"><a :href="'#/'+m[0]" @click="nav=false" :data-nav="m[0]"
+   :class="page===m[0]||(page==='product'&&m[0]==='products')?'bg-indigo-600 text-white':'hover:bg-slate-800'" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm">
+   <span x-text="m[2]"></span><span x-text="m[1]"></span><span x-show="m[0]==='alerts'&&dash.alerts" class="ml-auto text-xs bg-rose-500 text-white rounded-full px-2" x-text="dash.alerts"></span></a></template></nav>
+ <div class="px-5 mt-8 text-xs text-slate-500 leading-5"><div>文本引擎</div><div class="text-slate-400 break-all" x-text="health.text_engine"></div><div class="mt-2">图像引擎</div><div class="text-slate-400" x-text="health.image_engine"></div></div>
+</aside>
+<main class="flex-1 min-w-0">
+ <header class="sticky top-0 z-20 bg-white/90 backdrop-blur border-b px-4 md:px-8 h-14 flex items-center gap-3">
+  <button class="md:hidden text-xl" @click="nav=!nav">☰</button><h1 class="font-semibold" x-text="title()"></h1>
+  <div class="ml-auto flex items-center gap-2"><span x-show="busy" class="text-xs text-slate-500 flex items-center gap-1"><span class="w-3 h-3 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></span>加载中</span>
+  <button @click="runMonitor()" class="text-sm bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg px-3 py-1.5">⟳ 立即监控抓取</button></div></header>
+ <!-- 提示 -->
+ <div class="fixed top-16 right-4 z-50 space-y-2 w-80"><template x-for="t in toasts" :key="t.id"><div :class="t.err?'bg-rose-50 border-rose-300 text-rose-700':'bg-emerald-50 border-emerald-300 text-emerald-700'" class="border rounded-lg px-4 py-2 text-sm shadow" x-text="t.msg" data-toast></div></template></div>
+ <div class="p-4 md:p-8 space-y-6">
+
+ <!-- 仪表盘 -->
+ <section x-show="page==='dashboard'" x-cloak data-page="dashboard" class="space-y-6">
+  <div class="grid grid-cols-2 lg:grid-cols-5 gap-4"><template x-for="c in [['商品数',dash.products,'📦'],['覆盖平台',dash.platforms,'🌐'],['数据源',dash.sources,'🔌'],['价格记录',dash.prices,'📈'],['告警',dash.alerts,'🔔']]">
+   <div class="bg-white rounded-xl p-5 shadow-sm border"><div class="text-sm text-slate-500 flex justify-between"><span x-text="c[0]"></span><span x-text="c[2]"></span></div><div class="text-3xl font-bold mt-2" x-text="c[1]??'—'" data-stat></div></div></template></div>
+  <div class="grid lg:grid-cols-3 gap-4">
+   <div class="bg-white rounded-xl p-5 shadow-sm border"><h3 class="font-semibold mb-3">类目分布</h3><div class="h-56"><canvas id="catChart"></canvas></div></div>
+   <div class="bg-white rounded-xl p-5 shadow-sm border"><h3 class="font-semibold mb-3">平台分布</h3><div class="h-56"><canvas id="platChart"></canvas></div></div>
+   <div class="bg-white rounded-xl p-5 shadow-sm border"><h3 class="font-semibold mb-3">最新告警</h3>
+    <template x-if="!(dash.recent_alerts||[]).length"><div class="text-sm text-slate-400 py-10 text-center">暂无告警 🎉</div></template>
+    <ul class="space-y-2 text-sm"><template x-for="a in dash.recent_alerts||[]"><li class="flex justify-between gap-2 border-b pb-2"><a class="text-indigo-600 truncate" :href="'#/product/'+a.product_id" x-text="a.title"></a><span class="text-rose-600 shrink-0" x-text="a.msg"></span></li></template></ul></div>
+  </div>
+  <div class="bg-white rounded-xl p-5 shadow-sm border text-sm text-slate-600">全球平台目录已收录 <b x-text="dash.catalog"></b> 个平台，可在「平台目录」按国家/类型浏览，并一键创建数据源。</div>
+ </section>
+
+ <!-- 商品监控 -->
+ <section x-show="page==='products'" x-cloak data-page="products" class="space-y-4">
+  <div class="bg-white rounded-xl p-4 shadow-sm border flex flex-wrap gap-3 items-end">
+   <label class="text-sm">关键词<input x-model="pf.q" @input="pg=1" data-filter-q class="block border rounded-lg px-3 py-1.5 mt-1 w-56" placeholder="标题/品牌"></label>
+   <label class="text-sm">平台<select x-model="pf.platform" @change="pg=1" class="block border rounded-lg px-3 py-1.5 mt-1"><option value="">全部</option><template x-for="v in uniq('platform')"><option x-text="v"></option></template></select></label>
+   <label class="text-sm">类目<select x-model="pf.category" @change="pg=1" data-filter-cat class="block border rounded-lg px-3 py-1.5 mt-1"><option value="">全部</option><template x-for="v in uniq('category')"><option x-text="v"></option></template></select></label>
+   <div class="ml-auto text-sm text-slate-500">共 <b x-text="filtered().length"></b> 条</div></div>
+  <div class="bg-white rounded-xl shadow-sm border overflow-x-auto"><table class="w-full text-sm" data-products-table>
+   <thead class="bg-slate-50 text-slate-500"><tr><template x-for="c in [['id','ID'],['title','商品'],['platform','平台'],['category','类目'],['chain','产业链'],['last_price','现价']]">
+    <th class="text-left px-4 py-3 cursor-pointer select-none" @click="sortBy(c[0])" :data-sort="c[0]"><span x-text="c[1]"></span><span x-text="sk===c[0]?(asc?' ▲':' ▼'):''"></span></th></template><th></th></tr></thead>
+   <tbody><template x-for="p in paged()" :key="p.id"><tr class="border-t hover:bg-indigo-50/40">
+    <td class="px-4 py-2 text-slate-400" x-text="p.id"></td><td class="px-4 py-2 font-medium" x-text="p.title"></td>
+    <td class="px-4 py-2"><span class="bg-slate-100 rounded px-2 py-0.5 text-xs" x-text="p.platform"></span></td><td class="px-4 py-2" x-text="p.category||'—'"></td>
+    <td class="px-4 py-2 text-slate-500" x-text="p.chain||'—'"></td><td class="px-4 py-2 font-semibold text-indigo-700" x-text="money(p.last_price,p.currency)"></td>
+    <td class="px-4 py-2"><a :href="'#/product/'+p.id" class="text-indigo-600 hover:underline" data-detail>详情 →</a></td></tr></template></tbody></table>
+   <template x-if="!filtered().length"><div class="text-center text-slate-400 py-12">没有匹配的商品，试试调整筛选条件或在「数据源管理」抓取数据</div></template></div>
+  <div class="flex justify-end items-center gap-2 text-sm"><button class="border rounded px-3 py-1 disabled:opacity-40" :disabled="pg<=1" @click="pg--">上一页</button>
+   <span x-text="pg+' / '+pages()"></span><button class="border rounded px-3 py-1 disabled:opacity-40" :disabled="pg>=pages()" @click="pg++" data-next>下一页</button></div>
+ </section>
+
+ <!-- 商品详情 -->
+ <section x-show="page==='product'" x-cloak data-page="product" class="space-y-4">
+  <a href="#/products" class="text-sm text-indigo-600">← 返回商品列表</a>
+  <template x-if="d.p"><div class="space-y-4">
+   <div class="bg-white rounded-xl p-5 shadow-sm border flex flex-wrap gap-4 items-center">
+    <div><div class="text-xl font-bold" x-text="d.p.title" data-product-title></div><div class="text-sm text-slate-500 mt-1"><span x-text="d.p.platform"></span> · <span x-text="d.p.category||'未分类'"></span> · <span x-text="d.p.chain||''"></span></div></div>
+    <div class="ml-auto text-right"><div class="text-sm text-slate-500">最新价</div><div class="text-3xl font-bold text-indigo-700" x-text="money(d.h.stats.last)"></div>
+     <div :class="d.h.stats.change_pct>0?'text-rose-600':'text-emerald-600'" class="text-sm" x-text="(d.h.stats.change_pct>0?'▲ ':'▼ ')+(d.h.stats.change_pct??0)+'%'"></div></div></div>
+   <div class="grid lg:grid-cols-3 gap-4">
+    <div class="lg:col-span-2 bg-white rounded-xl p-5 shadow-sm border"><div class="flex items-center mb-3"><h3 class="font-semibold">历史价格 & 预测</h3>
+     <span class="ml-auto text-xs px-2 py-0.5 rounded-full" :class="{'上涨':'bg-rose-100 text-rose-700','下跌':'bg-emerald-100 text-emerald-700','平稳':'bg-slate-100'}[d.f.trend]" x-text="d.f.trend?'趋势：'+d.f.trend:'数据不足'"></span></div>
+     <div class="h-72"><canvas id="priceChart" data-price-chart></canvas></div>
+     <div class="mt-3 flex gap-2 items-end text-sm"><label>手动录入价格<input type="number" step="0.01" x-model="newPrice" class="block border rounded-lg px-3 py-1.5 mt-1 w-36"></label><button @click="addPrice()" class="bg-slate-800 text-white rounded-lg px-3 py-1.5">记录</button></div></div>
+    <div class="bg-white rounded-xl p-5 shadow-sm border"><h3 class="font-semibold mb-3">价格统计</h3><dl class="grid grid-cols-2 gap-3 text-sm">
+     <template x-for="s in [['记录数',d.h.stats.count],['最低价',money(d.h.stats.min)],['最高价',money(d.h.stats.max)],['均价',money(d.h.stats.avg)],['移动平均',money(d.f.moving_average)],['指数平滑',money(d.f.exp_smoothing)],['日斜率',d.f.slope??'—'],['7期后预测',money((d.f.linear_regression||[]).slice(-1)[0])]]">
+     <div class="bg-slate-50 rounded-lg p-3"><dt class="text-slate-500 text-xs" x-text="s[0]"></dt><dd class="font-semibold mt-1" x-text="s[1]??'—'"></dd></div></template></dl></div></div>
+   <div class="grid lg:grid-cols-2 gap-4">
+    <div class="bg-white rounded-xl p-5 shadow-sm border" data-compare><h3 class="font-semibold mb-3">跨平台比价 <span class="text-xs text-slate-400" x-show="d.c.spread" x-text="'价差 '+money(d.c.spread)"></span></h3>
+     <template x-if="(d.c.offers||[]).length<2"><div class="text-sm text-slate-400 py-6 text-center">暂未发现其他平台的同款商品</div></template>
+     <div class="space-y-2"><template x-for="(o,i) in d.c.offers||[]"><div class="flex items-center gap-3 text-sm"><span class="w-24 truncate" x-text="o.platform"></span>
+      <div class="flex-1 bg-slate-100 rounded h-6 relative"><div class="h-6 rounded" :class="i===0?'bg-emerald-400':'bg-indigo-300'" :style="'width:'+(o.price/maxOffer()*100)+'%'"></div></div>
+      <span class="w-24 text-right font-semibold" x-text="money(o.price)"></span><span x-show="i===0" class="text-xs text-emerald-600">最低</span></div></template></div></div>
+    <div class="bg-white rounded-xl p-5 shadow-sm border" data-pricing><h3 class="font-semibold mb-3">定价建议</h3>
+     <div class="flex gap-3 text-sm items-end mb-4"><label>成本<input type="number" x-model="cost" class="block border rounded-lg px-3 py-1.5 mt-1 w-28" data-cost></label><label>加成率<input type="number" step="0.05" x-model="markup" class="block border rounded-lg px-3 py-1.5 mt-1 w-24"></label><button @click="loadPricing()" class="bg-indigo-600 text-white rounded-lg px-3 py-1.5" data-calc>计算</button></div>
+     <div class="grid grid-cols-2 gap-3 text-sm"><template x-for="s in [['成本加成价',d.pr.cost_plus],['竞品最低-1%',d.pr.competitive_min_minus_1pct],['市场中位数',d.pr.market_median]]"><div class="bg-slate-50 rounded-lg p-3"><div class="text-xs text-slate-500" x-text="s[0]"></div><div class="font-semibold" x-text="money(s[1])"></div></div></template>
+      <div class="bg-indigo-600 text-white rounded-lg p-3"><div class="text-xs opacity-80">推荐售价</div><div class="text-xl font-bold" x-text="money(d.pr.recommended)" data-recommended></div></div></div></div></div>
+  </div></template>
+ </section>
+
+ <!-- 比价 -->
+ <section x-show="page==='compare'" x-cloak data-page="compare" class="space-y-4">
+  <div class="text-sm text-slate-500">按同款分组（跨平台出现 ≥2 次的商品），自动标出最低价平台与价差。</div>
+  <template x-if="!groups().length"><div class="bg-white rounded-xl border p-12 text-center text-slate-400">暂无跨平台同款商品</div></template>
+  <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-4"><template x-for="g in groups()"><div class="bg-white rounded-xl p-5 shadow-sm border" data-group>
+   <div class="font-semibold" x-text="g[0].title"></div><div class="text-xs text-slate-400 mb-3" x-text="g.length+' 个平台 · 价差 '+money(g[g.length-1].last_price-g[0].last_price)"></div>
+   <template x-for="(o,i) in g"><a :href="'#/product/'+o.id" class="flex justify-between text-sm py-1 border-b last:border-0"><span x-text="o.platform"></span><span :class="i===0?'text-emerald-600 font-bold':''" x-text="money(o.last_price)"></span></a></template></div></template></div>
+ </section>
+
+ <!-- 定价 -->
+ <section x-show="page==='pricing'" x-cloak data-page="pricing" class="space-y-4">
+  <div class="bg-white rounded-xl p-5 shadow-sm border"><div class="flex flex-wrap gap-3 items-end text-sm">
+   <label>选择商品<select x-model="pp.id" class="block border rounded-lg px-3 py-1.5 mt-1 w-72" data-pricing-select><template x-for="p in all"><option :value="p.id" x-text="p.platform+' · '+p.title"></option></template></select></label>
+   <label>成本<input type="number" x-model="pp.cost" class="block border rounded-lg px-3 py-1.5 mt-1 w-28"></label><label>加成率<input type="number" step="0.05" x-model="pp.markup" class="block border rounded-lg px-3 py-1.5 mt-1 w-24"></label>
+   <button class="bg-indigo-600 text-white rounded-lg px-4 py-1.5" @click="pricingPage()" data-pricing-run>生成建议</button></div>
+   <div class="text-xs text-slate-500 mt-3">规则：推荐价 = max(成本×1.05, min(成本加成价, 竞品最低价×0.99))；无竞品时取成本加成价，无成本时取市场中位数。</div></div>
+  <template x-if="pp.r"><div class="grid grid-cols-2 lg:grid-cols-4 gap-4"><template x-for="s in [['成本加成价',pp.r.cost_plus],['竞品最低-1%',pp.r.competitive_min_minus_1pct],['市场中位数',pp.r.market_median],['推荐售价',pp.r.recommended]]">
+   <div class="bg-white rounded-xl p-5 shadow-sm border" :class="s[0]==='推荐售价'&&'ring-2 ring-indigo-500'"><div class="text-sm text-slate-500" x-text="s[0]"></div><div class="text-2xl font-bold mt-1" x-text="money(s[1])" data-pricing-val></div></div></template></div></template>
+ </section>
+
+ <!-- 搜索 -->
+ <section x-show="page==='search'" x-cloak data-page="search" class="space-y-4">
+  <div class="bg-white rounded-xl p-5 shadow-sm border space-y-3">
+   <div class="flex flex-wrap gap-2"><template x-for="m in [['semantic','🧠 语义/跨语言'],['keyword','🔤 关键词'],['category','🗂 类目'],['chain','🏭 产业链'],['image','🖼 以图搜图']]">
+    <button @click="sm=m[0];sres=null" :data-mode="m[0]" :class="sm===m[0]?'bg-indigo-600 text-white':'bg-slate-100 hover:bg-slate-200'" class="rounded-full px-4 py-1.5 text-sm" x-text="m[1]"></button></template></div>
+   <form x-show="sm!=='image'" @submit.prevent="doSearch()" class="flex gap-2"><input x-model="sq" data-search-input class="flex-1 border rounded-lg px-4 py-2" :placeholder="{semantic:'任意语言描述，如：游戏机 / headphones / キーボード',keyword:'标题或品牌关键词',category:'类目，如：耳机',chain:'产业链前缀，如：消费电子'}[sm]">
+    <button class="bg-indigo-600 text-white rounded-lg px-6" data-search-btn>搜索</button></form>
+   <label x-show="sm==='image'" class="block border-2 border-dashed rounded-xl p-8 text-center text-slate-500 cursor-pointer hover:border-indigo-400">点击选择图片（CLIP 图像嵌入匹配）<input type="file" accept="image/*" class="hidden" @change="imgSearch($event)" data-image-input></label>
+  </div>
+  <template x-if="serr"><div class="bg-rose-50 border border-rose-200 text-rose-700 rounded-lg p-3 text-sm" x-text="serr"></div></template>
+  <template x-if="sres&&!sres.length"><div class="bg-white rounded-xl border p-12 text-center text-slate-400" data-empty>没有找到匹配结果</div></template>
+  <div x-show="sengine" class="text-xs text-slate-500" x-text="'引擎：'+sengine"></div>
+  <div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-4"><template x-for="r in sres||[]"><a :href="'#/product/'+r.id" class="bg-white rounded-xl p-4 shadow-sm border hover:shadow-md transition" data-result>
+   <div class="flex justify-between gap-2"><div class="font-medium" x-text="r.title"></div><span x-show="r.score!=null" class="shrink-0 text-xs h-fit rounded-full px-2 py-0.5" :class="r.score>.5?'bg-emerald-100 text-emerald-700':'bg-amber-100 text-amber-700'" x-text="'匹配 '+Math.round(r.score*100)+'%'"></span></div>
+   <div class="text-xs text-slate-500 mt-1" x-text="[r.platform,r.category,r.chain].filter(Boolean).join(' · ')"></div>
+   <div class="mt-2 font-bold text-indigo-700" x-text="money(r.last_price)"></div><div x-show="r.score!=null" class="mt-2 h-1.5 bg-slate-100 rounded"><div class="h-1.5 bg-indigo-500 rounded" :style="'width:'+Math.max(0,r.score*100)+'%'"></div></div></a></template></div>
+ </section>
+
+ <!-- AI 搜索 -->
+ <section x-show="page==='ai'" x-cloak data-page="ai" class="space-y-4">
+  <div class="bg-white rounded-xl p-5 shadow-sm border space-y-3"><div class="flex flex-wrap gap-2"><template x-for="(v,k) in providers"><button @click="ap=k" :data-provider="k" :class="ap===k?'border-indigo-500 bg-indigo-50':'border-slate-200'" class="border rounded-lg px-3 py-2 text-sm flex items-center gap-2">
+    <span x-text="k"></span><span class="w-2 h-2 rounded-full" :class="v.configured?'bg-emerald-500':'bg-slate-300'" :title="v.configured?'已配置':'未配置'"></span></button></template></div>
+   <template x-if="providers[ap]&&!providers[ap].configured"><div class="bg-amber-50 border border-amber-200 text-amber-800 rounded-lg p-3 text-sm" data-ai-warn>
+    ⚠️ 尚未配置 <code class="font-mono" x-text="providers[ap].env"></code>。请在服务器设置该环境变量后重启服务即可启用 <b x-text="ap"></b> 搜索（仅返回排名前 10 的结果）。</div></template>
+   <form @submit.prevent="aiSearch()" class="flex gap-2"><input x-model="aq" class="flex-1 border rounded-lg px-4 py-2" placeholder="如：iPhone 16 全网最低价" data-ai-input><button class="bg-indigo-600 text-white rounded-lg px-6" data-ai-btn>AI 搜索</button></form></div>
+  <template x-if="ares&&ares.message"><div class="bg-amber-50 border border-amber-200 text-amber-800 rounded-lg p-3 text-sm" data-ai-msg x-text="ares.message"></div></template>
+  <ol class="space-y-2"><template x-for="r in (ares&&ares.results)||[]"><li class="bg-white rounded-xl p-4 border flex gap-3"><span class="text-2xl font-bold text-indigo-300 w-8" x-text="r.rank"></span><div><div class="font-medium" x-text="r.title"></div><div class="text-xs text-slate-500" x-text="[r.platform,money(r.price),r.reason].filter(Boolean).join(' · ')"></div></div></li></template></ol>
+ </section>
+
+ <!-- 数据源 -->
+ <section x-show="page==='sources'" x-cloak data-page="sources" class="space-y-4">
+  <div class="flex"><button @click="editSource(null)" class="bg-indigo-600 text-white rounded-lg px-4 py-2 text-sm" data-new-source>＋ 新增数据源</button></div>
+  <div class="bg-white rounded-xl shadow-sm border overflow-x-auto"><table class="w-full text-sm"><thead class="bg-slate-50 text-slate-500"><tr><th class="text-left px-4 py-3">名称</th><th class="text-left px-4">类型</th><th class="text-left px-4">状态</th><th class="text-left px-4">配置摘要</th><th class="px-4 text-right">操作</th></tr></thead>
+   <tbody><template x-for="s in srcs" :key="s.id"><tr class="border-t" data-source-row><td class="px-4 py-2 font-medium" x-text="s.name"></td><td class="px-4"><span class="bg-indigo-50 text-indigo-700 rounded px-2 py-0.5 text-xs" x-text="s.type"></span></td>
+    <td class="px-4"><span :class="s.enabled?'text-emerald-600':'text-slate-400'" x-text="s.enabled?'● 启用':'○ 停用'"></span></td><td class="px-4 text-xs text-slate-500 max-w-xs truncate" x-text="summary(s)"></td>
+    <td class="px-4 py-2 text-right whitespace-nowrap space-x-2"><button class="text-indigo-600" @click="fetchSource(s)" data-fetch>抓取</button><button class="text-slate-600" @click="editSource(s)">编辑</button><button class="text-rose-600" @click="delSource(s)">删除</button></td></tr></template></tbody></table>
+   <template x-if="!srcs.length"><div class="text-center text-slate-400 py-12">还没有数据源，点击「新增数据源」开始</div></template></div>
+  <!-- 表单弹窗 -->
+  <div x-show="form" x-cloak class="fixed inset-0 z-40 bg-black/40 grid place-items-center p-4" @keydown.escape.window="form=null"><div class="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-auto p-6 space-y-4" data-source-form x-show="form">
+   <template x-if="form"><div class="space-y-3 text-sm"><h3 class="text-lg font-semibold" x-text="form.id?'编辑数据源':'新增数据源'"></h3>
+    <div class="grid grid-cols-2 gap-3"><label>名称<input x-model="form.name" class="block w-full border rounded-lg px-3 py-1.5 mt-1" data-f-name></label>
+     <label>适配器类型<select x-model="form.type" class="block w-full border rounded-lg px-3 py-1.5 mt-1" data-f-type><template x-for="(d,k) in adapters"><option :value="k" x-text="k"></option></template></select></label>
+     <label>平台标识<input x-model="form.c.platform" class="block w-full border rounded-lg px-3 py-1.5 mt-1" placeholder="如 taobao.com" data-f-platform></label>
+     <label class="flex items-center gap-2 mt-6"><input type="checkbox" x-model="form.enabled">启用（纳入定时监控）</label></div>
+    <p class="text-xs text-slate-500 bg-slate-50 rounded p-2" x-text="adapters[form.type]"></p>
+    <template x-if="form.type==='mock'"><div class="grid grid-cols-2 gap-3"><label>价格系数 bias<input type="number" step="0.01" x-model.number="form.c.bias" class="block w-full border rounded-lg px-3 py-1.5 mt-1"></label><label>随机种子<input type="number" x-model.number="form.c.seed" class="block w-full border rounded-lg px-3 py-1.5 mt-1"></label></div></template>
+    <template x-if="form.type==='webpage'"><div class="space-y-3"><label>商品网址（每行一个）<textarea x-model="form.urls" rows="3" class="block w-full border rounded-lg px-3 py-1.5 mt-1 font-mono text-xs" data-f-urls></textarea></label>
+     <div class="grid grid-cols-2 gap-3"><label>标题选择器<input x-model="form.c.title_selector" class="block w-full border rounded-lg px-3 py-1.5 mt-1" placeholder="h1.title"></label><label>价格选择器<input x-model="form.c.price_selector" class="block w-full border rounded-lg px-3 py-1.5 mt-1" placeholder=".price" data-f-price-sel></label>
+     <label>类目<input x-model="form.c.category" class="block w-full border rounded-lg px-3 py-1.5 mt-1"></label><label>产业链<input x-model="form.c.chain" class="block w-full border rounded-lg px-3 py-1.5 mt-1"></label></div></div></template>
+    <template x-if="form.type==='rest'"><div class="space-y-3"><div class="grid grid-cols-4 gap-3"><label class="col-span-3">API URL<input x-model="form.c.url" class="block w-full border rounded-lg px-3 py-1.5 mt-1" data-f-url></label><label>方法<select x-model="form.c.method" class="block w-full border rounded-lg px-3 py-1.5 mt-1"><option>GET</option><option>POST</option></select></label></div>
+     <label>鉴权请求头（JSON，支持 ${ENV}）<textarea x-model="form.headers" rows="2" class="block w-full border rounded-lg px-3 py-1.5 mt-1 font-mono text-xs" data-f-headers></textarea></label>
+     <label>列表路径 items_path<input x-model="form.c.items_path" class="block w-full border rounded-lg px-3 py-1.5 mt-1" placeholder="data.items" data-f-items></label>
+     <label>字段映射（JSON：统一字段 → 源字段路径）<textarea x-model="form.mapping" rows="3" class="block w-full border rounded-lg px-3 py-1.5 mt-1 font-mono text-xs" data-f-mapping></textarea></label></div></template>
+    <template x-if="form.type==='csv'"><div class="grid grid-cols-2 gap-3"><label>本地路径<input x-model="form.c.path" class="block w-full border rounded-lg px-3 py-1.5 mt-1" data-f-path></label><label>或 CSV URL<input x-model="form.c.url" class="block w-full border rounded-lg px-3 py-1.5 mt-1"></label>
+     <label class="col-span-2">字段映射（JSON，可空=按同名列）<textarea x-model="form.mapping" rows="2" class="block w-full border rounded-lg px-3 py-1.5 mt-1 font-mono text-xs"></textarea></label></div></template>
+    <template x-if="testRes"><div class="rounded-lg p-3 text-xs" :class="testRes.err?'bg-rose-50 text-rose-700':'bg-emerald-50 text-emerald-800'" data-test-result>
+     <div class="font-semibold" x-text="testRes.err||('✅ 连接成功，获取 '+testRes.count+' 条，预览：')"></div><ul class="mt-1 space-y-0.5"><template x-for="i in testRes.sample||[]"><li x-text="i.title+' — '+money(i.price)"></li></template></ul></div></template>
+    <div class="flex justify-end gap-2 pt-2"><button @click="form=null" class="border rounded-lg px-4 py-1.5">取消</button><button @click="testSource()" class="border border-indigo-500 text-indigo-600 rounded-lg px-4 py-1.5" data-f-test>测试连接</button><button @click="saveSource()" class="bg-indigo-600 text-white rounded-lg px-4 py-1.5" data-f-save>保存</button></div>
+   </div></template></div></div>
+ </section>
+
+ <!-- 平台目录 -->
+ <section x-show="page==='catalog'" x-cloak data-page="catalog" class="space-y-4">
+  <div class="bg-white rounded-xl p-4 shadow-sm border flex flex-wrap gap-3 items-end text-sm">
+   <label>国家/地区<select x-model="cf.country" @change="loadCatalog()" class="block border rounded-lg px-3 py-1.5 mt-1 w-44" data-cat-country><option value="">全部</option><template x-for="c in facets.countries"><option x-text="c"></option></template></select></label>
+   <label>类型<select x-model="cf.type" @change="loadCatalog()" class="block border rounded-lg px-3 py-1.5 mt-1 w-36"><option value="">全部</option><template x-for="c in facets.types"><option x-text="c"></option></template></select></label>
+   <label>关键词<input x-model="cf.q" @input.debounce.400ms="loadCatalog()" class="block border rounded-lg px-3 py-1.5 mt-1 w-48" placeholder="平台名/网址"></label>
+   <div class="ml-auto text-slate-500">共 <b x-text="cat.total" data-cat-total></b> 个平台</div></div>
+  <div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-4"><template x-for="p in cat.items||[]"><div class="bg-white rounded-xl p-4 border shadow-sm" data-cat-card>
+   <div class="flex justify-between"><div class="font-semibold" x-text="p.name"></div><span class="text-xs rounded px-2 py-0.5 h-fit" :class="p.scope==='本土'?'bg-emerald-50 text-emerald-700':'bg-sky-50 text-sky-700'" x-text="p.scope"></span></div>
+   <div class="text-xs text-slate-500 mt-1"><span x-text="p.region"></span> · <span x-text="p.country"></span> · <span x-text="p.type"></span></div>
+   <div class="text-sm text-slate-600 mt-2" x-text="p.note"></div><div class="mt-3 flex justify-between items-center"><a class="text-xs text-indigo-600" :href="'https://'+p.url" target="_blank" rel="noopener" x-text="p.url"></a>
+   <button class="text-xs border rounded px-2 py-0.5 hover:bg-indigo-50" @click="go('sources');editSource(null,{name:p.name,type:'webpage',c:{platform:p.url}})">接入为数据源</button></div></div></template></div>
+  <template x-if="!(cat.items||[]).length"><div class="bg-white rounded-xl border p-12 text-center text-slate-400">没有匹配的平台</div></template>
+ </section>
+
+ <!-- 告警 -->
+ <section x-show="page==='alerts'" x-cloak data-page="alerts" class="space-y-4">
+  <div class="text-sm text-slate-500">监控抓取时价格变动 ≥ 5% 自动产生告警。</div>
+  <template x-if="!alertsList.length"><div class="bg-white rounded-xl border p-12 text-center text-slate-400" data-empty>暂无告警</div></template>
+  <div class="bg-white rounded-xl border divide-y"><template x-for="a in alertsList"><div class="p-4 flex gap-3 items-center text-sm" data-alert><span class="text-xl">🔔</span><div class="flex-1"><a class="font-medium text-indigo-600" :href="'#/product/'+a.product_id" x-text="a.title"></a><div class="text-xs text-slate-500" x-text="a.platform+' · '+a.ts+' UTC'"></div></div><span class="text-rose-600 font-medium" x-text="a.msg"></span></div></template></div>
+ </section>
+ </div></main></div>
+<div x-show="nav" @click="nav=false" class="fixed inset-0 bg-black/30 z-20 md:hidden"></div>
+</body></html>

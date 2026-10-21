@@ -1,0 +1,921 @@
+﻿大洲/地区,国家,平台名称,网址,类型,本土或国际,简要说明
+亚洲-东亚,澳门,Taobao 淘宝,taobao.com,C2C/跨境,国际,澳门居民主要网购渠道，内地直邮
+亚洲-东亚,澳门,JD.com 京东,jd.com,B2C,国际,内地电商，支持寄送澳门
+亚洲-东亚,澳门,Aomi 澳觅,aomi.mo,本地生活/外卖,本土,澳门本地外卖及生活服务平台
+亚洲-东亚,朝鲜,Manmulsang 万物商,—,综合,本土,待核实：国营内网电商平台，仅限国内网络访问，无公开网址
+亚洲-东亚,韩国,Coupang 쿠팡,coupang.com,综合/自营,本土,韩国最大电商，“火箭配送”，纽交所上市
+亚洲-东亚,韩国,Naver Shopping,shopping.naver.com,综合/比价,本土,Naver旗下购物搜索与开放市场
+亚洲-东亚,韩国,11st 11번가,11st.co.kr,综合,本土,SK集团系开放市场
+亚洲-东亚,韩国,Gmarket,gmarket.co.kr,综合,本土,新世界集团旗下，与阿里国际组建合资公司
+亚洲-东亚,韩国,SSG.COM,ssg.com,综合/生鲜,本土,新世界集团电商（E-mart等）
+亚洲-东亚,韩国,Karrot 당근마켓,daangn.com,二手/C2C,本土,胡萝卜市场，本地二手交易App
+亚洲-东亚,蒙古,Shoppy.mn,shoppy.mn,综合,本土,蒙古本土综合网购平台
+亚洲-东亚,蒙古,Unegui.mn,unegui.mn,分类/C2C,本土,蒙古最大分类信息网站
+亚洲-东亚,蒙古,Taobao 淘宝,taobao.com,C2C/跨境,国际,经中国转运代购广泛使用
+亚洲-东亚,蒙古,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+亚洲-东亚,日本,Amazon,amazon.co.jp,综合/跨境,国际,日本最大电商平台之一
+亚洲-东亚,日本,Rakuten Ichiba 楽天市場,rakuten.co.jp,综合,本土,乐天集团旗下，与亚马逊并列日本两强
+亚洲-东亚,日本,Yahoo!ショッピング,shopping.yahoo.co.jp,综合,本土,LY Corporation（软银系）旗下
+亚洲-东亚,日本,Mercari メルカリ,jp.mercari.com,二手/C2C,本土,日本最大二手交易App
+亚洲-东亚,日本,ZOZOTOWN,zozo.jp,垂直类(时尚),本土,日本最大时尚电商，LY集团旗下
+亚洲-东亚,日本,Yahoo!オークション,auctions.yahoo.co.jp,C2C/拍卖,本土,日本最大网络拍卖平台
+亚洲-东亚,台湾,momo購物網,momoshop.com.tw,B2C,本土,富邦媒体旗下，台湾最大B2C电商
+亚洲-东亚,台湾,Shopee 蝦皮購物,shopee.tw,综合/C2C,区域,Sea集团旗下，台湾流量最大电商之一
+亚洲-东亚,台湾,PChome 24h購物,24h.pchome.com.tw,B2C,本土,老牌电商，以快速到货著称
+亚洲-东亚,台湾,Coupang 酷澎,tw.coupang.com,B2C/跨境,国际,韩国Coupang 2022年进入台湾，增长迅速
+亚洲-东亚,台湾,Yahoo!奇摩購物中心,tw.buy.yahoo.com,综合,本土,老牌综合购物平台
+亚洲-东亚,台湾,露天拍賣 Ruten,ruten.com.tw,C2C/拍卖,本土,本土C2C拍卖平台
+亚洲-东亚,香港,HKTVmall,hktvmall.com,综合,本土,香港最大本地综合网购平台（香港科技探索）
+亚洲-东亚,香港,Taobao 淘宝,taobao.com,C2C/跨境,国际,香港消费者最常用的跨境网购平台之一
+亚洲-东亚,香港,Carousell,carousell.com.hk,二手/C2C,区域,新加坡起家的分类与二手交易平台
+亚洲-东亚,香港,Ztore 士多,ztore.com,生鲜/超市,本土,本地网上超市
+亚洲-东亚,中国,Taobao 淘宝,taobao.com,C2C/综合,本土,阿里巴巴旗下，中国最大的网购平台之一
+亚洲-东亚,中国,Tmall 天猫,tmall.com,B2C,本土,阿里巴巴旗下品牌官方商城
+亚洲-东亚,中国,JD.com 京东,jd.com,B2C/自营,本土,自营+自建物流，3C家电优势明显
+亚洲-东亚,中国,Pinduoduo 拼多多,pinduoduo.com,社交电商,本土,PDD控股旗下，低价拼团，下沉市场领先
+亚洲-东亚,中国,Douyin 抖音电商,douyin.com,直播/内容电商,本土,字节跳动旗下，直播带货规模领先
+亚洲-东亚,中国,Xianyu 闲鱼,goofish.com,二手/C2C,本土,阿里巴巴旗下，中国最大二手交易平台
+亚洲-东南亚,东帝汶,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,社交平台交易为主
+亚洲-东南亚,东帝汶,AliExpress,aliexpress.com,跨境,国际,待核实：配送覆盖有限
+亚洲-东南亚,东帝汶,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+亚洲-东南亚,菲律宾,Shopee,shopee.ph,综合/C2C,区域,菲律宾第一大电商
+亚洲-东南亚,菲律宾,Lazada,lazada.com.ph,综合/B2C,区域,阿里巴巴控股
+亚洲-东南亚,菲律宾,TikTok Shop,shop.tiktok.com,社交电商/直播,国际,直播电商增长快
+亚洲-东南亚,菲律宾,Zalora,zalora.com.ph,垂直类(时尚),区域,东南亚时尚电商
+亚洲-东南亚,菲律宾,Carousell,carousell.ph,二手/C2C,区域,分类与二手交易平台
+亚洲-东南亚,柬埔寨,Khmer24,khmer24.com,分类/C2C,本土,柬埔寨最大分类信息与交易平台
+亚洲-东南亚,柬埔寨,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,社交电商为主要网购方式
+亚洲-东南亚,柬埔寨,Taobao 淘宝,taobao.com,C2C/跨境,国际,经转运代购常见
+亚洲-东南亚,柬埔寨,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+亚洲-东南亚,老挝,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Facebook及WhatsApp社交卖家为主要渠道
+亚洲-东南亚,老挝,Taobao 淘宝,taobao.com,C2C/跨境,国际,中老铁路开通后中国商品跨境网购增多
+亚洲-东南亚,老挝,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+亚洲-东南亚,老挝,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+亚洲-东南亚,马来西亚,Shopee,shopee.com.my,综合/C2C,区域,马来西亚第一大电商
+亚洲-东南亚,马来西亚,Lazada,lazada.com.my,综合/B2C,区域,马来西亚第二大综合电商
+亚洲-东南亚,马来西亚,TikTok Shop,shop.tiktok.com,社交电商/直播,国际,直播电商快速增长
+亚洲-东南亚,马来西亚,PG Mall,pgmall.my,综合,本土,马来西亚本土综合电商
+亚洲-东南亚,马来西亚,Mudah.my,mudah.my,分类/C2C,本土,马来西亚最大分类信息平台
+亚洲-东南亚,马来西亚,Zalora,zalora.com.my,垂直类(时尚),区域,东南亚时尚电商
+亚洲-东南亚,缅甸,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,缅甸电商以Facebook社交销售为主
+亚洲-东南亚,缅甸,Shop.com.mm,shop.com.mm,综合,区域,待核实：Daraz旗下缅甸站，当前运营状态不明
+亚洲-东南亚,缅甸,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+亚洲-东南亚,泰国,Shopee,shopee.co.th,综合/C2C,区域,泰国第一大电商
+亚洲-东南亚,泰国,Lazada,lazada.co.th,综合/B2C,区域,泰国第二大电商
+亚洲-东南亚,泰国,TikTok Shop,shop.tiktok.com,社交电商/直播,国际,泰国直播电商增长极快
+亚洲-东南亚,泰国,Central Online,central.co.th,B2C/百货,本土,尚泰集团百货线上渠道
+亚洲-东南亚,泰国,Kaidee,kaidee.com,分类/二手,本土,泰国最大二手分类平台
+亚洲-东南亚,文莱,Instagram / WhatsApp 社交卖家,instagram.com,社交电商,国际,文莱本地网购以Instagram社交卖家为主
+亚洲-东南亚,文莱,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+亚洲-东南亚,文莱,Taobao 淘宝,taobao.com,C2C/跨境,国际,经转运使用
+亚洲-东南亚,文莱,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+亚洲-东南亚,新加坡,Shopee,shopee.sg,综合/C2C,区域,新加坡流量第一的电商平台（Sea总部所在地）
+亚洲-东南亚,新加坡,Lazada,lazada.sg,综合/B2C,区域,阿里巴巴控股，Lazada总部所在地
+亚洲-东南亚,新加坡,Amazon,amazon.sg,综合/跨境,国际,亚马逊新加坡站（2019年上线）
+亚洲-东南亚,新加坡,Carousell,carousell.sg,二手/C2C,本土,新加坡创立的分类与二手交易平台
+亚洲-东南亚,新加坡,FairPrice Online,fairprice.com.sg,生鲜/超市,本土,NTUC职总平价超市线上渠道
+亚洲-东南亚,新加坡,TikTok Shop,shop.tiktok.com,社交电商/直播,国际,增长迅速的直播电商
+亚洲-东南亚,印度尼西亚,Shopee,shopee.co.id,综合/C2C,区域,印尼GMV第一的电商平台
+亚洲-东南亚,印度尼西亚,Tokopedia,tokopedia.com,综合,本土,印尼本土龙头，2024年起TikTok持股75%并与TikTok Shop整合
+亚洲-东南亚,印度尼西亚,Lazada,lazada.co.id,综合/B2C,区域,阿里巴巴控股
+亚洲-东南亚,印度尼西亚,Blibli,blibli.com,B2C,本土,Djarum集团旗下，主打正品与电子产品
+亚洲-东南亚,印度尼西亚,TikTok Shop,shop.tiktok.com,社交电商/直播,国际,与Tokopedia合并运营
+亚洲-东南亚,印度尼西亚,Bukalapak,bukalapak.com,虚拟商品,本土,曾为三大电商之一，2025年2月起停止实物商品交易，仅保留虚拟产品
+亚洲-东南亚,越南,Shopee,shopee.vn,综合/C2C,区域,越南市场份额第一
+亚洲-东南亚,越南,TikTok Shop,shop.tiktok.com,社交电商/直播,国际,越南第二大电商渠道
+亚洲-东南亚,越南,Lazada,lazada.vn,综合/B2C,区域,阿里巴巴控股
+亚洲-东南亚,越南,Tiki,tiki.vn,B2C/自营,本土,越南本土电商，自营书籍电子见长
+亚洲-东南亚,越南,Chợ Tốt,chotot.com,分类/C2C,本土,越南最大分类信息平台
+亚洲-东南亚,越南,Thế Giới Di Động,thegioididong.com,垂直类(手机数码),本土,越南最大手机电子零售商（MWG集团）
+亚洲-南亚,阿富汗,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,社交平台交易为主
+亚洲-南亚,阿富汗,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+亚洲-南亚,巴基斯坦,Daraz,daraz.pk,综合,区域,巴基斯坦最大电商
+亚洲-南亚,巴基斯坦,OLX Pakistan,olx.com.pk,分类/C2C,国际,巴基斯坦最大分类信息平台（Dubizzle集团）
+亚洲-南亚,巴基斯坦,Temu,temu.com,跨境,国际,2024年进入巴基斯坦
+亚洲-南亚,巴基斯坦,PriceOye,priceoye.pk,垂直类(电子),本土,手机电子产品电商
+亚洲-南亚,不丹,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,社交平台交易为主
+亚洲-南亚,不丹,Amazon,amazon.in,综合/跨境,国际,经印度跨境购物常见
+亚洲-南亚,不丹,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+亚洲-南亚,马尔代夫,Instagram / WhatsApp 社交卖家,instagram.com,社交电商,国际,本地商户多经Instagram/Viber销售
+亚洲-南亚,马尔代夫,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+亚洲-南亚,马尔代夫,Amazon,amazon.com,综合/跨境,国际,经转运使用
+亚洲-南亚,马尔代夫,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+亚洲-南亚,孟加拉国,Daraz,daraz.com.bd,综合,区域,孟加拉最大电商
+亚洲-南亚,孟加拉国,Chaldal,chaldal.com,生鲜/杂货,本土,达卡领先的线上杂货平台
+亚洲-南亚,孟加拉国,Bikroy,bikroy.com,分类/C2C,本土,孟加拉最大分类信息平台
+亚洲-南亚,孟加拉国,Rokomari,rokomari.com,垂直类(图书),本土,孟加拉最大网上书店
+亚洲-南亚,尼泊尔,Daraz,daraz.com.np,综合,区域,尼泊尔最大电商
+亚洲-南亚,尼泊尔,Sastodeal,sastodeal.com,综合,本土,尼泊尔本土综合电商
+亚洲-南亚,尼泊尔,Hamrobazar,hamrobazaar.com,分类/C2C,本土,尼泊尔最大分类信息平台
+亚洲-南亚,斯里兰卡,Daraz,daraz.lk,综合,区域,斯里兰卡最大电商
+亚洲-南亚,斯里兰卡,ikman,ikman.lk,分类/C2C,本土,斯里兰卡最大分类信息平台
+亚洲-南亚,斯里兰卡,Kapruka,kapruka.com,综合/礼品,本土,老牌本土电商，海外侨民送礼常用
+亚洲-南亚,印度,Flipkart,flipkart.com,综合,本土,印度最大电商，沃尔玛控股
+亚洲-南亚,印度,Amazon,amazon.in,综合/跨境,国际,亚马逊印度站，与Flipkart双寡头
+亚洲-南亚,印度,Meesho,meesho.com,社交电商,本土,主打零佣金、下沉市场，订单量领先
+亚洲-南亚,印度,Myntra,myntra.com,垂直类(时尚),本土,Flipkart旗下时尚电商
+亚洲-南亚,印度,JioMart,jiomart.com,综合/生鲜,本土,信实集团(Reliance)旗下
+亚洲-南亚,印度,Nykaa,nykaa.com,垂直类(美妆),本土,印度最大美妆电商
+亚洲-中亚,哈萨克斯坦,Kaspi.kz,kaspi.kz,综合/超级App,本土,集支付、金融与电商于一体，市场绝对龙头
+亚洲-中亚,哈萨克斯坦,Wildberries,wildberries.kz,综合,区域,俄罗斯头部电商在哈萨克斯坦
+亚洲-中亚,哈萨克斯坦,Ozon,ozon.kz,综合,区域,俄罗斯电商在哈萨克斯坦
+亚洲-中亚,哈萨克斯坦,OLX Kazakhstan,olx.kz,分类/C2C,国际,最大分类信息平台
+亚洲-中亚,哈萨克斯坦,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+亚洲-中亚,吉尔吉斯斯坦,Wildberries,wildberries.kg,综合,区域,当地最常用网购平台之一
+亚洲-中亚,吉尔吉斯斯坦,Ozon,ozon.ru,综合,区域,俄罗斯头部电商，拓展至独联体
+亚洲-中亚,吉尔吉斯斯坦,Lalafo,lalafo.kg,分类/C2C,本土,比什凯克创立的分类信息平台
+亚洲-中亚,吉尔吉斯斯坦,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+亚洲-中亚,塔吉克斯坦,Somon.tj,somon.tj,分类/C2C,本土,塔吉克最大分类信息平台
+亚洲-中亚,塔吉克斯坦,Wildberries,wildberries.ru,综合,区域,已在塔吉克斯坦开设取货点
+亚洲-中亚,塔吉克斯坦,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+亚洲-中亚,土库曼斯坦,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+亚洲-中亚,土库曼斯坦,Instagram / WhatsApp 社交卖家,instagram.com,社交电商,国际,待核实：互联网管控严格，电商极不发达
+亚洲-中亚,乌兹别克斯坦,Uzum Market,uzum.uz,综合,本土,乌兹别克斯坦最大电商，首家独角兽
+亚洲-中亚,乌兹别克斯坦,Wildberries,wildberries.uz,综合,区域,俄罗斯头部电商在乌兹别克
+亚洲-中亚,乌兹别克斯坦,Ozon,ozon.uz,综合,区域,俄罗斯电商在乌兹别克
+亚洲-中亚,乌兹别克斯坦,OLX Uzbekistan,olx.uz,分类/C2C,国际,最大分类信息平台
+亚洲-西亚/中东,阿联酋,Amazon,amazon.ae,综合/跨境,国际,亚马逊阿联酋站
+亚洲-西亚/中东,阿联酋,noon,noon.com,综合,区域,总部迪拜的本土电商龙头
+亚洲-西亚/中东,阿联酋,Namshi,namshi.com,垂直类(时尚),区域,中东时尚电商，noon旗下
+亚洲-西亚/中东,阿联酋,Dubizzle,dubizzle.com,分类/C2C,本土,阿联酋最大分类信息平台
+亚洲-西亚/中东,阿联酋,Carrefour UAE,carrefouruae.com,生鲜/超市,区域,Majid Al Futtaim运营的家乐福线上渠道
+亚洲-西亚/中东,阿联酋,Sharaf DG,uae.sharafdg.com,垂直类(电子),本土,电子产品零售商
+亚洲-西亚/中东,阿曼,noon,noon.com,综合,区域,2025年起覆盖阿曼
+亚洲-西亚/中东,阿曼,talabat,talabat.com,本地生活/即时零售,区域,中东外卖及杂货即时配送，Delivery Hero旗下
+亚洲-西亚/中东,阿曼,Namshi,namshi.com,垂直类(时尚),区域,中东时尚电商，noon旗下
+亚洲-西亚/中东,阿曼,OpenSooq,om.opensooq.com,分类/C2C,区域,中东北非分类信息平台，约旦创立
+亚洲-西亚/中东,阿塞拜疆,Umico,umico.az,综合,本土,阿塞拜疆本土综合电商与积分平台
+亚洲-西亚/中东,阿塞拜疆,Tap.az,tap.az,分类/C2C,本土,最大分类信息平台
+亚洲-西亚/中东,阿塞拜疆,Wildberries,wildberries.az,综合,区域,已进入阿塞拜疆
+亚洲-西亚/中东,阿塞拜疆,Trendyol,trendyol.com,综合/跨境,国际,直邮阿塞拜疆，使用广泛
+亚洲-西亚/中东,阿塞拜疆,Kontakt Home,kontakt.az,垂直类(电子),本土,电子家电零售商
+亚洲-西亚/中东,巴勒斯坦,OpenSooq,ps.opensooq.com,分类/C2C,区域,中东北非分类信息平台，约旦创立
+亚洲-西亚/中东,巴勒斯坦,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,社交平台交易为主
+亚洲-西亚/中东,巴勒斯坦,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+亚洲-西亚/中东,巴林,noon,noon.com,综合,区域,经阿联酋站跨境覆盖巴林
+亚洲-西亚/中东,巴林,talabat,talabat.com,本地生活/即时零售,区域,中东外卖及杂货即时配送，Delivery Hero旗下
+亚洲-西亚/中东,巴林,Namshi,namshi.com,垂直类(时尚),区域,中东时尚电商，noon旗下
+亚洲-西亚/中东,巴林,Carrefour Bahrain,carrefourbahrain.com,生鲜/超市,区域,家乐福巴林线上渠道
+亚洲-西亚/中东,格鲁吉亚,Extra.ge,extra.ge,综合,本土,格鲁吉亚本土综合电商
+亚洲-西亚/中东,格鲁吉亚,MyMarket,mymarket.ge,分类/C2C,本土,TNET集团旗下分类信息平台
+亚洲-西亚/中东,格鲁吉亚,Zoommer,zoommer.ge,垂直类(电子),本土,电子产品零售商
+亚洲-西亚/中东,格鲁吉亚,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+亚洲-西亚/中东,格鲁吉亚,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+亚洲-西亚/中东,卡塔尔,Snoonu,snoonu.com,即时零售/综合,本土,卡塔尔本土快送与电商超级App
+亚洲-西亚/中东,卡塔尔,noon,noon.com,综合,区域,2025年起覆盖卡塔尔
+亚洲-西亚/中东,卡塔尔,talabat,talabat.com,本地生活/即时零售,区域,中东外卖及杂货即时配送，Delivery Hero旗下
+亚洲-西亚/中东,卡塔尔,Qatar Living,qatarliving.com,分类/C2C,本土,卡塔尔最大社区与分类信息网站
+亚洲-西亚/中东,卡塔尔,Carrefour Qatar,carrefourqatar.com,生鲜/超市,区域,家乐福卡塔尔线上渠道
+亚洲-西亚/中东,科威特,Xcite,xcite.com,垂直类(电子),本土,Alghanim集团旗下电子零售
+亚洲-西亚/中东,科威特,noon,noon.com,综合,区域,2025年起覆盖科威特
+亚洲-西亚/中东,科威特,talabat,talabat.com,本地生活/即时零售,区域,talabat创立于科威特
+亚洲-西亚/中东,科威特,4Sale,q84sale.com,分类/C2C,本土,科威特最大分类信息平台
+亚洲-西亚/中东,科威特,Namshi,namshi.com,垂直类(时尚),区域,中东时尚电商，noon旗下
+亚洲-西亚/中东,黎巴嫩,Dubizzle Lebanon,dubizzle.com.lb,分类/C2C,区域,原OLX黎巴嫩，最大分类信息平台
+亚洲-西亚/中东,黎巴嫩,Toters,totersapp.com,即时零售/外卖,本土,黎巴嫩本土快送App
+亚洲-西亚/中东,黎巴嫩,Shein,shein.com,垂直类(时尚)/跨境,国际,快时尚跨境平台，总部新加坡
+亚洲-西亚/中东,黎巴嫩,Amazon,amazon.com,综合/跨境,国际,经转运使用
+亚洲-西亚/中东,塞浦路斯,Skroutz,skroutz.cy,比价/综合,区域,希腊比价与市场平台塞浦路斯站
+亚洲-西亚/中东,塞浦路斯,Bazaraki,bazaraki.com,分类/C2C,本土,塞浦路斯最大分类信息平台
+亚洲-西亚/中东,塞浦路斯,Amazon,amazon.de,综合/跨境,国际,多经德国/意大利站跨境购物
+亚洲-西亚/中东,塞浦路斯,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+亚洲-西亚/中东,沙特阿拉伯,noon,noon.com,综合,区域,沙特与阿联酋最大本土电商
+亚洲-西亚/中东,沙特阿拉伯,Amazon,amazon.sa,综合/跨境,国际,亚马逊沙特站（原Souq）
+亚洲-西亚/中东,沙特阿拉伯,Namshi,namshi.com,垂直类(时尚),区域,noon旗下时尚电商
+亚洲-西亚/中东,沙特阿拉伯,Jarir,jarir.com,垂直类(电子/图书),本土,沙特大型电子及图书零售商
+亚洲-西亚/中东,沙特阿拉伯,Extra,extra.com,垂直类(电子),本土,沙特电子家电零售商
+亚洲-西亚/中东,沙特阿拉伯,Haraj,haraj.com.sa,分类/C2C,本土,沙特最大分类信息平台
+亚洲-西亚/中东,土耳其,Trendyol,trendyol.com,综合,本土,土耳其最大电商，阿里巴巴控股
+亚洲-西亚/中东,土耳其,Hepsiburada,hepsiburada.com,综合,本土,老牌电商，2025年起由哈萨克斯坦Kaspi控股
+亚洲-西亚/中东,土耳其,Amazon,amazon.com.tr,综合/跨境,国际,亚马逊土耳其站
+亚洲-西亚/中东,土耳其,N11,n11.com,综合,本土,综合开放市场
+亚洲-西亚/中东,土耳其,Sahibinden,sahibinden.com,分类/C2C,本土,最大分类信息平台（房产/汽车）
+亚洲-西亚/中东,土耳其,Çiçeksepeti,ciceksepeti.com,综合/礼品,本土,鲜花礼品起家的综合电商
+亚洲-西亚/中东,叙利亚,OpenSooq,sy.opensooq.com,分类/C2C,区域,中东北非分类信息平台，约旦创立
+亚洲-西亚/中东,叙利亚,noon,noon.com,综合,区域,2026年5月宣布进军叙利亚
+亚洲-西亚/中东,叙利亚,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,社交平台交易为主
+亚洲-西亚/中东,亚美尼亚,List.am,list.am,分类/C2C,本土,亚美尼亚最大分类信息平台
+亚洲-西亚/中东,亚美尼亚,Wildberries,wildberries.am,综合,区域,已进入亚美尼亚
+亚洲-西亚/中东,亚美尼亚,Ozon,ozon.ru,综合,区域,已进入亚美尼亚
+亚洲-西亚/中东,亚美尼亚,Menu.am,menu.am,外卖/即时零售,本土,本土外卖与杂货配送
+亚洲-西亚/中东,也门,OpenSooq,ye.opensooq.com,分类/C2C,区域,分类信息平台
+亚洲-西亚/中东,也门,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,社交平台交易为主
+亚洲-西亚/中东,也门,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+亚洲-西亚/中东,伊拉克,Miswag,miswag.com,综合,本土,伊拉克本土领先电商
+亚洲-西亚/中东,伊拉克,OpenSooq,iq.opensooq.com,分类/C2C,区域,中东北非分类信息平台，约旦创立
+亚洲-西亚/中东,伊拉克,talabat,talabat.com,本地生活/即时零售,区域,覆盖伊拉克主要城市
+亚洲-西亚/中东,伊拉克,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,社交电商非常普遍
+亚洲-西亚/中东,伊朗,Digikala,digikala.com,综合,本土,伊朗最大电商（受制裁，国际平台缺席）
+亚洲-西亚/中东,伊朗,Divar,divar.ir,分类/C2C,本土,伊朗最大分类信息平台
+亚洲-西亚/中东,伊朗,Basalam,basalam.com,C2C/手工,本土,手工艺品及小商户市场
+亚洲-西亚/中东,伊朗,Torob,torob.com,比价,本土,伊朗最大比价购物搜索
+亚洲-西亚/中东,以色列,AliExpress,aliexpress.com,跨境,国际,以色列人均使用率极高的跨境平台
+亚洲-西亚/中东,以色列,Amazon,amazon.com,综合/跨境,国际,满额免费直邮以色列，使用广泛
+亚洲-西亚/中东,以色列,KSP,ksp.co.il,垂直类(电子),本土,以色列最大电子产品电商
+亚洲-西亚/中东,以色列,Yad2,yad2.co.il,分类/二手,本土,以色列最大二手分类平台
+亚洲-西亚/中东,以色列,Shufersal Online,shufersal.co.il,生鲜/超市,本土,最大连锁超市线上渠道
+亚洲-西亚/中东,以色列,Zap,zap.co.il,比价,本土,以色列主流比价平台
+亚洲-西亚/中东,约旦,OpenSooq,jo.opensooq.com,分类/C2C,区域,发源于约旦的分类信息平台
+亚洲-西亚/中东,约旦,talabat,talabat.com,本地生活/即时零售,区域,中东外卖及杂货即时配送，Delivery Hero旗下
+亚洲-西亚/中东,约旦,Shein,shein.com,垂直类(时尚)/跨境,国际,快时尚跨境平台，总部新加坡
+亚洲-西亚/中东,约旦,Amazon,amazon.com,综合/跨境,国际,经转运使用
+欧洲-西欧,爱尔兰,Amazon,amazon.ie,综合/跨境,国际,2025年3月上线的亚马逊爱尔兰站
+欧洲-西欧,爱尔兰,DoneDeal,donedeal.ie,分类/C2C,本土,爱尔兰最大分类信息平台
+欧洲-西欧,爱尔兰,Adverts.ie,adverts.ie,分类/二手,本土,二手物品交易平台
+欧洲-西欧,爱尔兰,Tesco Ireland,tesco.ie,生鲜/超市,国际,Tesco爱尔兰线上渠道
+欧洲-西欧,爱尔兰,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+欧洲-西欧,爱尔兰,Shein,shein.com,垂直类(时尚)/跨境,国际,快时尚跨境平台，总部新加坡
+欧洲-西欧,奥地利,Amazon,amazon.de,综合/跨境,国际,奥地利无本地站，主要使用德国站
+欧洲-西欧,奥地利,willhaben,willhaben.at,分类/C2C,本土,奥地利最大分类信息平台
+欧洲-西欧,奥地利,Zalando,zalando.at,垂直类(时尚),区域,欧洲最大时尚电商，总部柏林
+欧洲-西欧,奥地利,MediaMarkt,mediamarkt.at,垂直类(电子),区域,电子零售
+欧洲-西欧,奥地利,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+欧洲-西欧,比利时,Bol,bol.com,综合,区域,荷兰平台，比利时（弗拉芒区）第一
+欧洲-西欧,比利时,Amazon,amazon.com.be,综合/跨境,国际,2022年上线的亚马逊比利时站
+欧洲-西欧,比利时,Coolblue,coolblue.be,垂直类(电子),区域,荷兰电子电商
+欧洲-西欧,比利时,2dehands / 2ememain,2dehands.be,分类/C2C,本土,比利时最大分类信息平台
+欧洲-西欧,比利时,Zalando,zalando.be,垂直类(时尚),区域,欧洲最大时尚电商，总部柏林
+欧洲-西欧,比利时,Vinted,vinted.be,二手(时尚),区域,立陶宛创立的欧洲最大二手服饰平台
+欧洲-西欧,德国,Amazon,amazon.de,综合/跨境,国际,德国第一大电商，份额远超对手
+欧洲-西欧,德国,Otto,otto.de,综合,本土,德国第二大电商，Otto集团
+欧洲-西欧,德国,eBay,ebay.de,C2C/拍卖,国际,德国第三大电商市场
+欧洲-西欧,德国,Zalando,zalando.de,垂直类(时尚),本土,欧洲最大时尚电商，总部柏林
+欧洲-西欧,德国,Kleinanzeigen,kleinanzeigen.de,分类/C2C,本土,原eBay Kleinanzeigen，最大分类平台
+欧洲-西欧,德国,MediaMarkt,mediamarkt.de,垂直类(电子),本土,欧洲最大电子零售商
+欧洲-西欧,法国,Amazon,amazon.fr,综合/跨境,国际,法国第一大电商
+欧洲-西欧,法国,Leboncoin,leboncoin.fr,分类/C2C,本土,法国最大分类信息与二手平台
+欧洲-西欧,法国,Cdiscount,cdiscount.com,综合,本土,法国本土综合电商（Casino集团）
+欧洲-西欧,法国,Fnac,fnac.com,垂直类(文化/电子),本土,Fnac Darty旗下
+欧洲-西欧,法国,Vinted,vinted.fr,二手(时尚),区域,法国是Vinted最大市场之一
+欧洲-西欧,法国,Veepee,veepee.fr,闪购,本土,原Vente-privée，欧洲闪购龙头
+欧洲-西欧,荷兰,Bol,bol.com,综合,本土,荷比最大电商，Ahold Delhaize旗下
+欧洲-西欧,荷兰,Amazon,amazon.nl,综合/跨境,国际,2020年上线
+欧洲-西欧,荷兰,Coolblue,coolblue.nl,垂直类(电子),本土,以服务著称的电子家电电商
+欧洲-西欧,荷兰,Marktplaats,marktplaats.nl,分类/C2C,本土,荷兰最大分类信息平台
+欧洲-西欧,荷兰,Albert Heijn,ah.nl,生鲜/超市,本土,最大连锁超市线上渠道
+欧洲-西欧,荷兰,Zalando,zalando.nl,垂直类(时尚),区域,欧洲最大时尚电商，总部柏林
+欧洲-西欧,列支敦士登,Digitec Galaxus,galaxus.ch,综合,区域,与瑞士共享关税区，使用瑞士平台
+欧洲-西欧,列支敦士登,Ricardo,ricardo.ch,C2C/拍卖,区域,瑞士二手拍卖平台
+欧洲-西欧,列支敦士登,Amazon,amazon.de,综合/跨境,国际,美国亚马逊，可跨境直邮或经转运使用
+欧洲-西欧,卢森堡,Amazon,amazon.de,综合/跨境,国际,多使用德国/法国站
+欧洲-西欧,卢森堡,Zalando,zalando.com,垂直类(时尚),区域,欧洲最大时尚电商，总部柏林
+欧洲-西欧,卢森堡,Vinted,vinted.com,二手(时尚),区域,立陶宛创立的欧洲最大二手服饰平台
+欧洲-西欧,卢森堡,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+欧洲-西欧,摩纳哥,Amazon,amazon.fr,综合/跨境,国际,使用法国站
+欧洲-西欧,摩纳哥,Leboncoin,leboncoin.fr,分类/C2C,区域,法国分类平台
+欧洲-西欧,摩纳哥,Cdiscount,cdiscount.com,综合,区域,法国综合电商
+欧洲-西欧,瑞士,Digitec Galaxus,galaxus.ch,综合,本土,瑞士最大电商，Migros集团旗下
+欧洲-西欧,瑞士,Ricardo,ricardo.ch,C2C/拍卖,本土,瑞士最大二手拍卖平台
+欧洲-西欧,瑞士,Brack.ch,brack.ch,综合,本土,本土综合电商
+欧洲-西欧,瑞士,Zalando,zalando.ch,垂直类(时尚),区域,欧洲最大时尚电商，总部柏林
+欧洲-西欧,瑞士,Migros Online,migros.ch,生鲜/超市,本土,最大零售商线上渠道
+欧洲-西欧,瑞士,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+欧洲-西欧,英国,Amazon,amazon.co.uk,综合/跨境,国际,英国最大电商平台
+欧洲-西欧,英国,eBay,ebay.co.uk,C2C/拍卖,国际,英国第二大电商市场
+欧洲-西欧,英国,Argos,argos.co.uk,综合/B2C,本土,Sainsbury's旗下综合零售
+欧洲-西欧,英国,Tesco,tesco.com,生鲜/超市,本土,英国最大超市线上渠道
+欧洲-西欧,英国,ASOS,asos.com,垂直类(时尚),本土,英国时尚电商
+欧洲-西欧,英国,Vinted,vinted.co.uk,二手(时尚),区域,英国增长最快的二手服饰平台
+欧洲-北欧,爱沙尼亚,Kaup24,kaup24.ee,综合,区域,Pigu集团旗下爱沙尼亚站
+欧洲-北欧,爱沙尼亚,Hansapost,hansapost.ee,综合,区域,Pigu集团旗下
+欧洲-北欧,爱沙尼亚,Osta.ee,osta.ee,C2C/拍卖,本土,本土拍卖与二手平台
+欧洲-北欧,爱沙尼亚,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+欧洲-北欧,奥兰群岛（芬兰）,Tori,tori.fi,分类/C2C,国际,芬兰分类平台，覆盖奥兰
+欧洲-北欧,奥兰群岛（芬兰）,Verkkokauppa.com,verkkokauppa.com,综合/电子,国际,待核实：芬兰电商，奥兰在欧盟增值税区外，配送需清关
+欧洲-北欧,奥兰群岛（芬兰）,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+欧洲-北欧,冰岛,Heimkaup,heimkaup.is,综合,本土,待核实：冰岛本土较大网购平台
+欧洲-北欧,冰岛,Elko,elko.is,垂直类(电子),本土,电子零售商
+欧洲-北欧,冰岛,Bland.is,bland.is,分类/C2C,本土,待核实：本地分类信息与社区网站
+欧洲-北欧,冰岛,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+欧洲-北欧,冰岛,Amazon,amazon.com,综合/跨境,国际,经转运使用
+欧洲-北欧,丹麦,DBA,dba.dk,分类/C2C,本土,丹麦最大二手分类平台
+欧洲-北欧,丹麦,Bilka,bilka.dk,综合,本土,Salling集团大卖场线上渠道
+欧洲-北欧,丹麦,Elgiganten,elgiganten.dk,垂直类(电子),区域,电子零售
+欧洲-北欧,丹麦,Coolshop,coolshop.dk,综合,本土,本土综合电商
+欧洲-北欧,丹麦,Zalando,zalando.dk,垂直类(时尚),区域,欧洲最大时尚电商，总部柏林
+欧洲-北欧,丹麦,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+欧洲-北欧,法罗群岛（丹麦）,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+欧洲-北欧,法罗群岛（丹麦）,（本地主流平台）,—,—,本土,待核实：多从丹麦网店购物，需清关
+欧洲-北欧,芬兰,Verkkokauppa.com,verkkokauppa.com,综合/电子,本土,芬兰最大本土电商
+欧洲-北欧,芬兰,Tori,tori.fi,分类/C2C,本土,芬兰最大二手分类平台
+欧洲-北欧,芬兰,Gigantti,gigantti.fi,垂直类(电子),区域,Elkjøp集团
+欧洲-北欧,芬兰,Zalando,zalando.fi,垂直类(时尚),区域,欧洲最大时尚电商，总部柏林
+欧洲-北欧,芬兰,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+欧洲-北欧,根西岛（英）,Amazon,amazon.co.uk,综合/跨境,国际,英国站可配送（部分商品受限）
+欧洲-北欧,根西岛（英）,eBay,ebay.co.uk,C2C/拍卖,国际,英国eBay广泛使用
+欧洲-北欧,根西岛（英）,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+欧洲-北欧,拉脱维亚,220.lv,220.lv,综合,区域,Pigu集团旗下拉脱维亚站
+欧洲-北欧,拉脱维亚,SS.com,ss.com,分类/C2C,本土,最大分类信息平台
+欧洲-北欧,拉脱维亚,1a.lv,1a.lv,综合/电子,本土,本土综合电商
+欧洲-北欧,拉脱维亚,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+欧洲-北欧,立陶宛,Pigu,pigu.lt,综合,本土,波罗的海最大电商集团
+欧洲-北欧,立陶宛,Vinted,vinted.lt,二手(时尚),本土,立陶宛起家的独角兽
+欧洲-北欧,立陶宛,Skelbiu,skelbiu.lt,分类/C2C,本土,最大分类信息平台
+欧洲-北欧,立陶宛,Varle,varle.lt,综合,本土,本土综合电商
+欧洲-北欧,立陶宛,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+欧洲-北欧,马恩岛（英）,Amazon,amazon.co.uk,综合/跨境,国际,英国站可配送（部分商品受限）
+欧洲-北欧,马恩岛（英）,eBay,ebay.co.uk,C2C/拍卖,国际,英国eBay广泛使用
+欧洲-北欧,马恩岛（英）,Argos,argos.co.uk,综合/B2C,国际,待核实：英国综合零售
+欧洲-北欧,挪威,FINN.no,finn.no,分类/C2C,本土,挪威最大分类平台，渗透率极高
+欧洲-北欧,挪威,Komplett,komplett.no,垂直类(电子),本土,挪威最大电子电商
+欧洲-北欧,挪威,Elkjøp,elkjop.no,垂直类(电子),本土,北欧最大电子零售商
+欧洲-北欧,挪威,Zalando,zalando.no,垂直类(时尚),区域,欧洲最大时尚电商，总部柏林
+欧洲-北欧,挪威,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+欧洲-北欧,瑞典,Amazon,amazon.se,综合/跨境,国际,2020年上线
+欧洲-北欧,瑞典,Blocket,blocket.se,分类/C2C,本土,瑞典最大分类信息平台（Schibsted）
+欧洲-北欧,瑞典,Tradera,tradera.com,C2C/拍卖,本土,瑞典最大拍卖平台
+欧洲-北欧,瑞典,CDON,cdon.se,综合,本土,北欧本土开放市场
+欧洲-北欧,瑞典,Elgiganten,elgiganten.se,垂直类(电子),本土,Elkjøp集团电子零售
+欧洲-北欧,瑞典,Zalando,zalando.se,垂直类(时尚),区域,欧洲最大时尚电商，总部柏林
+欧洲-北欧,斯瓦尔巴和扬马延（挪威）,FINN.no,finn.no,分类/C2C,国际,挪威分类平台
+欧洲-北欧,斯瓦尔巴和扬马延（挪威）,Komplett,komplett.no,垂直类(电子),国际,待核实：挪威电商，斯瓦尔巴配送受限
+欧洲-北欧,斯瓦尔巴和扬马延（挪威）,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+欧洲-北欧,泽西岛（英）,Amazon,amazon.co.uk,综合/跨境,国际,英国站可配送（部分商品受限）
+欧洲-北欧,泽西岛（英）,eBay,ebay.co.uk,C2C/拍卖,国际,英国eBay广泛使用
+欧洲-北欧,泽西岛（英）,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+欧洲-南欧,阿尔巴尼亚,Merrjep,merrjep.al,分类/C2C,本土,最大分类信息平台
+欧洲-南欧,阿尔巴尼亚,Neptun,neptun.al,垂直类(电子),区域,电子零售
+欧洲-南欧,阿尔巴尼亚,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+欧洲-南欧,阿尔巴尼亚,Temu,temu.com,跨境,国际,待核实：PDD控股（拼多多母公司）旗下低价跨境平台
+欧洲-南欧,安道尔,Amazon,amazon.es,综合/跨境,国际,使用西班牙/法国站
+欧洲-南欧,安道尔,Wallapop,wallapop.com,二手/C2C,区域,西班牙二手平台
+欧洲-南欧,安道尔,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+欧洲-南欧,北马其顿,Pazar3,pazar3.mk,分类/C2C,本土,最大分类信息平台
+欧洲-南欧,北马其顿,Reklama5,reklama5.mk,分类/C2C,本土,分类信息平台
+欧洲-南欧,北马其顿,Neptun,neptun.mk,垂直类(电子),本土,电子零售
+欧洲-南欧,北马其顿,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+欧洲-南欧,波黑,OLX.ba,olx.ba,分类/C2C,本土,波黑最大交易平台（本地独立运营）
+欧洲-南欧,波黑,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+欧洲-南欧,波黑,Temu,temu.com,跨境,国际,待核实：PDD控股（拼多多母公司）旗下低价跨境平台
+欧洲-南欧,梵蒂冈,Amazon,amazon.it,综合/跨境,国际,使用意大利站
+欧洲-南欧,梵蒂冈,Subito,subito.it,分类/C2C,国际,意大利分类平台
+欧洲-南欧,黑山,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+欧洲-南欧,黑山,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+欧洲-南欧,黑山,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+欧洲-南欧,克罗地亚,Njuškalo,njuskalo.hr,分类/C2C,本土,最大分类信息平台
+欧洲-南欧,克罗地亚,Links,links.hr,垂直类(电子),本土,待核实：电子产品零售商
+欧洲-南欧,克罗地亚,Mall.hr,mall.hr,综合,本土,2026年2月由Allegro出售予Mutares
+欧洲-南欧,克罗地亚,eKupi,ekupi.hr,综合,本土,本土综合电商
+欧洲-南欧,克罗地亚,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+欧洲-南欧,科索沃,Gjirafa50,gjirafa50.com,综合/电子,本土,科索沃最大本土电商（Gjirafa集团）
+欧洲-南欧,科索沃,Merrjep,merrjep.com,分类/C2C,本土,分类信息平台
+欧洲-南欧,科索沃,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+欧洲-南欧,马耳他,Maltapark,maltapark.com,分类/C2C,本土,马耳他最大分类交易平台
+欧洲-南欧,马耳他,Amazon,amazon.de,综合/跨境,国际,多使用德/意站
+欧洲-南欧,马耳他,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+欧洲-南欧,马耳他,Shein,shein.com,垂直类(时尚)/跨境,国际,快时尚跨境平台，总部新加坡
+欧洲-南欧,葡萄牙,Amazon,amazon.es,综合/跨境,国际,无本地站，多使用西班牙站
+欧洲-南欧,葡萄牙,Worten,worten.pt,综合/电子,本土,Sonae集团，最大本土电商之一
+欧洲-南欧,葡萄牙,OLX Portugal,olx.pt,分类/C2C,国际,最大分类信息平台
+欧洲-南欧,葡萄牙,Fnac Portugal,fnac.pt,垂直类(文化/电子),国际,
+欧洲-南欧,葡萄牙,Continente,continente.pt,生鲜/超市,本土,最大超市线上渠道
+欧洲-南欧,葡萄牙,KuantoKusta,kuantokusta.pt,比价/市场,本土,比价与开放市场
+欧洲-南欧,塞尔维亚,KupujemProdajem,kupujemprodajem.com,分类/C2C,本土,塞尔维亚最大分类交易平台
+欧洲-南欧,塞尔维亚,Gigatron,gigatron.rs,垂直类(电子),本土,电子零售
+欧洲-南欧,塞尔维亚,Limundo,limundo.com,C2C/拍卖,本土,在线拍卖平台
+欧洲-南欧,塞尔维亚,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+欧洲-南欧,圣马力诺,Amazon,amazon.it,综合/跨境,国际,使用意大利站
+欧洲-南欧,圣马力诺,Subito,subito.it,分类/C2C,区域,意大利分类平台
+欧洲-南欧,斯洛文尼亚,Mimovrste,mimovrste.com,综合,本土,斯洛文尼亚最大电商，2026年由Allegro出售予Mutares
+欧洲-南欧,斯洛文尼亚,Bolha,bolha.com,分类/C2C,本土,最大分类信息平台
+欧洲-南欧,斯洛文尼亚,Big Bang,bigbang.si,垂直类(电子),本土,电子零售
+欧洲-南欧,斯洛文尼亚,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+欧洲-南欧,西班牙,Amazon,amazon.es,综合/跨境,国际,西班牙第一大电商
+欧洲-南欧,西班牙,AliExpress,aliexpress.com,跨境,国际,西班牙是速卖通欧洲核心市场
+欧洲-南欧,西班牙,El Corte Inglés,elcorteingles.es,综合/百货,本土,最大百货集团线上渠道
+欧洲-南欧,西班牙,Wallapop,wallapop.com,二手/C2C,本土,西班牙最大二手交易App
+欧洲-南欧,西班牙,PcComponentes,pccomponentes.com,垂直类(电子),本土,电子产品电商
+欧洲-南欧,西班牙,Shein,shein.com,垂直类(时尚)/跨境,国际,快时尚跨境平台，总部新加坡
+欧洲-南欧,希腊,Skroutz,skroutz.gr,比价/综合,本土,希腊最大电商与比价平台
+欧洲-南欧,希腊,Public,public.gr,综合/电子,本土,电子文化零售
+欧洲-南欧,希腊,Plaisio,plaisio.gr,垂直类(电子),本土,电子零售
+欧洲-南欧,希腊,e-shop.gr,e-shop.gr,综合,本土,老牌本土电商
+欧洲-南欧,希腊,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+欧洲-南欧,希腊,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+欧洲-南欧,意大利,Amazon,amazon.it,综合/跨境,国际,意大利第一大电商
+欧洲-南欧,意大利,eBay,ebay.it,C2C/拍卖,国际,美国老牌在线拍卖与交易平台
+欧洲-南欧,意大利,Subito,subito.it,分类/C2C,本土,最大分类信息平台
+欧洲-南欧,意大利,Zalando,zalando.it,垂直类(时尚),区域,欧洲最大时尚电商，总部柏林
+欧洲-南欧,意大利,Unieuro,unieuro.it,垂直类(电子),本土,电子零售商
+欧洲-南欧,意大利,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+欧洲-南欧,直布罗陀（英）,Amazon,amazon.co.uk,综合/跨境,国际,英国/西班牙站均可使用
+欧洲-南欧,直布罗陀（英）,eBay,ebay.co.uk,C2C/拍卖,国际,美国老牌在线拍卖与交易平台
+欧洲-南欧,直布罗陀（英）,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+欧洲-中东欧,白俄罗斯,Wildberries,wildberries.by,综合,区域,白俄罗斯最大网购平台之一
+欧洲-中东欧,白俄罗斯,Ozon,ozon.by,综合,区域,俄罗斯头部电商，拓展至独联体
+欧洲-中东欧,白俄罗斯,21vek.by,21vek.by,综合,本土,本土最大电商
+欧洲-中东欧,白俄罗斯,Kufar,kufar.by,分类/C2C,本土,最大分类信息平台
+欧洲-中东欧,白俄罗斯,Onliner,catalog.onliner.by,比价,本土,门户及比价目录
+欧洲-中东欧,保加利亚,eMAG,emag.bg,综合,区域,eMAG保加利亚站
+欧洲-中东欧,保加利亚,OLX Bulgaria,olx.bg,分类/C2C,国际,最大分类信息平台
+欧洲-中东欧,保加利亚,Technopolis,technopolis.bg,垂直类(电子),本土,电子零售
+欧洲-中东欧,保加利亚,Ozone.bg,ozone.bg,综合,本土,本土综合电商
+欧洲-中东欧,保加利亚,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+欧洲-中东欧,波兰,Allegro,allegro.pl,综合,本土,波兰最大电商，市场份额遥遥领先
+欧洲-中东欧,波兰,Amazon,amazon.pl,综合/跨境,国际,2021年上线
+欧洲-中东欧,波兰,OLX Polska,olx.pl,分类/C2C,国际,最大分类信息平台
+欧洲-中东欧,波兰,Temu,temu.com,跨境,国际,波兰是Temu欧洲重点市场
+欧洲-中东欧,波兰,Media Expert,mediaexpert.pl,垂直类(电子),本土,最大电子零售商
+欧洲-中东欧,波兰,Zalando,zalando.pl,垂直类(时尚),区域,欧洲最大时尚电商，总部柏林
+欧洲-中东欧,俄罗斯,Wildberries,wildberries.ru,综合,区域,俄罗斯第一大电商（与Russ合并为RWB）
+欧洲-中东欧,俄罗斯,Ozon,ozon.ru,综合,区域,俄罗斯第二大电商
+欧洲-中东欧,俄罗斯,Yandex Market,market.yandex.ru,综合,本土,Yandex旗下电商
+欧洲-中东欧,俄罗斯,Avito,avito.ru,分类/C2C,本土,全球最大分类信息平台之一
+欧洲-中东欧,俄罗斯,Megamarket,megamarket.ru,综合,本土,俄储蓄银行(Sber)旗下
+欧洲-中东欧,俄罗斯,AliExpress Russia,aliexpress.ru,跨境,国际,速卖通俄罗斯合资公司
+欧洲-中东欧,捷克,Alza,alza.cz,综合/电子,本土,捷克最大电商
+欧洲-中东欧,捷克,Allegro,allegro.cz,综合,国际,波兰Allegro捷克站（整合原Mall.cz）
+欧洲-中东欧,捷克,Heureka,heureka.cz,比价,本土,中欧最大比价平台
+欧洲-中东欧,捷克,Bazoš,bazos.cz,分类/C2C,本土,最大分类信息平台
+欧洲-中东欧,捷克,Rohlik,rohlik.cz,生鲜,本土,生鲜电商独角兽
+欧洲-中东欧,捷克,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+欧洲-中东欧,罗马尼亚,eMAG,emag.ro,综合,本土,罗马尼亚最大电商（Naspers/Prosus控股）
+欧洲-中东欧,罗马尼亚,OLX Romania,olx.ro,分类/C2C,国际,最大分类信息平台
+欧洲-中东欧,罗马尼亚,Altex,altex.ro,垂直类(电子),本土,电子零售
+欧洲-中东欧,罗马尼亚,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+欧洲-中东欧,罗马尼亚,Trendyol,trendyol.com,综合/跨境,国际,跨境覆盖罗马尼亚
+欧洲-中东欧,摩尔多瓦,999.md,999.md,分类/C2C,本土,摩尔多瓦最大交易平台
+欧洲-中东欧,摩尔多瓦,Darwin,darwin.md,垂直类(电子),本土,待核实：电子产品零售商
+欧洲-中东欧,摩尔多瓦,Enter,enter.online,垂直类(电子),本土,待核实：电子产品零售商
+欧洲-中东欧,摩尔多瓦,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+欧洲-中东欧,摩尔多瓦,Temu,temu.com,跨境,国际,待核实：PDD控股（拼多多母公司）旗下低价跨境平台
+欧洲-中东欧,斯洛伐克,Alza,alza.sk,综合/电子,区域,捷克Alza斯洛伐克站
+欧洲-中东欧,斯洛伐克,Allegro,allegro.sk,综合,国际,Allegro斯洛伐克站
+欧洲-中东欧,斯洛伐克,Bazoš,bazos.sk,分类/C2C,本土,分类信息平台
+欧洲-中东欧,斯洛伐克,Heureka,heureka.sk,比价,区域,比价平台
+欧洲-中东欧,斯洛伐克,Notino,notino.sk,垂直类(美妆),区域,中欧美妆电商
+欧洲-中东欧,乌克兰,Rozetka,rozetka.com.ua,综合,本土,乌克兰最大电商
+欧洲-中东欧,乌克兰,Prom.ua,prom.ua,综合/市场,本土,中小商家开放市场
+欧洲-中东欧,乌克兰,OLX Ukraine,olx.ua,分类/C2C,国际,最大分类信息平台
+欧洲-中东欧,乌克兰,Epicentr,epicentrk.ua,综合/建材,本土,大型零售集团线上渠道
+欧洲-中东欧,乌克兰,Allo,allo.ua,垂直类(电子),本土,电子零售
+欧洲-中东欧,匈牙利,eMAG,emag.hu,综合,区域,罗马尼亚eMAG匈牙利站
+欧洲-中东欧,匈牙利,Allegro,allegro.hu,综合,国际,Allegro匈牙利站，增长迅速
+欧洲-中东欧,匈牙利,Jófogás,jofogas.hu,分类/C2C,本土,最大分类信息平台
+欧洲-中东欧,匈牙利,Árukereső,arukereso.hu,比价,本土,主流比价平台
+欧洲-中东欧,匈牙利,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+非洲-北非,阿尔及利亚,Ouedkniss,ouedkniss.com,分类/C2C,本土,阿尔及利亚最大交易平台
+非洲-北非,阿尔及利亚,Yassir,yassir.com,即时零售/超级App,本土,本土出行及配送超级App
+非洲-北非,阿尔及利亚,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,社交电商普遍
+非洲-北非,阿尔及利亚,Jumia Algeria,jumia.dz,综合,区域,已于2026年2月停止运营（仅供参考）
+非洲-北非,埃及,Amazon,amazon.eg,综合/跨境,国际,2021年由Souq升级
+非洲-北非,埃及,noon,noon.com,综合,区域,中东本土电商，Alabbar与沙特PIF共同创立
+非洲-北非,埃及,Jumia,jumia.com.eg,综合,区域,泛非电商平台，纽交所上市，现运营8国
+非洲-北非,埃及,Dubizzle Egypt,dubizzle.com.eg,分类/C2C,区域,原OLX埃及
+非洲-北非,埃及,B.TECH,btech.com,垂直类(电子),本土,电子家电零售
+非洲-北非,埃及,Temu,temu.com,跨境,国际,待核实：PDD控股（拼多多母公司）旗下低价跨境平台
+非洲-北非,利比亚,OpenSooq,ly.opensooq.com,分类/C2C,区域,中东北非分类信息平台，约旦创立
+非洲-北非,利比亚,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,社交平台交易为主
+非洲-北非,利比亚,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-北非,摩洛哥,Jumia,jumia.ma,综合,区域,摩洛哥领先电商
+非洲-北非,摩洛哥,Avito.ma,avito.ma,分类/C2C,本土,最大分类信息平台
+非洲-北非,摩洛哥,Marjane Mall,marjanemall.ma,综合,本土,Marjane超市集团线上市场
+非洲-北非,摩洛哥,Electroplanet,electroplanet.ma,垂直类(电子),本土,电子零售
+非洲-北非,摩洛哥,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+非洲-北非,摩洛哥,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+非洲-北非,苏丹,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,社交平台交易为主（受战乱影响）
+非洲-北非,苏丹,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-北非,突尼斯,Tunisianet,tunisianet.com.tn,垂直类(电子),本土,最大电子产品电商
+非洲-北非,突尼斯,Mytek,mytek.tn,垂直类(电子),本土,电子零售
+非洲-北非,突尼斯,Tayara,tayara.tn,分类/C2C,本土,最大分类信息平台
+非洲-北非,突尼斯,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Jumia已于2024年底退出突尼斯
+非洲-北非,西撒哈拉,Avito.ma,avito.ma,分类/C2C,国际,摩洛哥分类平台，覆盖阿尤恩等城市（实际管控区）
+非洲-北非,西撒哈拉,Jumia,jumia.ma,综合,区域,待核实：摩洛哥站对该地区配送
+非洲-北非,西撒哈拉,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-西非,贝宁,CoinAfrique,coinafrique.com,分类/C2C,区域,法语非洲分类信息平台
+非洲-西非,贝宁,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-西非,贝宁,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+非洲-西非,贝宁,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-西非,布基纳法索,CoinAfrique,coinafrique.com,分类/C2C,区域,法语非洲分类信息平台
+非洲-西非,布基纳法索,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-西非,布基纳法索,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-西非,多哥,CoinAfrique,coinafrique.com,分类/C2C,区域,法语非洲分类信息平台
+非洲-西非,多哥,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-西非,多哥,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+非洲-西非,多哥,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-西非,佛得角,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-西非,佛得角,Amazon,amazon.es,综合/跨境,国际,待核实：经葡/西转运
+非洲-西非,佛得角,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-西非,冈比亚,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-西非,冈比亚,Instagram / WhatsApp 社交卖家,instagram.com,社交电商,国际,大量中小商户通过社交媒体接单、货到付款
+非洲-西非,冈比亚,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-西非,几内亚,CoinAfrique,coinafrique.com,分类/C2C,区域,待核实：法语非洲分类信息平台
+非洲-西非,几内亚,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-西非,几内亚,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-西非,几内亚比绍,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-西非,几内亚比绍,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-西非,加纳,Jumia,jumia.com.gh,综合,区域,泛非电商平台，纽交所上市，现运营8国
+非洲-西非,加纳,Jiji,jiji.com.gh,分类/C2C,区域,已合并Tonaton
+非洲-西非,加纳,Kikuu,kikuu.com,跨境,区域,待核实：中国背景的非洲跨境电商
+非洲-西非,加纳,Instagram / WhatsApp 社交卖家,instagram.com,社交电商,国际,大量中小商户通过社交媒体接单、货到付款
+非洲-西非,科特迪瓦,Jumia,jumia.ci,综合,区域,法语西非最大电商之一
+非洲-西非,科特迪瓦,CoinAfrique,coinafrique.com,分类/C2C,区域,法语非洲分类信息平台
+非洲-西非,科特迪瓦,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+非洲-西非,科特迪瓦,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-西非,利比里亚,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-西非,利比里亚,Instagram / WhatsApp 社交卖家,instagram.com,社交电商,国际,大量中小商户通过社交媒体接单、货到付款
+非洲-西非,利比里亚,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-西非,马里,CoinAfrique,coinafrique.com,分类/C2C,区域,法语非洲分类信息平台
+非洲-西非,马里,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-西非,马里,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+非洲-西非,马里,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-西非,毛里塔尼亚,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-西非,毛里塔尼亚,OpenSooq,opensooq.com,分类/C2C,区域,待核实：中东北非分类信息平台，约旦创立
+非洲-西非,毛里塔尼亚,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-西非,尼日尔,CoinAfrique,coinafrique.com,分类/C2C,区域,待核实：法语非洲分类信息平台
+非洲-西非,尼日尔,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-西非,尼日尔,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-西非,尼日利亚,Jumia,jumia.com.ng,综合,区域,尼日利亚最大电商
+非洲-西非,尼日利亚,Konga,konga.com,综合,本土,本土综合电商
+非洲-西非,尼日利亚,Jiji,jiji.ng,分类/C2C,区域,尼日利亚最大分类平台
+非洲-西非,尼日利亚,Temu,temu.com,跨境,国际,2024年进入尼日利亚
+非洲-西非,尼日利亚,Slot,slot.ng,垂直类(电子),本土,手机电子零售
+非洲-西非,尼日利亚,Instagram / WhatsApp 社交卖家,instagram.com,社交电商,国际,大量中小商户通过社交媒体接单、货到付款
+非洲-西非,塞拉利昂,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-西非,塞拉利昂,Instagram / WhatsApp 社交卖家,instagram.com,社交电商,国际,大量中小商户通过社交媒体接单、货到付款
+非洲-西非,塞拉利昂,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-西非,塞内加尔,Jumia,jumia.sn,综合,区域,泛非电商平台，纽交所上市，现运营8国
+非洲-西非,塞内加尔,CoinAfrique,coinafrique.com,分类/C2C,区域,CoinAfrique发源地
+非洲-西非,塞内加尔,Expat-Dakar,expat-dakar.com,分类/C2C,本土,达喀尔分类信息平台
+非洲-西非,塞内加尔,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+非洲-西非,圣赫勒拿、阿森松和特里斯坦-达库尼亚（英）,Amazon,amazon.co.uk,综合/跨境,国际,待核实：配送极为有限
+非洲-西非,圣赫勒拿、阿森松和特里斯坦-达库尼亚（英）,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-中非,安哥拉,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,社交电商为主
+非洲-中非,安哥拉,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+非洲-中非,安哥拉,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-中非,赤道几内亚,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-中非,赤道几内亚,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-中非,刚果（布）,CoinAfrique,coinafrique.com,分类/C2C,区域,待核实：法语非洲分类信息平台
+非洲-中非,刚果（布）,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-中非,刚果（布）,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-中非,刚果（金）,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,社交电商为主
+非洲-中非,刚果（金）,CoinAfrique,coinafrique.com,分类/C2C,区域,待核实：法语非洲分类信息平台
+非洲-中非,刚果（金）,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+非洲-中非,刚果（金）,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-中非,加蓬,CoinAfrique,coinafrique.com,分类/C2C,区域,待核实：法语非洲分类信息平台
+非洲-中非,加蓬,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-中非,加蓬,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-中非,喀麦隆,CoinAfrique,coinafrique.com,分类/C2C,区域,法语非洲分类信息平台
+非洲-中非,喀麦隆,Glotelho,glotelho.cm,综合,本土,待核实：喀麦隆本土电商
+非洲-中非,喀麦隆,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-中非,喀麦隆,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+非洲-中非,圣多美和普林西比,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-中非,圣多美和普林西比,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-中非,乍得,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-中非,乍得,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-中非,中非共和国,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-中非,中非共和国,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-东非,埃塞俄比亚,Jiji,jiji.com.et,分类/C2C,区域,非洲分类信息平台
+非洲-东非,埃塞俄比亚,Telegram 频道卖家,telegram.org,社交电商,国际,埃塞俄比亚网购大量通过Telegram频道进行
+非洲-东非,埃塞俄比亚,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-东非,布隆迪,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-东非,布隆迪,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-东非,厄立特里亚,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-东非,吉布提,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-东非,吉布提,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-东非,津巴布韦,Classifieds.co.zw,classifieds.co.zw,分类/C2C,本土,津巴布韦主要分类信息平台
+非洲-东非,津巴布韦,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-东非,津巴布韦,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+非洲-东非,津巴布韦,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-东非,科摩罗,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-东非,科摩罗,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-东非,肯尼亚,Jumia,jumia.co.ke,综合,区域,肯尼亚最大电商
+非洲-东非,肯尼亚,Kilimall,kilimall.co.ke,综合,区域,中国背景的东非电商平台
+非洲-东非,肯尼亚,Jiji,jiji.co.ke,分类/C2C,区域,非洲分类信息平台
+非洲-东非,肯尼亚,Temu,temu.com,跨境,国际,待核实：PDD控股（拼多多母公司）旗下低价跨境平台
+非洲-东非,肯尼亚,Instagram / WhatsApp 社交卖家,instagram.com,社交电商,国际,大量中小商户通过社交媒体接单、货到付款
+非洲-东非,留尼汪（法）,Amazon,amazon.fr,综合/跨境,国际,法国站，部分商品可配送至海外省，运费及限制较多
+非洲-东非,留尼汪（法）,Leboncoin,leboncoin.fr,分类/C2C,国际,法国分类平台，覆盖法国海外省本地交易
+非洲-东非,留尼汪（法）,Cdiscount,cdiscount.com,综合,国际,待核实：法国综合电商，对海外省配送范围有限
+非洲-东非,留尼汪（法）,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-东非,卢旺达,Kasha,kasha.co,垂直类(健康/个护),本土,待核实：面向女性的健康个护电商
+非洲-东非,卢旺达,Instagram / WhatsApp 社交卖家,instagram.com,社交电商,国际,大量中小商户通过社交媒体接单、货到付款
+非洲-东非,卢旺达,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+非洲-东非,卢旺达,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-东非,马达加斯加,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,社交电商为主
+非洲-东非,马达加斯加,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+非洲-东非,马达加斯加,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-东非,马拉维,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-东非,马拉维,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-东非,马约特（法）,Amazon,amazon.fr,综合/跨境,国际,法国站，部分商品可配送至海外省，运费及限制较多
+非洲-东非,马约特（法）,Leboncoin,leboncoin.fr,分类/C2C,国际,法国分类平台，覆盖法国海外省本地交易
+非洲-东非,马约特（法）,Cdiscount,cdiscount.com,综合,国际,待核实：法国综合电商，对海外省配送范围有限
+非洲-东非,马约特（法）,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-东非,毛里求斯,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-东非,毛里求斯,Amazon,amazon.com,综合/跨境,国际,经转运使用
+非洲-东非,毛里求斯,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+非洲-东非,毛里求斯,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-东非,莫桑比克,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-东非,莫桑比克,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+非洲-东非,莫桑比克,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-东非,南苏丹,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-东非,南苏丹,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-东非,塞舌尔,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-东非,塞舌尔,Amazon,amazon.com,综合/跨境,国际,经转运使用
+非洲-东非,塞舌尔,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-东非,索马里,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-东非,索马里,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-东非,坦桑尼亚,Jiji,jiji.co.tz,分类/C2C,区域,非洲分类信息平台
+非洲-东非,坦桑尼亚,Kikuu,kikuu.com,跨境,区域,待核实：中国背景的非洲跨境电商
+非洲-东非,坦桑尼亚,Instagram / WhatsApp 社交卖家,instagram.com,社交电商,国际,Jumia已于2019年退出
+非洲-东非,乌干达,Jumia,jumia.ug,综合,区域,泛非电商平台，纽交所上市，现运营8国
+非洲-东非,乌干达,Jiji,jiji.ug,分类/C2C,区域,非洲分类信息平台
+非洲-东非,乌干达,Kilimall,kilimall.com,综合,区域,待核实：中国背景的东非电商平台
+非洲-东非,乌干达,Instagram / WhatsApp 社交卖家,instagram.com,社交电商,国际,大量中小商户通过社交媒体接单、货到付款
+非洲-东非,英属印度洋领地,Amazon,amazon.com,综合/跨境,国际,待核实：迪戈加西亚为美军基地，经美军邮政(FPO)收货
+非洲-东非,英属印度洋领地,（无常住居民）,—,—,—,无常住人口或仅有科研/军事人员，不存在商业电商市场
+非洲-东非,赞比亚,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-东非,赞比亚,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+非洲-东非,赞比亚,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-南部非洲,博茨瓦纳,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-南部非洲,博茨瓦纳,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+非洲-南部非洲,博茨瓦纳,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-南部非洲,莱索托,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-南部非洲,莱索托,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-南部非洲,纳米比亚,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-南部非洲,纳米比亚,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+非洲-南部非洲,纳米比亚,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+非洲-南部非洲,南非,Takealot,takealot.com,综合,本土,南非最大电商，Naspers旗下
+非洲-南部非洲,南非,Amazon,amazon.co.za,综合/跨境,国际,2024年5月上线
+非洲-南部非洲,南非,Temu,temu.com,跨境,国际,南非增长最快的平台之一
+非洲-南部非洲,南非,Shein,shein.com,垂直类(时尚)/跨境,国际,快时尚跨境平台，总部新加坡
+非洲-南部非洲,南非,Makro,makro.co.za,综合/批发,本土,沃尔玛旗下Massmart运营
+非洲-南部非洲,南非,Gumtree,gumtree.co.za,分类/C2C,本土,分类信息平台
+非洲-南部非洲,斯威士兰,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+非洲-南部非洲,斯威士兰,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+美洲-北美洲,百慕大（英）,Amazon,amazon.com,综合/跨境,国际,经美国转运公司使用，为主要网购渠道
+美洲-北美洲,百慕大（英）,eBay,ebay.com,C2C/拍卖,国际,美国老牌在线拍卖与交易平台
+美洲-北美洲,百慕大（英）,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+美洲-北美洲,波多黎各（美属）,Amazon,amazon.com,综合/跨境,国际,适用美国国内配送
+美洲-北美洲,波多黎各（美属）,Walmart,walmart.com,综合,国际,
+美洲-北美洲,波多黎各（美属）,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+美洲-北美洲,波多黎各（美属）,Shein,shein.com,垂直类(时尚)/跨境,国际,快时尚跨境平台，总部新加坡
+美洲-北美洲,格陵兰（丹麦）,AliExpress,aliexpress.com,跨境,国际,阿里巴巴旗下跨境零售平台，覆盖200+国家和地区
+美洲-北美洲,格陵兰（丹麦）,（本地主流平台）,—,—,本土,待核实：多从丹麦网店购物，需清关
+美洲-北美洲,加拿大,Amazon,amazon.ca,综合/跨境,国际,加拿大最大电商
+美洲-北美洲,加拿大,Walmart Canada,walmart.ca,综合,国际,
+美洲-北美洲,加拿大,Canadian Tire,canadiantire.ca,综合,本土,本土大型零售
+美洲-北美洲,加拿大,Best Buy Canada,bestbuy.ca,垂直类(电子),国际,
+美洲-北美洲,加拿大,Kijiji,kijiji.ca,分类/C2C,本土,最大分类信息平台
+美洲-北美洲,加拿大,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+美洲-北美洲,美国,Amazon,amazon.com,综合/跨境,国际,美国最大电商，份额约四成
+美洲-北美洲,美国,Walmart,walmart.com,综合,本土,美国第二大电商
+美洲-北美洲,美国,eBay,ebay.com,C2C/拍卖,国际,美国老牌在线拍卖与交易平台
+美洲-北美洲,美国,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+美洲-北美洲,美国,Etsy,etsy.com,垂直类(手工/创意),本土,手工及创意商品市场
+美洲-北美洲,美国,Target,target.com,综合,本土,大型零售商线上渠道
+美洲-北美洲,墨西哥,Mercado Libre,mercadolibre.com.mx,综合,区域,墨西哥最大电商
+美洲-北美洲,墨西哥,Amazon,amazon.com.mx,综合/跨境,国际,美国亚马逊，可跨境直邮或经转运使用
+美洲-北美洲,墨西哥,Walmart México,walmart.com.mx,综合,国际,Walmex
+美洲-北美洲,墨西哥,Liverpool,liverpool.com.mx,综合/百货,本土,百货集团
+美洲-北美洲,墨西哥,Coppel,coppel.com,综合,本土,面向大众的零售与信贷
+美洲-北美洲,墨西哥,Shein,shein.com,垂直类(时尚)/跨境,国际,快时尚跨境平台，总部新加坡
+美洲-北美洲,圣皮埃尔和密克隆（法）,Amazon,amazon.fr,综合/跨境,国际,待核实：法国/加拿大站配送受限
+美洲-北美洲,圣皮埃尔和密克隆（法）,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+美洲-中美洲,巴拿马,Encuentra24,encuentra24.com,分类/C2C,区域,巴拿马最大分类平台
+美洲-中美洲,巴拿马,Mercado Libre,mercadolibre.com.pa,综合,区域,拉美最大电商，阿根廷创立，纳斯达克上市
+美洲-中美洲,巴拿马,Aeropost,aeropost.com,跨境代购/转运,区域,中美洲及加勒比跨境购物与转运服务，PriceSmart旗下
+美洲-中美洲,巴拿马,Amazon,amazon.com,综合/跨境,国际,经转运使用
+美洲-中美洲,伯利兹,Amazon,amazon.com,综合/跨境,国际,经美国转运使用
+美洲-中美洲,伯利兹,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+美洲-中美洲,伯利兹,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+美洲-中美洲,哥斯达黎加,Aeropost,aeropost.com,跨境代购/转运,区域,哥斯达黎加最常用跨境购物方式之一
+美洲-中美洲,哥斯达黎加,Walmart Costa Rica,walmart.co.cr,综合,国际,
+美洲-中美洲,哥斯达黎加,Mercado Libre,mercadolibre.co.cr,综合,区域,拉美最大电商，阿根廷创立，纳斯达克上市
+美洲-中美洲,哥斯达黎加,Encuentra24,encuentra24.com,分类/C2C,区域,中美洲分类信息平台
+美洲-中美洲,哥斯达黎加,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+美洲-中美洲,洪都拉斯,Mercado Libre,mercadolibre.com.hn,综合,区域,拉美最大电商，阿根廷创立，纳斯达克上市
+美洲-中美洲,洪都拉斯,Encuentra24,encuentra24.com,分类/C2C,区域,中美洲分类信息平台
+美洲-中美洲,洪都拉斯,Aeropost,aeropost.com,跨境代购/转运,区域,中美洲及加勒比跨境购物与转运服务，PriceSmart旗下
+美洲-中美洲,洪都拉斯,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+美洲-中美洲,尼加拉瓜,Mercado Libre,mercadolibre.com.ni,综合,区域,拉美最大电商，阿根廷创立，纳斯达克上市
+美洲-中美洲,尼加拉瓜,Encuentra24,encuentra24.com,分类/C2C,区域,中美洲分类信息平台
+美洲-中美洲,尼加拉瓜,Aeropost,aeropost.com,跨境代购/转运,区域,中美洲及加勒比跨境购物与转运服务，PriceSmart旗下
+美洲-中美洲,尼加拉瓜,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+美洲-中美洲,萨尔瓦多,Mercado Libre,mercadolibre.com.sv,综合,区域,拉美最大电商，阿根廷创立，纳斯达克上市
+美洲-中美洲,萨尔瓦多,Encuentra24,encuentra24.com,分类/C2C,区域,中美洲分类信息平台
+美洲-中美洲,萨尔瓦多,Aeropost,aeropost.com,跨境代购/转运,区域,中美洲及加勒比跨境购物与转运服务，PriceSmart旗下
+美洲-中美洲,萨尔瓦多,Temu,temu.com,跨境,国际,待核实：PDD控股（拼多多母公司）旗下低价跨境平台
+美洲-中美洲,危地马拉,Mercado Libre,mercadolibre.com.gt,综合,区域,拉美最大电商，阿根廷创立，纳斯达克上市
+美洲-中美洲,危地马拉,Pacifiko,pacifiko.com,综合,本土,危地马拉本土电商
+美洲-中美洲,危地马拉,Cemaco,cemaco.com,综合/家居,本土,
+美洲-中美洲,危地马拉,Aeropost,aeropost.com,跨境代购/转运,区域,中美洲及加勒比跨境购物与转运服务，PriceSmart旗下
+美洲-中美洲,危地马拉,Encuentra24,encuentra24.com,分类/C2C,区域,中美洲分类信息平台
+美洲-加勒比,阿鲁巴（荷）,Amazon,amazon.com,综合/跨境,国际,经美国转运公司使用
+美洲-加勒比,阿鲁巴（荷）,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,本地社交平台交易常见
+美洲-加勒比,阿鲁巴（荷）,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+美洲-加勒比,安圭拉（英）,Amazon,amazon.com,综合/跨境,国际,经美国转运公司使用
+美洲-加勒比,安圭拉（英）,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,本地社交平台交易常见
+美洲-加勒比,安圭拉（英）,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+美洲-加勒比,安提瓜和巴布达,Amazon,amazon.com,综合/跨境,国际,经转运使用
+美洲-加勒比,安提瓜和巴布达,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+美洲-加勒比,安提瓜和巴布达,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+美洲-加勒比,巴巴多斯,Amazon,amazon.com,综合/跨境,国际,经转运使用
+美洲-加勒比,巴巴多斯,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+美洲-加勒比,巴巴多斯,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+美洲-加勒比,巴哈马,Amazon,amazon.com,综合/跨境,国际,经美国转运使用
+美洲-加勒比,巴哈马,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+美洲-加勒比,巴哈马,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+美洲-加勒比,多米尼加,Mercado Libre,mercadolibre.com.do,综合,区域,拉美最大电商，阿根廷创立，纳斯达克上市
+美洲-加勒比,多米尼加,Corotos,corotos.com.do,分类/C2C,本土,最大分类信息平台
+美洲-加勒比,多米尼加,Amazon,amazon.com,综合/跨境,国际,经转运使用
+美洲-加勒比,多米尼加,Shein,shein.com,垂直类(时尚)/跨境,国际,快时尚跨境平台，总部新加坡
+美洲-加勒比,多米尼克,Amazon,amazon.com,综合/跨境,国际,经转运使用
+美洲-加勒比,多米尼克,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+美洲-加勒比,多米尼克,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+美洲-加勒比,法属圣马丁,Amazon,amazon.fr,综合/跨境,国际,待核实：法国站对该海外集体配送受限
+美洲-加勒比,法属圣马丁,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,本地社交平台交易常见
+美洲-加勒比,法属圣马丁,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+美洲-加勒比,格林纳达,Amazon,amazon.com,综合/跨境,国际,经转运使用
+美洲-加勒比,格林纳达,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+美洲-加勒比,格林纳达,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+美洲-加勒比,古巴,Revolico,revolico.com,分类/C2C,本土,古巴最大分类信息网站
+美洲-加勒比,古巴,Supermarket23,supermarket23.com,跨境代购,国际,待核实：海外侨民为古巴家人下单的平台
+美洲-加勒比,古巴,TuEnvío,tuenvio.cu,B2C,本土,待核实：国营零售CIMEX线上商店
+美洲-加勒比,瓜德罗普（法）,Amazon,amazon.fr,综合/跨境,国际,法国站，部分商品可配送至海外省，运费及限制较多
+美洲-加勒比,瓜德罗普（法）,Leboncoin,leboncoin.fr,分类/C2C,国际,法国分类平台，覆盖法国海外省本地交易
+美洲-加勒比,瓜德罗普（法）,Cdiscount,cdiscount.com,综合,国际,待核实：法国综合电商，对海外省配送范围有限
+美洲-加勒比,瓜德罗普（法）,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+美洲-加勒比,海地,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+美洲-加勒比,海地,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+美洲-加勒比,荷兰加勒比区（博奈尔、圣尤斯特歇斯、萨巴）,Amazon,amazon.com,综合/跨境,国际,经美国转运公司使用
+美洲-加勒比,荷兰加勒比区（博奈尔、圣尤斯特歇斯、萨巴）,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,本地社交平台交易常见
+美洲-加勒比,荷兰加勒比区（博奈尔、圣尤斯特歇斯、萨巴）,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+美洲-加勒比,荷属圣马丁,Amazon,amazon.com,综合/跨境,国际,经美国转运公司使用
+美洲-加勒比,荷属圣马丁,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,本地社交平台交易常见
+美洲-加勒比,荷属圣马丁,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+美洲-加勒比,开曼群岛（英）,Amazon,amazon.com,综合/跨境,国际,经美国转运公司使用
+美洲-加勒比,开曼群岛（英）,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,本地社交平台交易常见
+美洲-加勒比,开曼群岛（英）,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+美洲-加勒比,库拉索（荷）,Amazon,amazon.com,综合/跨境,国际,经美国转运公司使用
+美洲-加勒比,库拉索（荷）,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,本地社交平台交易常见
+美洲-加勒比,库拉索（荷）,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+美洲-加勒比,马提尼克（法）,Amazon,amazon.fr,综合/跨境,国际,法国站，部分商品可配送至海外省，运费及限制较多
+美洲-加勒比,马提尼克（法）,Leboncoin,leboncoin.fr,分类/C2C,国际,法国分类平台，覆盖法国海外省本地交易
+美洲-加勒比,马提尼克（法）,Cdiscount,cdiscount.com,综合,国际,待核实：法国综合电商，对海外省配送范围有限
+美洲-加勒比,马提尼克（法）,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+美洲-加勒比,美属维尔京群岛,Amazon,amazon.com,综合/跨境,国际,美国站，经美国邮政(USPS)按国内方式配送
+美洲-加勒比,美属维尔京群岛,eBay,ebay.com,C2C/拍卖,国际,美国老牌在线拍卖与交易平台
+美洲-加勒比,美属维尔京群岛,Walmart,walmart.com,综合,国际,待核实：部分商品可配送
+美洲-加勒比,美属维尔京群岛,Temu,temu.com,跨境,国际,待核实：PDD控股（拼多多母公司）旗下低价跨境平台
+美洲-加勒比,蒙特塞拉特（英）,Amazon,amazon.com,综合/跨境,国际,经美国转运公司使用
+美洲-加勒比,蒙特塞拉特（英）,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,本地社交平台交易常见
+美洲-加勒比,蒙特塞拉特（英）,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+美洲-加勒比,圣巴泰勒米（法）,Amazon,amazon.fr,综合/跨境,国际,待核实：法国站对该海外集体配送受限
+美洲-加勒比,圣巴泰勒米（法）,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,本地社交平台交易常见
+美洲-加勒比,圣巴泰勒米（法）,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+美洲-加勒比,圣基茨和尼维斯,Amazon,amazon.com,综合/跨境,国际,经转运使用
+美洲-加勒比,圣基茨和尼维斯,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+美洲-加勒比,圣基茨和尼维斯,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+美洲-加勒比,圣卢西亚,Amazon,amazon.com,综合/跨境,国际,经转运使用
+美洲-加勒比,圣卢西亚,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+美洲-加勒比,圣卢西亚,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+美洲-加勒比,圣文森特和格林纳丁斯,Amazon,amazon.com,综合/跨境,国际,经转运使用
+美洲-加勒比,圣文森特和格林纳丁斯,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+美洲-加勒比,圣文森特和格林纳丁斯,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+美洲-加勒比,特克斯和凯科斯群岛（英）,Amazon,amazon.com,综合/跨境,国际,经美国转运公司使用
+美洲-加勒比,特克斯和凯科斯群岛（英）,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,本地社交平台交易常见
+美洲-加勒比,特克斯和凯科斯群岛（英）,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+美洲-加勒比,特立尼达和多巴哥,Amazon,amazon.com,综合/跨境,国际,经转运使用
+美洲-加勒比,特立尼达和多巴哥,Shein,shein.com,垂直类(时尚)/跨境,国际,快时尚跨境平台，总部新加坡
+美洲-加勒比,特立尼达和多巴哥,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+美洲-加勒比,特立尼达和多巴哥,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+美洲-加勒比,牙买加,Amazon,amazon.com,综合/跨境,国际,经转运（如Mailpac）使用
+美洲-加勒比,牙买加,Shein,shein.com,垂直类(时尚)/跨境,国际,快时尚跨境平台，总部新加坡
+美洲-加勒比,牙买加,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+美洲-加勒比,英属维尔京群岛,Amazon,amazon.com,综合/跨境,国际,经美国转运公司使用
+美洲-加勒比,英属维尔京群岛,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,本地社交平台交易常见
+美洲-加勒比,英属维尔京群岛,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+美洲-南美洲,阿根廷,Mercado Libre,mercadolibre.com.ar,综合,区域,阿根廷第一，Mercado Libre发源地
+美洲-南美洲,阿根廷,Frávega,fravega.com,垂直类(电子),本土,电子家电零售
+美洲-南美洲,阿根廷,Carrefour Argentina,carrefour.com.ar,生鲜/超市,国际,
+美洲-南美洲,阿根廷,Temu,temu.com,跨境,国际,进口放宽后快速增长
+美洲-南美洲,阿根廷,Shein,shein.com,垂直类(时尚)/跨境,国际,快时尚跨境平台，总部新加坡
+美洲-南美洲,巴拉圭,Mercado Libre,mercadolibre.com.py,综合,区域,拉美最大电商，阿根廷创立，纳斯达克上市
+美洲-南美洲,巴拉圭,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+美洲-南美洲,巴拉圭,Amazon,amazon.com,综合/跨境,国际,经转运（Courier）使用
+美洲-南美洲,巴拉圭,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+美洲-南美洲,巴西,Mercado Livre,mercadolivre.com.br,综合,区域,巴西最大电商
+美洲-南美洲,巴西,Shopee,shopee.com.br,综合/C2C,区域,巴西订单量最大平台之一
+美洲-南美洲,巴西,Amazon,amazon.com.br,综合/跨境,国际,美国亚马逊，可跨境直邮或经转运使用
+美洲-南美洲,巴西,Magazine Luiza,magazineluiza.com.br,综合,本土,本土零售电商巨头
+美洲-南美洲,巴西,Casas Bahia,casasbahia.com.br,综合/电子,本土,
+美洲-南美洲,巴西,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+美洲-南美洲,秘鲁,Mercado Libre,mercadolibre.com.pe,综合,区域,拉美最大电商，阿根廷创立，纳斯达克上市
+美洲-南美洲,秘鲁,Falabella,falabella.com.pe,综合,区域,
+美洲-南美洲,秘鲁,Ripley,simple.ripley.com.pe,综合/百货,区域,
+美洲-南美洲,秘鲁,Plaza Vea,plazavea.com.pe,生鲜/超市,本土,
+美洲-南美洲,秘鲁,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+美洲-南美洲,玻利维亚,Mercado Libre,mercadolibre.com.bo,综合,区域,拉美最大电商，阿根廷创立，纳斯达克上市
+美洲-南美洲,玻利维亚,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+美洲-南美洲,玻利维亚,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+美洲-南美洲,厄瓜多尔,Mercado Libre,mercadolibre.com.ec,综合,区域,拉美最大电商，阿根廷创立，纳斯达克上市
+美洲-南美洲,厄瓜多尔,De Prati,deprati.com.ec,综合/百货,本土,
+美洲-南美洲,厄瓜多尔,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+美洲-南美洲,厄瓜多尔,Amazon,amazon.com,综合/跨境,国际,经转运使用
+美洲-南美洲,法属圭亚那,Amazon,amazon.fr,综合/跨境,国际,法国站，部分商品可配送至海外省，运费及限制较多
+美洲-南美洲,法属圭亚那,Leboncoin,leboncoin.fr,分类/C2C,国际,法国分类平台，覆盖法国海外省本地交易
+美洲-南美洲,法属圭亚那,Cdiscount,cdiscount.com,综合,国际,待核实：法国综合电商，对海外省配送范围有限
+美洲-南美洲,法属圭亚那,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+美洲-南美洲,福克兰群岛（马尔维纳斯群岛）,Amazon,amazon.co.uk,综合/跨境,国际,待核实：配送有限
+美洲-南美洲,福克兰群岛（马尔维纳斯群岛）,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+美洲-南美洲,哥伦比亚,Mercado Libre,mercadolibre.com.co,综合,区域,拉美最大电商，阿根廷创立，纳斯达克上市
+美洲-南美洲,哥伦比亚,Falabella,falabella.com.co,综合,区域,
+美洲-南美洲,哥伦比亚,Éxito,exito.com,综合/超市,本土,最大零售集团
+美洲-南美洲,哥伦比亚,Alkosto,alkosto.com,综合/电子,本土,
+美洲-南美洲,哥伦比亚,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+美洲-南美洲,圭亚那,Amazon,amazon.com,综合/跨境,国际,经转运使用
+美洲-南美洲,圭亚那,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+美洲-南美洲,圭亚那,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+美洲-南美洲,苏里南,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+美洲-南美洲,苏里南,Amazon,amazon.com,综合/跨境,国际,经转运使用
+美洲-南美洲,苏里南,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+美洲-南美洲,委内瑞拉,Mercado Libre,mercadolibre.com.ve,综合,区域,拉美最大电商，阿根廷创立，纳斯达克上市
+美洲-南美洲,委内瑞拉,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,社交电商普遍
+美洲-南美洲,委内瑞拉,Amazon,amazon.com,综合/跨境,国际,经转运使用
+美洲-南美洲,乌拉圭,Mercado Libre,mercadolibre.com.uy,综合,区域,拉美最大电商，阿根廷创立，纳斯达克上市
+美洲-南美洲,乌拉圭,Tienda Inglesa,tiendainglesa.com.uy,综合/超市,本土,
+美洲-南美洲,乌拉圭,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+美洲-南美洲,乌拉圭,Amazon,amazon.com,综合/跨境,国际,经转运使用
+美洲-南美洲,智利,Mercado Libre,mercadolibre.cl,综合,区域,拉美最大电商，阿根廷创立，纳斯达克上市
+美洲-南美洲,智利,Falabella,falabella.com,综合/百货,本土,拉美零售集团
+美洲-南美洲,智利,Paris,paris.cl,综合/百货,本土,Cencosud旗下
+美洲-南美洲,智利,Ripley,ripley.cl,综合/百货,本土,
+美洲-南美洲,智利,AliExpress,aliexpress.com,跨境,国际,智利是速卖通拉美重点市场
+美洲-南美洲,智利,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+大洋洲,澳大利亚,Amazon,amazon.com.au,综合/跨境,国际,美国亚马逊，可跨境直邮或经转运使用
+大洋洲,澳大利亚,eBay,ebay.com.au,C2C/拍卖,国际,美国老牌在线拍卖与交易平台
+大洋洲,澳大利亚,Kogan,kogan.com,综合,本土,本土电商
+大洋洲,澳大利亚,JB Hi-Fi,jbhifi.com.au,垂直类(电子),本土,
+大洋洲,澳大利亚,Woolworths,woolworths.com.au,生鲜/超市,本土,
+大洋洲,澳大利亚,Temu,temu.com,跨境,国际,Catch于2025年关闭，Temu等跨境平台扩张
+大洋洲,巴布亚新几内亚,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+大洋洲,巴布亚新几内亚,Amazon,amazon.com.au,综合/跨境,国际,待核实：多经澳大利亚转运
+大洋洲,巴布亚新几内亚,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+大洋洲,北马里亚纳群岛（美）,Amazon,amazon.com,综合/跨境,国际,美国站，经美国邮政(USPS)按国内方式配送
+大洋洲,北马里亚纳群岛（美）,eBay,ebay.com,C2C/拍卖,国际,美国老牌在线拍卖与交易平台
+大洋洲,北马里亚纳群岛（美）,Walmart,walmart.com,综合,国际,待核实：部分商品可配送
+大洋洲,法属波利尼西亚,Amazon,amazon.fr,综合/跨境,国际,待核实：法国站对该海外集体配送受限
+大洋洲,法属波利尼西亚,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,本地社交平台交易常见
+大洋洲,法属波利尼西亚,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+大洋洲,斐济,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+大洋洲,斐济,Amazon,amazon.com.au,综合/跨境,国际,经转运使用
+大洋洲,斐济,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+大洋洲,关岛（美）,Amazon,amazon.com,综合/跨境,国际,美国站，经美国邮政(USPS)按国内方式配送
+大洋洲,关岛（美）,eBay,ebay.com,C2C/拍卖,国际,美国老牌在线拍卖与交易平台
+大洋洲,关岛（美）,Walmart,walmart.com,综合,国际,待核实：部分商品可配送
+大洋洲,关岛（美）,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+大洋洲,基里巴斯,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+大洋洲,基里巴斯,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+大洋洲,科科斯（基林）群岛（澳）,Amazon,amazon.com.au,综合/跨境,国际,待核实：使用澳大利亚邮编，可经澳大利亚邮政收货
+大洋洲,科科斯（基林）群岛（澳）,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+大洋洲,库克群岛（新西兰）,Trade Me,trademe.co.nz,综合/C2C,国际,待核实：新西兰平台，经转运使用
+大洋洲,库克群岛（新西兰）,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+大洋洲,库克群岛（新西兰）,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+大洋洲,马绍尔群岛,Amazon,amazon.com,综合/跨境,国际,使用美国邮政(USPS)配送
+大洋洲,马绍尔群岛,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+大洋洲,美国本土外小岛屿,Amazon,amazon.com,综合/跨境,国际,待核实：仅限驻岛军事/科研人员经美国邮政收货
+大洋洲,美国本土外小岛屿,（无常住居民）,—,—,—,无常住人口或仅有科研/军事人员，不存在商业电商市场
+大洋洲,美属萨摩亚,Amazon,amazon.com,综合/跨境,国际,美国站，经美国邮政(USPS)按国内方式配送
+大洋洲,美属萨摩亚,eBay,ebay.com,C2C/拍卖,国际,美国老牌在线拍卖与交易平台
+大洋洲,美属萨摩亚,Walmart,walmart.com,综合,国际,待核实：部分商品可配送
+大洋洲,密克罗尼西亚联邦,Amazon,amazon.com,综合/跨境,国际,使用美国邮政(USPS)，可按美国国内运费配送
+大洋洲,密克罗尼西亚联邦,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+大洋洲,瑙鲁,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+大洋洲,纽埃（新西兰）,Trade Me,trademe.co.nz,综合/C2C,国际,待核实：新西兰平台，经转运使用
+大洋洲,纽埃（新西兰）,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+大洋洲,诺福克岛（澳）,Amazon,amazon.com.au,综合/跨境,国际,待核实：澳大利亚站配送受限
+大洋洲,诺福克岛（澳）,eBay,ebay.com.au,C2C/拍卖,国际,待核实：美国老牌在线拍卖与交易平台
+大洋洲,诺福克岛（澳）,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+大洋洲,帕劳,Amazon,amazon.com,综合/跨境,国际,使用美国邮政(USPS)配送
+大洋洲,帕劳,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+大洋洲,皮特凯恩群岛（英）,（本地主流平台）,—,—,本土,待核实：人口约50人，靠定期补给船，几乎无电商
+大洋洲,萨摩亚,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+大洋洲,萨摩亚,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+大洋洲,圣诞岛（澳）,Amazon,amazon.com.au,综合/跨境,国际,待核实：使用澳大利亚邮编，可经澳大利亚邮政收货
+大洋洲,圣诞岛（澳）,eBay,ebay.com.au,C2C/拍卖,国际,待核实：美国老牌在线拍卖与交易平台
+大洋洲,所罗门群岛,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+大洋洲,所罗门群岛,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+大洋洲,汤加,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+大洋洲,汤加,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+大洋洲,图瓦卢,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+大洋洲,托克劳（新西兰）,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+大洋洲,瓦利斯和富图纳（法）,Amazon,amazon.fr,综合/跨境,国际,待核实：法国站对该海外集体配送受限
+大洋洲,瓦利斯和富图纳（法）,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,本地社交平台交易常见
+大洋洲,瓦利斯和富图纳（法）,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+大洋洲,瓦努阿图,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,Meta旗下，本地买卖及社交卖家主要渠道
+大洋洲,瓦努阿图,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+大洋洲,新喀里多尼亚（法）,Amazon,amazon.fr,综合/跨境,国际,待核实：法国站对该海外集体配送受限
+大洋洲,新喀里多尼亚（法）,Facebook Marketplace,facebook.com/marketplace,社交电商/二手,国际,本地社交平台交易常见
+大洋洲,新喀里多尼亚（法）,（本地主流平台）,—,—,本土,待核实：未找到可靠的本地电商平台资料，消费者多依赖社交媒体与跨境平台
+大洋洲,新西兰,Trade Me,trademe.co.nz,综合/C2C,本土,新西兰最大电商与分类平台
+大洋洲,新西兰,The Warehouse,thewarehouse.co.nz,综合,本土,
+大洋洲,新西兰,Mighty Ape,mightyape.co.nz,综合,本土,Kogan旗下
+大洋洲,新西兰,Woolworths NZ,woolworths.co.nz,生鲜/超市,本土,原Countdown
+大洋洲,新西兰,Temu,temu.com,跨境,国际,PDD控股（拼多多母公司）旗下低价跨境平台
+大洋洲,新西兰,Amazon,amazon.com.au,综合/跨境,国际,美国亚马逊，可跨境直邮或经转运使用
+南极洲及无人岛屿,布韦岛（挪威）,（无常住居民）,—,—,—,无常住人口或仅有科研/军事人员，不存在商业电商市场
+南极洲及无人岛屿,法属南部和南极领地,（无常住居民）,—,—,—,无常住人口或仅有科研/军事人员，不存在商业电商市场
+南极洲及无人岛屿,赫德岛和麦克唐纳群岛（澳）,（无常住居民）,—,—,—,无常住人口或仅有科研/军事人员，不存在商业电商市场
+南极洲及无人岛屿,南极洲,（无常住居民）,—,—,—,无常住人口或仅有科研/军事人员，不存在商业电商市场
+南极洲及无人岛屿,南乔治亚和南桑威奇群岛（英）,（无常住居民）,—,—,—,无常住人口或仅有科研/军事人员，不存在商业电商市场

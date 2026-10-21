@@ -1,0 +1,171 @@
+<!doctype html><html lang="zh-CN" data-theme="dark"><head><meta charset="utf-8"><title>PriceHub 价格管理工作台</title><link rel="icon" href="data:,">
+<link rel="stylesheet" href="/static/style.css"><script src="/static/vendor/chart.js"></script><script defer src="/static/app.js"></script><script defer src="/static/vendor/alpine.js"></script></head>
+<body x-data="App()" x-init="init()" @keydown.window="keys($event)" @click.window="menuOpen=null;ctx=null" @mousemove.window="dragMove($event)" @mouseup.window="dragEnd()">
+<div class="app">
+<!-- 菜单栏 -->
+<div class="menubar" data-menubar><span class="logo">◆ PriceHub</span>
+ <template x-for="m in menus" :key="m.name"><div class="menu" :class="menuOpen===m.name&&'open'" @click.stop="menuOpen=menuOpen===m.name?null:m.name" @mouseenter="menuOpen&&(menuOpen=m.name)" :data-menu="m.name">
+  <div class="mlabel" x-text="m.name"></div>
+  <div class="dropdown" x-show="menuOpen===m.name" x-cloak><template x-for="it in m.items"><div>
+   <div x-show="it==='-'" class="sep"></div><div x-show="it!=='-'" class="mi" @click.stop="menuOpen=null;it.run&&it.run()" :data-mi="it.label"><span x-text="it.label"></span><span class="k" x-text="it.key||''"></span></div></div></template></div></div></template>
+ <span class="title" x-text="activeTab()?activeTab().title+' — PriceHub 全球价格全生命周期管理':''"></span></div>
+<!-- 工具栏 -->
+<div class="toolbar"><template x-for="b in toolbar"><span><span x-show="b==='|'" class="tbsep" style="display:inline-block"></span>
+ <button x-show="b!=='|'" class="tb" :title="b[1]" @click="b[2]()" x-text="b[0]" :data-tb="b[1]"></button></span></template>
+ <input class="search" placeholder="快速搜索商品（Ctrl+F）  命令面板 Ctrl+K" x-model="quick" @keydown.enter="openSearch(quick)" data-quick></div>
+<!-- 主体 -->
+<div class="main">
+ <div class="side" x-show="showSide" :style="'width:'+sideW+'px'" data-side>
+  <div class="phead">资源管理器</div>
+  <div class="tree"><template x-for="g in tree()" :key="g.key"><div>
+   <div class="node" @click="toggle(g.key)" style="font-weight:600"><span class="tw" x-text="collapsed[g.key]?'▶':'▼'"></span><span x-text="g.label"></span></div>
+   <div x-show="!collapsed[g.key]"><template x-for="n in g.children" :key="n.label"><div class="node" style="padding-left:22px" @click="n.run()" :data-node="n.label" :class="isActiveNode(n)&&'sel'">
+    <span x-text="n.icon||''"></span><span x-text="n.label"></span><span class="cnt" x-text="n.count??''"></span></div></template></div></div></template></div></div>
+ <div class="split" x-show="showSide" @mousedown.prevent="dragStart('side',$event)" :class="drag==='side'&&'drag'" data-split-side></div>
+ <!-- 工作区 -->
+ <div class="work">
+  <div class="tabs" data-tabs><template x-for="t in tabs" :key="t.id"><div class="tab" :class="t.id===active&&'active'" @click="active=t.id" @mousedown.middle.prevent="closeTab(t.id)" :data-tab="t.id">
+   <span x-text="t.icon"></span><span class="t" x-text="t.title"></span><span class="x" @click.stop="closeTab(t.id)" data-close>✕</span></div></template></div>
+  <template x-if="!tabs.length"><div class="empty" style="margin-top:15vh">没有打开的标签页<br><br>按 <b>Ctrl+K</b> 打开命令面板，或从左侧资源管理器选择模块</div></template>
+  <template x-for="t in tabs" :key="t.id"><div class="view" x-show="t.id===active" :data-view="t.type">
+
+   <!-- 仪表盘 -->
+   <template x-if="t.type==='dashboard'"><div>
+    <div class="stat"><template x-for="c in [['商品数',dash.products],['覆盖平台',dash.platforms],['数据源',dash.sources],['价格记录',dash.prices],['告警',dash.alerts]]"><div><div class="l" x-text="c[0]"></div><div class="n" x-text="c[1]??'—'" data-stat></div></div></template></div>
+    <div class="row"><div class="grp"><h4>类目分布</h4><div class="b chartbox"><canvas :id="'cat-'+t.id"></canvas></div></div><div class="grp"><h4>平台分布</h4><div class="b chartbox"><canvas :id="'plat-'+t.id"></canvas></div></div></div>
+    <div class="grp"><h4>最新告警</h4><div class="b"><template x-if="!(dash.recent_alerts||[]).length"><div class="muted">暂无告警</div></template>
+     <template x-for="a in dash.recent_alerts||[]"><div><a href="#" @click.prevent="openProduct(a.product_id)" x-text="a.title"></a> <span class="up" x-text="a.msg"></span></div></template>
+     <div class="muted" style="margin-top:6px">全球平台目录收录 <b x-text="dash.catalog"></b> 个平台 · 最近抓取 <span x-text="fmtTs(dash.last_fetch)"></span></div></div></div></div></template>
+
+   <!-- 商品监控 -->
+   <template x-if="t.type==='products'"><div>
+    <div class="filterbar"><input placeholder="关键词" x-model="t.f.q" @input="t.pg=1" data-filter-q style="width:200px">
+     <select x-model="t.f.platform" @change="t.pg=1" data-filter-plat><option value="">全部平台</option><template x-for="v in uniq('platform')"><option x-text="v"></option></template></select>
+     <select x-model="t.f.category" @change="t.pg=1" data-filter-cat><option value="">全部类目</option><template x-for="v in uniq('category')"><option x-text="v"></option></template></select>
+     <span class="muted" style="margin-left:auto">共 <b x-text="filtered(t).length" data-total></b> 条 · 双击打开 · 右键更多</span></div>
+    <div style="overflow:auto"><table class="grid" data-products-table><colgroup><template x-for="c in cols"><col :style="'width:'+c.w+'px'"></template></colgroup>
+     <thead><tr><template x-for="c in cols" :key="c.k"><th @click="sortBy(t,c.k)" :data-sort="c.k" :class="c.num&&'num'"><span x-text="c.label+(t.sk===c.k?(t.asc?' ▲':' ▼'):'')"></span><span class="rz" @mousedown.stop.prevent="dragStart('col',$event,c)" @click.stop data-resize></span></th></template></tr></thead>
+     <tbody><template x-for="p in paged(t)" :key="p.id"><tr :class="sel&&sel.kind==='product'&&sel.obj.id===p.id&&'sel'" @click="select('product',p)" @dblclick="openProduct(p.id)" @contextmenu.prevent.stop="select('product',p);showCtx($event,p)" data-row>
+      <template x-for="c in cols"><td :class="(c.num?'num ':'')+(c.k==='last_price'?'':'')" x-text="c.fmt?c.fmt(p[c.k],p):(p[c.k]??'—')"></td></template></tr></template></tbody></table></div>
+    <template x-if="!filtered(t).length"><div class="empty">没有匹配的商品</div></template>
+    <div class="pager"><span class="muted">每页</span><select x-model.number="t.per" @change="t.pg=1"><option>20</option><option>50</option><option>100</option></select>
+     <button class="btn" :disabled="t.pg<=1" @click="t.pg--">◀</button><span x-text="t.pg+' / '+pages(t)" data-page-info></span><button class="btn" :disabled="t.pg>=pages(t)" @click="t.pg++" data-next>▶</button></div></div></template>
+
+   <!-- 商品详情 -->
+   <template x-if="t.type==='product'"><div>
+    <template x-if="!t.d"><div class="empty"><span class="spin" style="border-color:var(--accent);border-top-color:transparent"></span> 加载中…</div></template>
+    <template x-if="t.d&&t.d.error"><div class="empty err" x-text="t.d.error"></div></template>
+    <template x-if="t.d&&t.d.p"><div>
+     <div class="grp"><h4><span x-text="'#'+t.d.p.id"></span><span x-text="t.d.p.title" data-product-title></span><span class="tag" x-text="t.d.p.platform"></span>
+      <span style="margin-left:auto" class="num" x-text="money(t.d.h.stats.last)"></span><span :class="t.d.h.stats.change_pct>0?'up':'down'" x-text="(t.d.h.stats.change_pct>0?'▲':'▼')+(t.d.h.stats.change_pct??0)+'%'"></span></h4>
+      <div class="b" style="display:grid;grid-template-columns:1fr 260px;gap:10px"><div><div class="chartbox"><canvas :id="'pc-'+t.id" data-price-chart></canvas></div>
+       <div class="filterbar" style="margin-top:6px">手动录入价格 <input type="number" step="0.01" x-model="t.np" style="width:100px"><button class="btn" @click="addPrice(t)">记录</button>
+        <span style="margin-left:auto" :class="{'上涨':'up','下跌':'down'}[t.d.f.trend]" x-text="t.d.f.trend?'趋势：'+t.d.f.trend:'数据不足'"></span></div></div>
+       <table class="grid"><tbody><template x-for="s in statRows(t)"><tr><td class="muted" x-text="s[0]"></td><td class="num" x-text="s[1]"></td></tr></template></tbody></table></div></div>
+     <div class="row"><div class="grp" data-compare><h4>跨平台比价<span class="muted" x-text="t.d.c.spread?'价差 '+money(t.d.c.spread):''"></span></h4><div class="b">
+       <template x-if="(t.d.c.offers||[]).length<2"><div class="muted">暂未发现其他平台同款</div></template>
+       <table class="grid" x-show="(t.d.c.offers||[]).length"><thead><tr><th>平台</th><th>商品</th><th class="num">价格</th><th style="width:140px"></th></tr></thead><tbody><template x-for="(o,i) in t.d.c.offers"><tr @dblclick="openProduct(o.id)">
+        <td x-text="o.platform"></td><td x-text="o.title"></td><td class="num" :class="i===0&&'down'" x-text="money(o.price)"></td><td><div class="bar" :class="i===0&&'best'"><div :style="'width:'+(o.price/Math.max(...t.d.c.offers.map(x=>x.price))*100)+'%'"></div></div></td></tr></template></tbody></table></div></div>
+      <div class="grp" data-pricing><h4>定价建议</h4><div class="b"><div class="filterbar">成本 <input type="number" x-model="t.cost" style="width:90px" data-cost> 加成率 <input type="number" step="0.05" x-model="t.markup" style="width:70px"><button class="btn primary" @click="loadPricing(t)" data-calc>计算</button></div>
+       <table class="grid"><tbody><template x-for="s in [['成本加成价',t.d.pr.cost_plus],['竞品最低-1%',t.d.pr.competitive_min_minus_1pct],['市场中位数',t.d.pr.market_median]]"><tr><td class="muted" x-text="s[0]"></td><td class="num" x-text="money(s[1])"></td></tr></template>
+        <tr><td><b>推荐售价</b></td><td class="num" style="font-size:15px;color:var(--accent)"><b x-text="money(t.d.pr.recommended)" data-recommended></b></td></tr></tbody></table></div></div></div>
+    </div></template></div></template>
+
+   <!-- 比价 -->
+   <template x-if="t.type==='compare'"><div><div class="muted" style="margin-bottom:6px">跨平台同款分组，绿色为最低价。双击行打开详情。</div>
+    <table class="grid"><thead><tr><th style="width:280px">同款商品</th><th style="width:60px" class="num">平台数</th><th style="width:120px">最低价平台</th><th style="width:110px" class="num">最低价</th><th style="width:110px" class="num">最高价</th><th style="width:100px" class="num">价差</th><th style="width:80px" class="num">价差%</th></tr></thead>
+     <tbody><template x-for="g in groups()"><tr data-group @dblclick="openProduct(g[0].id)" @click="select('product',g[0])"><td x-text="g[0].title"></td><td class="num" x-text="g.length"></td><td x-text="g[0].platform"></td><td class="num down" x-text="money(g[0].last_price)"></td><td class="num" x-text="money(g[g.length-1].last_price)"></td>
+      <td class="num up" x-text="money(g[g.length-1].last_price-g[0].last_price)"></td><td class="num" x-text="((g[g.length-1].last_price/g[0].last_price-1)*100).toFixed(1)+'%'"></td></tr></template></tbody></table>
+    <template x-if="!groups().length"><div class="empty">暂无跨平台同款</div></template></div></template>
+
+   <!-- 定价 -->
+   <template x-if="t.type==='pricing'"><div><div class="grp"><h4>定价模型</h4><div class="b"><div class="filterbar">
+    商品 <select x-model="t.pid" style="width:340px" data-pricing-select><template x-for="p in all"><option :value="p.id" x-text="p.platform+' · '+p.title" :selected="p.id==t.pid"></option></template></select>
+    成本 <input type="number" x-model="t.cost" style="width:90px"> 加成率 <input type="number" step="0.05" x-model="t.markup" style="width:70px"><button class="btn primary" @click="pricingTab(t)" data-pricing-run>生成建议</button></div>
+    <div class="muted">推荐价 = max(成本×1.05, min(成本加成价, 竞品最低×0.99))；无竞品取成本加成价，无成本取市场中位数。</div></div></div>
+    <template x-if="t.r"><table class="grid" style="width:420px;min-width:0"><tbody><template x-for="s in [['成本加成价',t.r.cost_plus],['竞品最低-1%',t.r.competitive_min_minus_1pct],['市场中位数',t.r.market_median],['推荐售价',t.r.recommended]]"><tr><td x-text="s[0]"></td><td class="num" x-text="money(s[1])" data-pricing-val></td></tr></template></tbody></table></template></div></template>
+
+   <!-- 搜索 -->
+   <template x-if="t.type==='search'"><div>
+    <div class="filterbar"><div class="seg"><template x-for="m in [['semantic','语义/跨语言'],['keyword','关键词'],['category','类目'],['chain','产业链'],['image','以图搜图']]"><button :class="t.m===m[0]&&'on'" @click="t.m=m[0];t.res=null" :data-mode="m[0]" x-text="m[1]"></button></template></div>
+     <input x-show="t.m!=='image'" x-model="t.q" @keydown.enter="doSearch(t)" style="width:340px" data-search-input :placeholder="{semantic:'任意语言，如 headphones / ゲーム機',keyword:'标题/品牌',category:'如 耳机',chain:'如 消费电子'}[t.m]">
+     <button x-show="t.m!=='image'" class="btn primary" @click="doSearch(t)" data-search-btn>搜索</button>
+     <input x-show="t.m==='image'" type="file" accept="image/*" @change="imgSearch(t,$event)" data-image-input>
+     <span class="muted" style="margin-left:auto" x-text="t.engine?'引擎：'+t.engine:''" data-engine></span></div>
+    <template x-if="t.err"><div class="note err" x-text="t.err"></div></template>
+    <template x-if="t.res&&!t.res.length"><div class="empty" data-empty>没有找到匹配结果</div></template>
+    <table class="grid" x-show="t.res&&t.res.length"><thead><tr><th style="width:40px">#</th><th style="width:320px">商品</th><th style="width:120px">平台</th><th style="width:90px">类目</th><th style="width:150px">产业链</th><th style="width:100px" class="num">现价</th><th style="width:120px">匹配分</th></tr></thead>
+     <tbody><template x-for="(r,i) in t.res||[]"><tr data-result @click="select('product',r)" @dblclick="openProduct(r.id)" @contextmenu.prevent.stop="select('product',r);showCtx($event,r)"><td class="muted" x-text="i+1"></td><td x-text="r.title"></td><td x-text="r.platform"></td><td x-text="r.category||''"></td><td x-text="r.chain||''"></td><td class="num" x-text="money(r.last_price)"></td>
+      <td><template x-if="r.score!=null"><span><span class="score"><div :style="'width:'+Math.max(0,r.score*100)+'%'"></div></span><span x-text="'匹配 '+Math.round(r.score*100)+'%'"></span></span></template></td></tr></template></tbody></table></div></template>
+
+   <!-- AI 搜索 -->
+   <template x-if="t.type==='ai'"><div>
+    <div class="filterbar">Provider <select x-model="t.p" data-provider-select><template x-for="(v,k) in providers"><option :value="k" x-text="k+(v.configured?'  ✔ 已配置':'  ✖ 未配置')"></option></template></select>
+     <input x-model="t.q" @keydown.enter="aiSearch(t)" style="width:340px" placeholder="如：iPhone 16 全网最低价" data-ai-input><button class="btn primary" @click="aiSearch(t)" data-ai-btn>AI 搜索 (Top 10)</button></div>
+    <template x-if="providers[t.p]&&!providers[t.p].configured"><div class="note" data-ai-warn>⚠ 未配置 <code x-text="providers[t.p].env"></code>：请在服务端设置该环境变量后重启服务以启用 <b x-text="t.p"></b>，当前为降级模式。</div></template>
+    <template x-if="t.r&&t.r.message"><div class="note" data-ai-msg x-text="t.r.message"></div></template>
+    <table class="grid" x-show="t.r&&t.r.results&&t.r.results.length"><thead><tr><th style="width:50px">排名</th><th style="width:320px">标题</th><th style="width:120px">平台</th><th style="width:100px" class="num">价格</th><th style="width:300px">理由</th></tr></thead>
+     <tbody><template x-for="r in (t.r&&t.r.results)||[]"><tr><td class="num" x-text="r.rank"></td><td x-text="r.title"></td><td x-text="r.platform"></td><td class="num" x-text="money(r.price)"></td><td x-text="r.reason"></td></tr></template></tbody></table></div></template>
+
+   <!-- 数据源 -->
+   <template x-if="t.type==='sources'"><div>
+    <div class="filterbar"><button class="btn primary" @click="editSource(null)" data-new-source>＋ 新建数据源</button><button class="btn" @click="runMonitor()">⟳ 全部抓取</button><span class="muted" style="margin-left:auto">双击编辑 · 右键更多</span></div>
+    <table class="grid"><thead><tr><th style="width:40px">ID</th><th style="width:180px">名称</th><th style="width:80px">适配器</th><th style="width:70px">状态</th><th style="width:380px">配置摘要</th><th style="width:170px">操作</th></tr></thead>
+     <tbody><template x-for="s in srcs" :key="s.id"><tr data-source-row :class="sel&&sel.kind==='source'&&sel.obj.id===s.id&&'sel'" @click="select('source',s)" @dblclick="editSource(s)" @contextmenu.prevent.stop="select('source',s);showSrcCtx($event,s)">
+      <td class="num" x-text="s.id"></td><td x-text="s.name"></td><td><span class="tag" x-text="s.type"></span></td><td :class="s.enabled?'ok':'muted'" x-text="s.enabled?'● 启用':'○ 停用'"></td><td class="muted" x-text="summary(s)"></td>
+      <td><button class="btn" @click.stop="fetchSource(s)" data-fetch>抓取</button> <button class="btn" @click.stop="editSource(s)">编辑</button> <button class="btn" @click.stop="delSource(s)" data-del>删除</button></td></tr></template></tbody></table>
+    <template x-if="!srcs.length"><div class="empty">还没有数据源</div></template></div></template>
+
+   <!-- 平台目录 -->
+   <template x-if="t.type==='catalog'"><div>
+    <div class="filterbar">国家/地区 <select x-model="t.country" @change="loadCatalog(t)" data-cat-country><option value="">全部</option><template x-for="c in facets.countries"><option x-text="c"></option></template></select>
+     类型 <select x-model="t.ptype" @change="loadCatalog(t)"><option value="">全部</option><template x-for="c in facets.types"><option x-text="c"></option></template></select>
+     <input x-model="t.q" @input.debounce.400ms="loadCatalog(t)" placeholder="平台名/网址" style="width:180px"><span class="muted" style="margin-left:auto">共 <b x-text="t.cat.total" data-cat-total></b> 个</span></div>
+    <table class="grid"><thead><tr><th style="width:90px">大洲/地区</th><th style="width:90px">国家</th><th style="width:200px">平台</th><th style="width:170px">网址</th><th style="width:100px">类型</th><th style="width:60px">范围</th><th style="width:320px">说明</th></tr></thead>
+     <tbody><template x-for="p in t.cat.items||[]"><tr data-cat-row @click="select('platform',p)" @dblclick="editSource(null,{name:p.name,type:'webpage',c:{platform:p.url}})"><td x-text="p.region"></td><td x-text="p.country"></td><td x-text="p.name"></td><td x-text="p.url"></td><td x-text="p.type"></td><td x-text="p.scope"></td><td x-text="p.note"></td></tr></template></tbody></table></div></template>
+
+   <!-- 告警 -->
+   <template x-if="t.type==='alerts'"><div><table class="grid"><thead><tr><th style="width:150px">时间(UTC)</th><th style="width:300px">商品</th><th style="width:120px">平台</th><th style="width:240px">内容</th></tr></thead>
+    <tbody><template x-for="a in alertsList"><tr data-alert @dblclick="openProduct(a.product_id)"><td x-text="a.ts"></td><td x-text="a.title"></td><td x-text="a.platform"></td><td class="up" x-text="a.msg"></td></tr></template></tbody></table>
+    <template x-if="!alertsList.length"><div class="empty" data-empty>暂无告警（监控抓取时价格变动 ≥5% 自动产生）</div></template></div></template>
+  </div></template>
+ </div>
+ <div class="split" x-show="showProps" @mousedown.prevent="dragStart('props',$event)" :class="drag==='props'&&'drag'"></div>
+ <div class="props" x-show="showProps" :style="'width:'+propsW+'px'" data-props><div class="phead">属性</div>
+  <template x-if="!sel"><div class="empty">选择一项以查看属性</div></template>
+  <template x-if="sel"><dl class="kv"><template x-for="r in propRows()"><div style="display:contents"><dt x-text="r[0]"></dt><dd x-text="r[1]"></dd></div></template></dl></template>
+  <template x-if="sel&&sel.kind==='product'"><div style="padding:0 10px"><button class="btn primary" @click="openProduct(sel.obj.id)" style="width:100%">打开详情</button></div></template></div>
+</div>
+<!-- 状态栏 -->
+<div class="status" data-status><span x-text="online?'● 服务在线':'● 服务离线'" :style="!online&&'color:#ffb4b4'" data-online></span><span x-text="'商品 '+(dash.products??0)" data-status-count></span><span x-text="'数据源 '+(dash.sources??0)"></span><span x-text="'最近抓取 '+fmtTs(dash.last_fetch)"></span>
+ <span x-show="task" style="display:flex;gap:6px;align-items:center" data-task><span class="spin"></span><span x-text="task&&task.label"></span><span class="prog"><div :style="'width:'+(task?task.p*100:0)+'%'"></div></span></span>
+ <span x-show="busy&&!task"><span class="spin"></span> 加载中</span>
+ <div class="r"><span x-text="health.text_engine?'文本: multilingual-MiniLM':''"></span><span x-text="theme==='dark'?'深色':'浅色'"></span><span>UTF-8</span></div></div>
+</div>
+<!-- 右键菜单 -->
+<div class="ctx" x-show="ctx" x-cloak :style="ctx&&('left:'+ctx.x+'px;top:'+ctx.y+'px')" data-ctx @click.stop><template x-for="it in (ctx&&ctx.items)||[]"><div><div x-show="it==='-'" class="sep"></div><div x-show="it!=='-'" class="mi" @click="ctx=null;it.run()" x-text="it.label"></div></div></template></div>
+<!-- 数据源对话框 -->
+<div class="overlay" x-show="form" x-cloak @mousedown.self="form=null"><div class="dialog" data-source-form><template x-if="form"><div style="display:contents">
+ <div class="dt"><span x-text="form.id?'编辑数据源 — '+form.name:'新建数据源'"></span><span class="x" @click="form=null">✕</span></div>
+ <div class="db"><div class="form">
+  <label>名称</label><input x-model="form.name" data-f-name><label>适配器类型</label><select x-model="form.type" data-f-type><template x-for="(d,k) in adapters"><option :value="k" x-text="k" :selected="k===form.type"></option></template></select>
+  <label>平台标识</label><input x-model="form.c.platform" placeholder="如 taobao.com" data-f-platform><label>启用监控</label><span><input type="checkbox" x-model="form.enabled"> 纳入定时监控</span>
+  <label></label><div class="muted" x-text="adapters[form.type]"></div>
+  <template x-if="form.type==='mock'"><div style="display:contents"><label>价格系数</label><input type="number" step="0.01" x-model.number="form.c.bias"><label>随机种子</label><input type="number" x-model.number="form.c.seed"></div></template>
+  <template x-if="form.type==='webpage'"><div style="display:contents"><label>商品网址</label><textarea rows="3" x-model="form.urls" placeholder="每行一个" data-f-urls></textarea><label>标题选择器</label><input x-model="form.c.title_selector"><label>价格选择器</label><input x-model="form.c.price_selector" data-f-price-sel><label>类目</label><input x-model="form.c.category"><label>产业链</label><input x-model="form.c.chain"></div></template>
+  <template x-if="form.type==='rest'"><div style="display:contents"><label>API URL</label><input x-model="form.c.url" data-f-url><label>方法</label><select x-model="form.c.method"><option>GET</option><option>POST</option></select>
+   <label>鉴权请求头</label><textarea rows="2" x-model="form.headers" data-f-headers></textarea><label>列表路径</label><input x-model="form.c.items_path" placeholder="data.items" data-f-items><label>字段映射</label><textarea rows="3" x-model="form.mapping" data-f-mapping></textarea></div></template>
+  <template x-if="form.type==='csv'"><div style="display:contents"><label>本地路径</label><input x-model="form.c.path" data-f-path><label>或 CSV URL</label><input x-model="form.c.url"><label>字段映射</label><textarea rows="2" x-model="form.mapping" placeholder="可空=按同名列"></textarea></div></template>
+ </div>
+ <template x-if="testRes"><div class="note" :class="testRes.err?'err':'ok'" style="border-color:currentColor" data-test-result><div x-text="testRes.err||('✔ 连接成功，获取 '+testRes.count+' 条，预览：')"></div><template x-for="i in testRes.sample||[]"><div x-text="'· '+i.title+' — '+money(i.price)"></div></template></div></template></div>
+ <div class="df"><button class="btn" @click="testSource()" data-f-test>测试连接</button><span style="flex:1"></span><button class="btn" @click="form=null">取消</button><button class="btn primary" @click="saveSource()" data-f-save>保存</button></div></div></template></div></div>
+<!-- 通用对话框 -->
+<div class="overlay" x-show="dlg" x-cloak @mousedown.self="dlg=null"><div class="dialog" style="width:520px" data-dialog><template x-if="dlg"><div style="display:contents"><div class="dt"><span x-text="dlg.title"></span><span class="x" @click="dlg=null">✕</span></div>
+ <div class="db"><template x-for="l in dlg.lines"><div x-html="l" style="padding:2px 0"></div></template><template x-if="dlg.input!=null"><input x-model="dlg.input" style="width:100%;margin-top:6px" data-dlg-input></template></div>
+ <div class="df"><button class="btn" x-show="dlg.ok" @click="dlg=null">取消</button><button class="btn primary" @click="const d=dlg;dlg=null;d.ok&&d.ok(d.input)" data-dlg-ok>确定</button></div></div></template></div></div>
+<!-- 命令面板 -->
+<div class="overlay" x-show="palette" x-cloak @mousedown.self="palette=false"><div class="palette" data-palette>
+ <input x-ref="pin" x-model="pq" @input="pi=0" @keydown.down.prevent="pi=Math.min(pi+1,pcmds().length-1)" @keydown.up.prevent="pi=Math.max(pi-1,0)" @keydown.enter.prevent="runCmd(pcmds()[pi])" @keydown.escape="palette=false" placeholder="输入命令或商品名…" data-palette-input>
+ <div style="max-height:50vh;overflow:auto"><template x-for="(c,i) in pcmds()"><div class="it" :class="i===pi&&'on'" @mouseenter="pi=i" @click="runCmd(c)" data-cmd><span x-text="c.label"></span><span class="muted" x-text="c.key||c.cat||''"></span></div></template></div></div></div>
+<div class="toasts"><template x-for="t in toasts" :key="t.id"><div class="toast" :class="t.err&&'err'" x-text="t.msg" data-toast></div></template></div>
+</body></html>
