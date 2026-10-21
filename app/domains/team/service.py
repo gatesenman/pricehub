@@ -101,6 +101,7 @@ def oidc_config():
     r = G("SELECT v FROM settings WHERE workspace_id=1 AND k='oidc'", one=True); return json.loads(r["v"]) if r else {}
 def set_oidc_config(cfg):
     cfg = {k: (cfg.get(k) or "").strip() for k in ("issuer", "client_id", "client_secret", "name")}
+    if not cfg["client_secret"]: cfg["client_secret"] = oidc_config().get("client_secret", "")   # 留空表示不修改
     if cfg["issuer"] and not re.match(r"^https?://", cfg["issuer"]): raise HTTPException(400, "发行方地址需以 http(s):// 开头")
     X("INSERT OR REPLACE INTO settings(k,v,workspace_id) VALUES('oidc',?,1)", (json.dumps(cfg),)); _DISC.clear()
 def discovery(issuer):
@@ -124,6 +125,7 @@ def oidc_finish(code, state):
     r = httpx.post(d["token_endpoint"], data={"grant_type": "authorization_code", "code": code, "redirect_uri": st["redirect_uri"], "client_id": c["client_id"], "client_secret": c.get("client_secret", "")}, timeout=10)
     if r.status_code != 200: raise HTTPException(401, f"身份提供方拒绝了登录：HTTP {r.status_code}")
     idt = r.json().get("id_token")
+    if not idt: raise HTTPException(401, "身份提供方没有返回身份令牌")
     key = jwt.PyJWKClient(d["jwks_uri"]).get_signing_key_from_jwt(idt).key
     claims = jwt.decode(idt, key, algorithms=["RS256", "ES256"], audience=c["client_id"], issuer=d.get("issuer", c["issuer"]))
     if claims.get("nonce") != st["nonce"]: raise HTTPException(401, "登录校验失败（nonce 不匹配）")

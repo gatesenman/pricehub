@@ -1,0 +1,45 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-9.1.1, pluggy-1.7.0 -- /workspace/pricehub/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /workspace/pricehub
+plugins: anyio-4.15.1
+collecting ... collected 18 items
+
+{'ok': True, 'text_engine': 'sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2', 'image_engine': 'CLIP clip-ViT-B-32 + phash', 'adapters': ['mock', 'webpage', 'rest', 'csv'], 'platform_catalog': 920}
+日本平台: ['Amazon', 'Rakuten Ichiba 楽天市場', 'Yahoo!ショッピング', 'Mercari メルカリ', 'ZOZOTOWN', 'Yahoo!オークション']
+PASSED
+PASSED
+PASSED
+bad key -> 502 {'detail': "数据源抓取失败: Client error '401 Unauthorized' for url 'http://127.0.0.1:8901/v1/goods'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401"}
+PASSED
+PASSED
+monitor fail {'id': 5} 502: 数据源抓取失败: Client error '401 Unauthorized' for url 'http://127.0.0.1:8901/v1/goods'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401
+history {'count': 7, 'min': 599.0, 'max': 2060.0, 'avg': 1619.0, 'last': 599.0, 'change_pct': -70.05}
+forecast {'linear_regression': [2050.45, 2398.23, 2746.02, 3093.8, 3441.58, 3789.37, 4137.15], 'moving_average': 1401.06, 'exp_smoothing': 1562.22, 'slope': 347.7839, 'trend': '上涨'}
+PASSED
+compare {'group_key': '16 512 ultra 小米14', 'offers': [{'id': 2, 'platform': 'taobao.com', 'title': '小米14 Ultra 16+512', 'price': 6207.43}, {'id': 7, 'platform': 'jd.com', 'title': '小米14 Ultra 16+512', 'price': 6894.42}], 'cheapest': {'id': 2, 'platform': 'taobao.com', 'title': '小米14 Ultra 16+512', 'price': 6207.43}, 'spread': 686.99}
+pricing {'cost_plus': 6000.0, 'competitive_min_minus_1pct': 6825.48, 'market_median': 6894.42, 'recommended': 6000.0}
+PASSED
+PASSED
+游戏机 -> ['Nintendo Switch OLED 本体', 'Switch OLED 游戏机', 'Switch OLED 游戏机'] sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+PASSED
+headphones -> ['Wireless Bluetooth Headphones Noise Cancelling', '降噪蓝牙耳机 头戴式', 'ワイヤレスイヤホン ノイズキャンセリング'] sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+PASSED
+toothbrush -> ['電動歯ブラシ 充電式', '降噪蓝牙耳机 头戴式', 'Mechanical Gaming Keyboard RGB'] sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+PASSED
+green tea -> ['有机绿茶 500g', 'Steam 充值卡 100元', 'Steam 充值卡 100元'] sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+PASSED
+キーボード -> ['Mechanical Gaming Keyboard RGB', '降噪蓝牙耳机 头戴式', 'ワイヤレスイヤホン ノイズキャンセリング'] sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+PASSED
+手机 -> ['小米14 Ultra 16+512', '小米14 Ultra 16+512', 'iPhone 16 Pro 256GB'] sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+PASSED
+CLIP clip-ViT-B-32 + phash [{'id': 11, 'source_id': 3, 'platform': 'kawang', 'external_id': '18f6f022f4', 'title': 'Steam 充值卡 100元', 'category': '虚拟商品', 'chain': '数字内容>游戏点卡', 'brand': '', 'url': 'http://127.0.0.1:8901/item/3', 'image_path': '/workspace/pricehub/app/../data/images/11.img', 'phash': 'e885871a9e297967', 'currency': 'CNY', 'cost': None, 'group_key': '100元 steam 充值卡', 'monitored': 1, 'score': 0.9917, 'method': 'clip'}]
+PASSED
+{'ok': False, 'degraded': True, 'provider': 'deepseek', 'results': [], 'message': '未配置 DEEPSEEK_API_KEY，AI 搜索已降级（返回空结果）。设置环境变量后重启即可启用。'}
+PASSED
+fake deepseek returned 10 items, rank1: {'rank': 1, 'title': 'iPhone 16 offer 1', 'platform': 'p', 'price': 7000, 'url': '', 'reason': ''}
+PASSED
+
+
+============================== 18 passed in 8.86s ==============================

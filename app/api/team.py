@@ -87,7 +87,7 @@ def oidc_cb(code: str = "", state: str = "", error: str = ""):
 def invite_preview(token: str):
     i = T.G("SELECT i.email, i.role, i.accepted_at, w.name ws FROM invites i JOIN workspaces w ON w.id=i.ws_id WHERE i.token_hash=?", (T._h(token),), one=True)
     if not i or i["accepted_at"]: raise HTTPException(404, "邀请链接无效或已使用")
-    return {"email": i["email"], "role": T.ROLES[i["role"]], "workspace": i["ws"]}
+    return {"email": i["email"], "role": i["role"], "role_label": T.ROLES[i["role"]], "workspace": i["ws"]}
 @app.post("/api/invites/accept")
 def invite_accept(request: Request, body: dict = Body(...)):
     s = ctx(request); ws = T.accept(body.get("token"), s["user_id"]); T.switch(s["token"], ws); return {"ok": True, "ws_id": ws}

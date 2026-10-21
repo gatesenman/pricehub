@@ -1,5 +1,5 @@
 <!doctype html><html lang="zh-CN" data-theme="dark"><head><meta charset="utf-8"><title>PriceHub 价格管理工作台</title><link rel="icon" href="data:,">
-<link rel="stylesheet" href="/static/vendor/codicon.css"><link rel="stylesheet" href="/static/style.css"><script src="/static/vendor/chart.js"></script><script defer src="/static/v4.js"></script><script defer src="/static/app.js"></script><script defer src="/static/v5.js"></script><script defer src="/static/vendor/alpine.js"></script></head>
+<link rel="stylesheet" href="/static/vendor/codicon.css"><link rel="stylesheet" href="/static/style.css"><script src="/static/vendor/chart.js"></script><script defer src="/static/v4.js"></script><script defer src="/static/app.js"></script><script defer src="/static/v5.js"></script><script defer src="/static/v7.js"></script><script defer src="/static/vendor/alpine.js"></script></head>
 <body x-data="App()" @keydown.window="keys($event)" @click.window="menuOpen=null;ctx=null;openPid($event)" @mousemove.window="dragMove($event)" @mouseup.window="dragEnd()" @mouseover.window="tipOver($event)">
 <div class="app">
 <div class="menubar" data-menubar><span class="logo"><i class="codicon codicon-pulse"></i> PriceHub</span>
@@ -260,6 +260,47 @@
       <span class="muted">推送到：</span><template x-for="c in t.ch.items" :key="c.id"><label class="chip" :class="(t.sch.channel_ids||[]).map(String).includes(String(c.id))&&'on'"><input type="checkbox" style="display:none" :checked="(t.sch.channel_ids||[]).map(String).includes(String(c.id))" @change="t.sch.channel_ids=$event.target.checked?[...(t.sch.channel_ids||[]),c.id]:(t.sch.channel_ids||[]).filter(x=>String(x)!==String(c.id))"><span x-text="c.name"></span></label></template>
       <span class="muted" x-show="!t.ch.items.length">请先在「告警与通知」添加渠道</span><button class="btn primary" style="margin-left:auto" @click="saveSchedule(t)" data-sch-save>保存</button></div></div></div></div></template></div></template>
 
+   <template x-if="t.type==='team'"><div data-v7-team>
+    <div class="row"><div class="grp"><h4><i class="codicon codicon-organization"></i> 团队模式</h4><div class="b">
+      <div class="hint" x-text="me.team_mode?'已开启：每个人用自己的账号登录，数据按工作区隔离。':'未开启：本机免登录使用默认工作区。需要多人协作时再开启。'"></div>
+      <template x-if="!me.logged_in&&!me.has_users"><div data-owner-form><div class="hint">开启前先创建你的账号（你将成为默认工作区的所有者）：</div>
+        <div class="filterbar"><input x-model="t.oe" placeholder="邮箱" data-owner-email><input x-model="t.on" placeholder="名字" style="width:100px"><input type="password" x-model="t.op" placeholder="密码（至少 8 位）" data-owner-pw><button class="btn primary" @click="registerOwner(t)" data-owner-create>创建账号</button></div></div></template>
+      <template x-if="!me.logged_in&&me.has_users"><div class="hint">已有账号。开启团队模式后用账号登录即可。</div></template>
+      <label><input type="checkbox" :checked="me.team_mode" @change="setTeamMode(t,$event.target.checked)" :disabled="!me.logged_in&&!me.team_mode&&!me.has_users" data-team-mode> 开启团队模式（需要登录）</label></div></div>
+     <div class="grp"><h4><i class="codicon codicon-account"></i> 当前身份</h4><div class="b">
+      <div x-show="me.logged_in"><b x-text="me.user&&me.user.name"></b> <span class="muted" x-text="me.user&&me.user.email"></span><div class="hint" x-text="'工作区：'+me.workspace.name+' · 角色：'+roleCn(me.role)"></div>
+       <button class="btn" @click="logout()" data-logout><i class="codicon codicon-sign-out"></i> 退出登录</button></div>
+      <div x-show="!me.logged_in" class="hint">本机免登录（默认工作区）</div></div></div></div>
+    <div class="row" x-show="me.logged_in"><div class="grp"><h4><i class="codicon codicon-person-add"></i> 成员与邀请</h4><div class="b">
+      <div class="filterbar" x-show="canAdmin()"><input x-model="t.ie" placeholder="对方邮箱（可留空，任何人凭链接加入）" style="width:240px" data-invite-email><select x-model="t.ir" data-invite-role><template x-for="r in ['admin','editor','viewer']"><option :value="r" x-text="roleCn(r)" :selected="r===t.ir"></option></template></select><button class="btn primary" @click="sendInvite(t)" data-invite-create><i class="codicon codicon-link"></i> 生成邀请链接</button></div>
+      <template x-if="t.inv"><div class="result-card" data-invite-link><b>邀请链接（7 天内有效）：</b><div class="mono" style="user-select:all;word-break:break-all" x-text="t.inv"></div><div class="hint">系统不会替你发送邮件，请自己把链接发给对方。</div></div></template>
+      <table class="grid"><thead><tr><th>成员</th><th style="width:130px">角色</th><th style="width:150px">最近登录</th><th style="width:50px"></th></tr></thead><tbody><template x-for="m in t.m.items" :key="m.id"><tr data-member-row>
+        <td><span x-text="m.name"></span> <span class="muted" x-text="m.email"></span></td>
+        <td><select :disabled="!canAdmin()||m.role==='owner'&&me.role!=='owner'" @change="setRole(t,m,$event.target.value)" data-member-role><template x-for="r in ['owner','admin','editor','viewer']"><option :value="r" x-text="roleCn(r)" :selected="r===m.role"></option></template></select></td>
+        <td class="muted" x-text="m.last_login||'从未'"></td><td><button class="btn danger" x-show="canAdmin()&&m.id!==(me.user&&me.user.id)" @click="removeMember(t,m)" title="移出"><i class="codicon codicon-trash"></i></button></td></tr></template></tbody></table>
+      <template x-if="t.m.invites&&t.m.invites.length"><div><h5 style="margin:8px 0 4px">邀请记录</h5><table class="grid"><tbody><template x-for="i in t.m.invites" :key="i.id"><tr><td x-text="i.email||'任何人'"></td><td x-text="roleCn(i.role)"></td><td class="muted" x-text="i.accepted_at?'已加入':'待接受'"></td><td><button class="btn" x-show="!i.accepted_at" @click="revokeInvite(t,i)">撤销</button></td></tr></template></tbody></table></div></template>
+      <div class="hint" style="margin-top:6px">所有者：全部权限；管理员：管理成员和设置；编辑：增删改商品与规则；只读：只能查看。</div></div></div>
+     <div class="grp" x-show="canAdmin()"><h4><i class="codicon codicon-shield"></i> 单点登录（OIDC）</h4><div class="b">
+      <div class="field"><label>发行方地址（Issuer）</label><input x-model="t.oidc.issuer" placeholder="https://login.example.com" data-oidc-issuer></div>
+      <div class="field"><label>客户端 ID</label><input x-model="t.oidc.client_id" data-oidc-client></div>
+      <div class="field"><label>客户端密钥</label><input type="password" x-model="t.oidc.client_secret" placeholder="留空表示不修改"></div>
+      <div class="field"><label>登录按钮名称</label><input x-model="t.oidc.name" placeholder="如 公司账号"></div>
+      <div class="hint" x-text="'回调地址：'+location.origin+'/api/auth/oidc/callback'"></div><button class="btn primary" @click="saveOidc(t)" data-oidc-save>保存</button></div></div></div>
+    <div class="row" x-show="me.logged_in"><div class="grp"><h4><i class="codicon codicon-folder-library"></i> 我的工作区</h4><div class="b"><table class="grid"><tbody><template x-for="w in me.workspaces" :key="w.id"><tr><td><b x-text="w.name"></b></td><td x-text="roleCn(w.role)"></td><td><button class="btn" :disabled="w.id===me.workspace.id" @click="switchWs(w.id)" x-text="w.id===me.workspace.id?'当前':'切换'"></button></td></tr></template></tbody></table>
+      <button class="btn" style="margin-top:6px" @click="newWs()" data-ws-new><i class="codicon codicon-add"></i> 新建工作区</button><div class="hint">每个工作区的商品、数据源、规则、令牌互相独立。</div></div></div></div>
+   </div></template>
+   <template x-if="t.type==='usage'"><div data-v7-usage>
+    <div class="row"><div class="grp"><h4><i class="codicon codicon-dashboard"></i> <span x-text="'用量 · '+me.workspace.name"></span></h4><div class="b">
+      <div class="hint" x-text="'当前套餐：'+(t.u.plan_label||'')"></div>
+      <template x-for="x in t.u.items" :key="x.metric"><div class="usage-it" :data-usage="x.metric"><div class="ul"><span x-text="metricCn(x.metric)"></span><span class="muted" x-text="x.used+(x.limit?(' / '+x.limit):' · 不限')"></span></div>
+        <div class="pbar" :class="pct(x)>=90?'err':(pct(x)>=70?'warn':'')"><div :style="'width:'+(x.limit?pct(x):0)+'%'"></div></div>
+        <div class="hint" x-show="x.limit&&pct(x)>=90" x-text="x.used>=x.limit?'已用完，新的'+metricCn(x.metric)+'会被拒绝。可以调高配额或升级套餐。':'快用完了'"></div></div></template>
+      <div class="hint">接口调用按天统计，采集次数按月统计，监控商品数为当前总数。数字约每 5 秒更新。</div></div></div>
+     <div class="grp" x-show="canAdmin()"><h4><i class="codicon codicon-settings"></i> 套餐与配额</h4><div class="b">
+      <div class="field"><label>套餐</label><select x-model="t.u.plan" data-plan><template x-for="(l,k) in t.u.plans"><option :value="k" x-text="l" :selected="k===t.u.plan"></option></template></select></div>
+      <template x-for="m in ['skus','collects','api_calls']"><div class="field"><label x-text="metricCn(m)+'上限（留空=按套餐）'"></label><input type="number" min="0" x-model="t.q[m]" :data-quota="m"></div></template>
+      <button class="btn primary" @click="saveQuota(t)" data-quota-save>保存</button></div></div></div>
+   </div></template>
    <template x-if="t.type==='admin'"><div data-v5-admin>
     <div class="row"><div class="grp"><h4><i class="codicon codicon-globe"></i> 汇率（折合人民币）</h4><div class="b"><div class="filterbar">1 <select x-model="t.fxCur"><template x-for="(v,k) in t.fx.rates"><option x-text="k" :selected="k===t.fxCur"></option></template></select> =
       <input type="number" step="0.0001" x-model="t.fxVal" :placeholder="t.fx.rates[t.fxCur]" style="width:100px" data-fx-val> 人民币 <button class="btn primary" @click="saveFx(t)" data-fx-save>更新</button></div>
@@ -307,7 +348,10 @@
   <template x-if="sel&&sel.kind==='platform'&&xp&&xp.id===sel.obj.id"><div style="padding:0 10px" data-explain><div class="explain" :class="xp.status==='解析成功'&&'ok'"><h5><i class="codicon" :class="xp.status==='解析成功'?'codicon-pass':'codicon-info'"></i><span x-text="xp.title"></span></h5><div class="why" x-text="xp.reason"></div><b>建议下一步</b><ol><template x-for="n in xp.next"><li x-text="n"></li></template></ol></div></div></template>
   <template x-if="sel&&sel.kind==='platform'"><div style="padding:0 10px"><button class="btn primary" style="width:100%" :disabled="!sel.obj.domain" @click="togglePlatform(sel.obj)" x-text="sel.obj.enabled?'停用该平台':'启用该平台'"></button></div></template></div>
 </div>
-<div class="status" data-status><span data-online :style="!online&&'color:#ffb4b4'"><i class="codicon" :class="online?'codicon-pass':'codicon-error'"></i> <span x-text="online?'服务在线':'服务离线'"></span></span><span x-text="'商品 '+(dash.products??0)" data-status-count></span><span x-text="'数据源 '+(dash.sources??0)"></span>
+<div class="status" data-status><span class="wsw" @click.stop="wsMenu=!wsMenu" data-ws-switch title="切换工作区"><i class="codicon codicon-folder-library"></i> <span x-text="me.workspace.name"></span><span x-show="me.logged_in" x-text="' · '+roleCn(me.role)"></span>
+ <div class="wsmenu" x-show="wsMenu" x-cloak @click.stop><template x-for="w in me.workspaces" :key="w.id"><div class="mi" @click="switchWs(w.id)" :data-ws-item="w.id"><span><i class="codicon" :class="w.id===me.workspace.id?'codicon-check':'codicon-blank'"></i> <span x-text="w.name"></span></span><span class="k" x-text="roleCn(w.role)"></span></div></template>
+  <div class="mi" x-show="!me.logged_in" @click="wsMenu=false;openMod('team')"><span><i class="codicon codicon-info"></i> 单机模式只有默认工作区，开启团队模式后可新建</span></div>
+  <div class="sep" x-show="me.logged_in"></div><div class="mi" x-show="me.logged_in" @click="wsMenu=false;newWs()"><span><i class="codicon codicon-add"></i> 新建工作区</span></div><div class="mi" @click="wsMenu=false;openMod('team')"><span><i class="codicon codicon-organization"></i> 团队与成员</span></div><div class="mi" @click="wsMenu=false;openMod('usage')"><span><i class="codicon codicon-dashboard"></i> 用量与配额</span></div></div></span><span data-online :style="!online&&'color:#ffb4b4'"><i class="codicon" :class="online?'codicon-pass':'codicon-error'"></i> <span x-text="online?'服务在线':'服务离线'"></span></span><span x-text="'商品 '+(dash.products??0)" data-status-count></span><span x-text="'数据源 '+(dash.sources??0)"></span>
  <span x-text="'平台 已启用 '+(pstats.enabled||0)+'/'+(pstats.total||0)" data-status-platforms></span><span x-text="'最近抓取 '+fmtTs(dash.last_fetch)"></span>
  <span class="taskbtn" @click.stop="showTasks=!showTasks" data-task-center :title="'后台任务（点击查看）'"><template x-if="runningTasks.length"><span class="spin"></span></template><i x-show="!runningTasks.length" class="codicon codicon-tasklist"></i><span x-text="runningTasks.length?('后台任务 '+runningTasks.length+' 个进行中'):'后台任务'"></span></span>
  <span x-show="task" style="display:flex;gap:6px;align-items:center" data-task><span class="spin"></span><span x-text="task&&task.label"></span><span class="prog"><div :style="'width:'+(task?task.p*100:0)+'%'"></div></span></span>
@@ -359,6 +403,16 @@
  <div class="df"><span class="hint" style="margin-right:auto">读取在后台进行，关闭窗口不影响</span><button class="btn" @click="qmOpen=false">关闭</button>
   <template x-if="qm.task&&qm.task.status==='已完成'"><button class="btn" @click="const id=qr().product_id;qmOpen=false;openProduct(id)" data-qm-open>查看商品</button></template>
   <button class="btn primary" @click="qmGo()" :disabled="qm.task&&(qm.task.status==='排队中'||qm.task.status==='进行中')" data-qm-go><i class="codicon codicon-eye"></i> <span x-text="qm.task&&qm.task.status==='已完成'?'再监控一个':'开始监控'"></span></button></div></div></template></div></div>
+<div class="overlay login-ov" x-show="login.open" x-cloak data-login><template x-if="login.open"><div class="dialog" style="width:400px">
+ <div class="dt"><i class="codicon codicon-pulse"></i>&nbsp;<span x-text="login.mode==='register'?'创建账号':'登录 PriceHub'"></span></div>
+ <div class="db"><template x-if="login.inv"><div class="result-card" data-login-invite x-text="'你被邀请加入「'+login.inv.workspace+'」，角色：'+roleCn(login.inv.role)"></div></template>
+  <div class="field"><label>邮箱</label><input x-model="login.email" autocomplete="username" data-login-email></div>
+  <div class="field" x-show="login.mode==='register'"><label>名字</label><input x-model="login.name" data-login-name></div>
+  <div class="field"><label>密码</label><input type="password" x-model="login.password" :autocomplete="login.mode==='register'?'new-password':'current-password'" @keydown.enter="doLogin()" data-login-pw></div>
+  <div class="explain" x-show="login.error" data-login-error><h5><i class="codicon codicon-warning"></i><span x-text="login.error"></span></h5></div>
+  <button class="btn primary" style="width:100%;justify-content:center" @click="doLogin()" :disabled="login.busy" data-login-go x-text="login.mode==='register'?'创建并登录':'登录'"></button>
+  <template x-if="login.sso&&login.sso.enabled"><button class="btn" style="width:100%;justify-content:center;margin-top:8px" @click="ssoLogin()" data-login-sso><i class="codicon codicon-shield"></i> <span x-text="'用'+(login.sso.name||'公司账号')+'登录'"></span></button></template>
+  <div class="hint" style="margin-top:10px"><a href="#" @click.prevent="login.mode=login.mode==='register'?'login':'register'" x-text="login.mode==='register'?'已有账号？去登录':'有邀请链接？创建账号'"></a></div></div></div></template></div>
 <div class="overlay" x-show="obOpen" x-cloak style="place-items:center;padding:0" data-onboarding><template x-if="obOpen"><div class="ob">
  <div class="oh"><i class="codicon codicon-pulse" style="font-size:22px;color:var(--accent)"></i><h2 x-text="['欢迎使用 PriceHub','连接 AI 服务（可选）','添加第一个监控商品','准备就绪'][ob.step]"></h2><span class="muted" style="margin-left:auto" x-text="'第 '+(ob.step+1)+' / 4 步'"></span></div>
  <div class="steps"><template x-for="i in 4"><div :class="i-1<=ob.step&&'on'"></div></template></div>

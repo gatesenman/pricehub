@@ -18,7 +18,8 @@ def _dead_insert(j):
     obs.DEAD.set((db.q("SELECT COUNT(*) n FROM dead_letters", one=True) or {}).get("n", 0))
 def _on_result(j, result):
     obs.JOBS.labels(j.kind, result).inc(); bus.publish(f"job.{result}", job_id=j.id, kind=j.kind, key=j.key, attempts=j.attempts, error=j.error)
-SCHED = Scheduler(workers=int(os.environ.get("PRICEHUB_WORKERS", "4")), rate=float(os.environ.get("PRICEHUB_DOMAIN_RPS", "1")), burst=float(os.environ.get("PRICEHUB_DOMAIN_BURST", "3")),
+from app.core.redis_queue import make_scheduler
+SCHED = make_scheduler(workers=int(os.environ.get("PRICEHUB_WORKERS", "4")), rate=float(os.environ.get("PRICEHUB_DOMAIN_RPS", "1")), burst=float(os.environ.get("PRICEHUB_DOMAIN_BURST", "3")),
                   base_backoff=float(os.environ.get("PRICEHUB_BACKOFF_S", "2")), dead_sink=_dead_sink, on_result=_on_result)
 def source_key(s):
     """限速 key：取数据源配置里第一个网址的域名；无网址时按数据源类型。"""
@@ -31,6 +32,9 @@ def _h_source_fetch(p):
     from app.main import upsert
     s = db.q("SELECT * FROM sources WHERE id=?", (p["source_id"],), one=True)
     if not s: raise PermanentError("数据源不存在")
+    from app.domains.team import usage as _U
+    try: _U.check("collects")
+    except _U.QuotaExceeded as e: raise PermanentError(str(e))
     try: items = sources.make(s["type"], json.loads(s["config"] or "{}")).fetch()
     except (sdk.PluginError, KeyError, ValueError) as e:
         bus.publish("collect.failed", source_id=s["id"], type=s["type"], error=str(e)); raise PermanentError(str(e))
@@ -38,7 +42,10 @@ def _h_source_fetch(p):
         bus.publish("collect.failed", source_id=s["id"], type=s["type"], error=str(e)); raise
     ids = [upsert(s["id"], it) for it in items]
     bus.publish("collect.succeeded", source_id=s["id"], type=s["type"], items=len(items)); return {"fetched": len(items), "product_ids": ids}
-SCHED.register_handler("source.fetch", _h_source_fetch)
+def _h_source_fetch_ws(p):
+    from app.core import tenancy
+    with tenancy.use(int(p.get("ws") or 1)): return _h_source_fetch(p)   # 任务在提交它的工作区内执行（内存与 Redis 后端一致）
+SCHED.register_handler("source.fetch", _h_source_fetch_ws)
 def submit_source_fetch(sid, priority=5, max_attempts=4):
     s = db.q("SELECT * FROM sources WHERE id=?", (sid,), one=True) or {"type": "default"}
     from app.core import tenancy

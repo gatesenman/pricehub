@@ -1,4 +1,4 @@
-# 团队版部署：PriceHub + PostgreSQL（可选 Prometheus）。启动：docker compose up -d；带监控：docker compose --profile monitoring up -d
+# 团队版部署：PriceHub API + 独立 worker + PostgreSQL + Redis（可选 Prometheus）。启动：docker compose up -d；带监控：docker compose --profile monitoring up -d
 services:
   db:
     image: postgres:17
@@ -6,16 +6,30 @@ services:
     volumes: [pgdata:/var/lib/postgresql/data]
     healthcheck: {test: ["CMD-SHELL", "pg_isready -U pricehub"], interval: 10s, retries: 10}
     restart: unless-stopped
+  redis:
+    image: redis:7-alpine
+    healthcheck: {test: ["CMD", "redis-cli", "ping"], interval: 10s, retries: 10}
+    restart: unless-stopped
   app:
     build: .
-    depends_on: {db: {condition: service_healthy}}
-    environment:
+    image: localhost/pricehub:v7
+    depends_on: {db: {condition: service_healthy}, redis: {condition: service_healthy}}
+    environment: &env
       PRICEHUB_DB_URL: postgresql://pricehub:${PG_PASSWORD:-change-me}@db:5432/pricehub
-      PRICEHUB_WORKERS: "4"
+      PRICEHUB_QUEUE: redis
+      PRICEHUB_REDIS_URL: redis://redis:6379/0
+      PRICEHUB_EMBEDDED_WORKER: "0"
       PRICEHUB_DOMAIN_RPS: "1"
       PRICEHUB_LOG_LEVEL: INFO
       PRICEHUB_METRICS_TOKEN: ${METRICS_TOKEN:-change-me-metrics}
     ports: ["8800:8800"]
+    volumes: [appdata:/data, ./plugins:/plugins]
+    restart: unless-stopped
+  worker:
+    image: localhost/pricehub:v7
+    depends_on: {app: {condition: service_started}}
+    command: ["python", "-m", "app.worker", "--concurrency", "4"]
+    environment: *env
     volumes: [appdata:/data, ./plugins:/plugins]
     restart: unless-stopped
   prometheus:

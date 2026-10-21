@@ -205,6 +205,9 @@ def facets(): return {"countries": [r["country"] for r in db.q("SELECT DISTINCT 
 def fetch_source(sid: int):
     s = db.q("SELECT * FROM sources WHERE id=?", (sid,), one=True)
     if not s: raise HTTPException(404)
+    from app.domains.team import usage as _U
+    try: _U.check("collects")
+    except _U.QuotaExceeded as e: raise HTTPException(429, str(e))
     try: items = sources.make(s["type"], json.loads(s["config"])).fetch()
     except Exception as e:
         bus.publish("collect.failed", source_id=sid, type=s["type"], error=str(e)); raise HTTPException(502, f"数据源抓取失败: {e}")

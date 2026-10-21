@@ -9,6 +9,7 @@
 import heapq, threading, time, random, itertools, json, logging, collections
 log = logging.getLogger("pricehub.scheduler")
 class PermanentError(Exception): pass
+
 class TokenBucket:
     def __init__(self, rate, burst): self.rate, self.burst, self.tokens, self.t = float(rate), float(burst), float(burst), time.monotonic()
     def take(self):
@@ -98,6 +99,6 @@ class Scheduler:
         return True
     def stats(self):
         with self.cv:
-            return {"workers": self.workers_n, "running": self.running, "active": self.active, "ready": len(self.ready), "delayed": len(self.delayed),
+            return {"backend": getattr(self, "backend", "memory"), "workers": self.workers_n, "running": self.running, "active": self.active, "ready": len(self.ready), "delayed": len(self.delayed),
                     "counters": dict(self.stats_c), "rates": {k: {"rps": v[0], "burst": v[1]} for k, v in self.rates.items()}, "default_rate": {"rps": self.default_rate, "burst": self.default_burst},
                     "recent": [j.view() for j in list(self.jobs.values())[-30:]][::-1]}
