@@ -44,8 +44,9 @@ def test_faiss_vector_index_matches_bruteforce():
     assert HAVE_FAISS
     rng = np.random.default_rng(0); X = rng.normal(size=(5000, 64)).astype("float32"); X /= np.linalg.norm(X, axis=1, keepdims=True)
     q = X[123] + 0.01; q /= np.linalg.norm(q)
-    vi = VectorIndex().build(X); I, D = vi.search(q, 5); bf = np.argsort(-(X @ q))[:5]
-    assert vi.engine == "faiss-flat" and list(I) == list(bf)
+    bf = np.argsort(-(X @ q))[:5]
+    vi = VectorIndex(kind="flat").build(X); I, D = vi.search(q, 5); assert vi.engine == "faiss-flat" and list(I) == list(bf)
+    a = VectorIndex().build(X); I3, _ = a.search(q, 5); assert a.engine == "numpy-exact" and list(I3) == list(bf)   # 小规模自动走精确检索
     h = VectorIndex(kind="hnsw").build(X); I2, _ = h.search(q, 5); assert h.engine == "faiss-hnsw" and I2[0] == 123
 # ---------- 集成：服务 ----------
 @pytest.fixture(scope="module")
@@ -73,7 +74,7 @@ def test_api_v1_prefix_and_legacy(c):
     assert c.get("/api/v1/products").status_code == 200
 def test_health_and_metrics(c):
     assert c.get("/healthz").json()["status"] == "ok"
-    r = c.get("/readyz").json(); assert r["status"] == "ready" and r["checks"]["database"]["ok"] and r["checks"]["vector_index"]["engine"] == "faiss"
+    r = c.get("/readyz").json(); assert r["status"] == "ready" and r["checks"]["database"]["ok"] and r["checks"]["vector_index"]["engine"].startswith("faiss")
     m = c.get("/metrics").text
     for k in ("pricehub_http_requests_total", "pricehub_products", "pricehub_job_queue_depth", "pricehub_up 1.0"): assert k in m
 def test_plugin_sdk_dynamic_load(c):

@@ -11,12 +11,13 @@ class VectorIndex:
         self.dim, self.kind, self.index, self.M, self.ids = dim, kind, None, None, np.zeros(0, dtype=np.int64)
     @property
     def engine(self):
-        if not HAVE_FAISS: return "numpy"
+        if self.index is None: return "numpy-exact"
         return "faiss-hnsw" if isinstance(self.index, faiss.IndexHNSWFlat) else "faiss-flat"
     def build(self, vectors, ids=None):
         X = np.ascontiguousarray(np.asarray(vectors, dtype=np.float32)); n = len(X)
         self.dim = X.shape[1] if n else self.dim; self.ids = np.arange(n, dtype=np.int64) if ids is None else np.asarray(ids, dtype=np.int64)
-        if not HAVE_FAISS or n == 0: self.M = X; self.index = None; return self
+        # 压测结论：单条查询时 numpy 精确矩阵乘（多线程 BLAS）比 FAISS Flat 更快，所以小规模走 numpy 精确检索，大规模走 FAISS HNSW。
+        if not HAVE_FAISS or n == 0 or (self.kind == "auto" and n < HNSW_MIN) or self.kind == "numpy": self.M = X; self.index = None; return self
         use_hnsw = self.kind == "hnsw" or (self.kind == "auto" and n >= HNSW_MIN)
         if use_hnsw:
             self.index = faiss.IndexHNSWFlat(self.dim, 32, faiss.METRIC_INNER_PRODUCT); self.index.hnsw.efConstruction = 80; self.index.hnsw.efSearch = 64
@@ -24,7 +25,7 @@ class VectorIndex:
         self.index.add(X); return self
     def add(self, vectors, ids):
         X = np.ascontiguousarray(np.asarray(vectors, dtype=np.float32))
-        if self.index is None and not HAVE_FAISS: self.M = X if self.M is None else np.vstack([self.M, X])
+        if self.index is None and self.M is not None: self.M = np.vstack([self.M, X])
         elif self.index is None: return self.build(X, ids)
         else: self.index.add(X)
         self.ids = np.concatenate([self.ids, np.asarray(ids, dtype=np.int64)]); return self

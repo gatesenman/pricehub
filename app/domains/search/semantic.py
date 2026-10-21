@@ -10,7 +10,7 @@ if os.environ.get("PRICEHUB_NO_ST") != "1":
     except Exception as e: print("ST unavailable:", e)
 from app.core.vector import VectorIndex, HAVE_FAISS
 _CACHE = {}; _QCACHE = {}; _INDEX = {"key": None, "M": None, "vi": None}
-VECTOR_ENGINE = "faiss" if HAVE_FAISS else "numpy"
+VECTOR_ENGINE = "faiss-hnsw(≥5万) / numpy 精确(<5万)" if HAVE_FAISS else "numpy"
 EMB_FILE = os.environ.get("PRICEHUB_EMB_CACHE", os.path.join(os.path.dirname(__import__('app').__file__), "..", "data", "emb_cache.npz"))
 def _load_disk():
     """向量持久化：重启后无需重新编码全部商品（冷启动加速）。"""

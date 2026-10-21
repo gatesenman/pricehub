@@ -168,7 +168,7 @@ erDiagram
 
 | 阶段 | 规模 | 价格点存储 | 向量索引 |
 |---|---|---|---|
-| 单机 | ≤ 10 万 SKU / ≤ 千万点 | SQLite（WAL） | FAISS Flat（< 5 万）/ HNSW |
+| 单机 | ≤ 10 万 SKU / ≤ 千万点 | SQLite（WAL） | numpy 精确（< 5 万）/ FAISS HNSW |
 | 团队 | ≤ 100 万 SKU / ≤ 1 亿点 | PostgreSQL 17 + 按月分区；或 TimescaleDB hypertable + 压缩 | FAISS HNSW 常驻内存 |
 | 集群 | 百万以上 / 十亿点 | TimescaleDB 多节点或 ClickHouse 存时序，PostgreSQL 存主数据；离线分析用 DuckDB 读 Parquet 归档 | pgvector HNSW 或独立向量库 |
 
@@ -269,7 +269,7 @@ flowchart LR
 | ADR-03 | 价格点只追加、复合索引 (product_id, id) | 写多读少，最新价与历史查询都走索引 | 超大规模迁移到 TimescaleDB 分区与压缩 |
 | ADR-04 | 进程内事件总线，主题字符串 + 关键字参数 | 零依赖、易测试；解耦采集与告警 | 无持久化，进程崩溃可能丢事件；集群换 Redis Streams |
 | ADR-05 | 自研轻量调度器（堆 + 令牌桶 + 死信表） | 需要按域名限速和死信，APScheduler 不具备；Celery 对桌面版太重 | 单进程；任务定义已可序列化，便于替换 |
-| ADR-06 | FAISS 替代 numpy 暴力检索，规模大时自动切 HNSW | 结果与暴力一致（Flat），大规模延迟显著下降 | HNSW 为近似检索，召回率需监控；团队版可选 pgvector |
+| ADR-06 | 向量索引抽象：不足 5 万条用 numpy 精确检索，5 万条以上用 FAISS HNSW | 压测显示单条查询 numpy 比 FAISS Flat 快；HNSW 在 10 万条时 0.8 毫秒、召回 99.5% | HNSW 为近似检索，召回率需监控；团队版可选 pgvector |
 | ADR-07 | 插件放目录动态加载，SDK 主版本校验 | 第三方扩展不需改核心；不兼容早发现 | 插件与主进程同权限，需提示只装可信插件 |
 | ADR-08 | 不做反爬绕过 | 合规与可持续；对方条款优先 | 部分平台只能靠授权接口或导入 |
 | ADR-09 | /api/v1 由中间件重写实现，旧路径保留 | 零改动获得版本前缀，兼容现有界面与脚本 | v2 不兼容变更时需单独路由组 |
