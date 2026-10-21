@@ -264,7 +264,7 @@ def history(pid: int):
     return {"history": out, "stats": analytics.history_stats(out)}
 @app.get("/api/products/{pid}/forecast")
 def forecast(pid: int, horizon: int = 7):
-    h = db.q("SELECT price FROM prices WHERE product_id=? ORDER BY ts, id", (pid,)); f = analytics.forecast(h, horizon)
+    h = db.q("SELECT price, ts FROM prices WHERE product_id=? ORDER BY ts, id", (pid,)); f = analytics.forecast(h, horizon)
     f["conf"] = CF.forecast_conf(__import__("numpy").array([x["price"] for x in h], float)); return f
 def _peers(pid):
     p = db.q("SELECT * FROM products WHERE id=?", (pid,), one=True)

@@ -294,3 +294,19 @@ flowchart LR
 | ADR-08 | 不做反爬绕过 | 合规与可持续；对方条款优先 | 部分平台只能靠授权接口或导入 |
 | ADR-09 | /api/v1 由中间件重写实现，旧路径保留 | 零改动获得版本前缀，兼容现有界面与脚本 | v2 不兼容变更时需单独路由组 |
 | ADR-10 | Playwright 单浏览器线程 + 队列 | Playwright 同步 API 非线程安全；内存可控 | 吞吐受限，规模化时改为独立渲染节点池 |
+
+## 13. v8（2.0）智能预测与官方适配器
+
+### 13.1 预测管线
+`app/domains/analysis/forecast_v2.py` → `analytics.forecast` / `advice.buy_advice`。
+引擎选择：样本≥16 且 Prophet 可用 → Prophet；否则 ≥14 且 statsmodels → STL+ARIMA；否则 baseline。
+输出兼容旧字段（linear_regression / moving_average / exp_smoothing / trend），并增加 seasonal、elasticity、buy、ci90、promo_intensity。
+
+### 13.2 官方适配器
+`app/domains/official/`：`OfficialApiAdapter`（鉴权头、限速、分页、错误映射、审计）+ `crypto`（Fernet）+ `service`（settings 持久化）。
+路由：`GET/PUT /api/official/adapters`、`POST .../test`、`POST .../sync`。同步写入 `sources.type=official:<id>` 并 upsert 商品。
+
+### 13.3 渲染池 / 扩展 / pgvector
+- `app/domains/collect/render.py`：多 worker 线程 + 有界队列。
+- `extension/pricehub-clipper/`：MV3，打包为 static/downloads zip。
+- `app/core/pgvector_store.py`：可选；与现有 FAISS/numpy 并存，不强制。

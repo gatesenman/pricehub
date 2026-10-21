@@ -1,6 +1,6 @@
 # PriceHub 产品需求文档（PRD）
 
-> 版本：v7（1.5 团队协作）｜ 更新日期：2026-10-21 ｜ 适用代码：v7
+> 版本：v8（2.0 智能与官方接口）｜ 更新日期：2026-10-22 ｜ 适用代码：v8
 
 ## 1. 产品定位与价值主张
 
@@ -149,7 +149,7 @@ PriceHub
 | MVP（v1–v3） | 能采、能看、能比 | 数据源、价格历史、比价、语义搜索、平台目录与体检、置信度 | 已完成 |
 | 1.0（v4–v6） | 能告警、能决策、可部署 | 体验优化、规则告警与通知、同款匹配、到手价、MAP、定价引擎、报表、权限审计；v6：领域化重构、插件 SDK、调度器、事件总线、PostgreSQL、FAISS、/api/v1、/metrics、Docker | 已完成 |
 | 1.5（v7） | 团队协作 | 已完成：多租户工作区隔离、本地账号 + OIDC 单点登录、成员邀请与四级角色、用量配额与计量、Redis Streams 分布式队列与独立 worker、/metrics 鉴权；待做：任务分派、评论、数据源市场 | 主体已完成 |
-| 2.0 | 规模与智能 | 分布式采集节点、TimescaleDB/ClickHouse 时序、pgvector、价格弹性学习、需求预测、官方接口适配器（经授权）、浏览器扩展、移动端 | 规划 |
+| 2.0（v8） | 规模与智能 | 已完成：季节性预测（Prophet/STL+ARIMA）、价格弹性粗估、买入概率与置信区间、官方接口适配器框架（Amazon/eBay/AliExpress/京东/淘宝 stub/Keepa/SerpAPI）、渲染池配置、Chrome/Edge 扩展、pgvector 可选接口；待做：分布式采集节点、TimescaleDB/ClickHouse、真实官方签名、移动端 | 主体已完成 |
 
 ## 8. 商业模式与版本分级建议
 
@@ -200,3 +200,29 @@ PriceHub
 | 邀请 | 只生成 7 天有效的邀请链接，系统不发邮件，由邀请人自行转发 | 受邀人用链接注册后自动加入对应工作区和角色 |
 | 单点登录 | 配置 OIDC 发行方、客户端 ID/密钥；登录页出现“用 xx 登录”；首次登录自动建号，邮箱已存在则绑定 | 本地模拟 OIDC 提供方测试完整授权码流程和伪造 state 拒绝 |
 | 配额与计量 | 按套餐：单机版不限；免费版 500 个商品 / 每月 3000 次采集 / 每天 2 万次接口调用；所有者可单独调整 | 超限分别返回 429 或任务失败并说明原因；「用量与配额」页显示进度条 |
+
+## 12. v8（2.0）智能预测与官方接口
+
+### 12.1 智能预测
+- 在线性回归 / 移动平均 / 指数平滑之上，优先 Prophet，其次 statsmodels STL+ARIMA，再回退基线。
+- 促销日历（双11、618、黑五等）进入买入时机概率。
+- 价格弹性为基于价格波动代理的粗估，非真实销量。
+- 商品详情「买入时机建议」展示：结论、概率条、90% 置信区间、引擎名、弹性说明。
+
+### 12.2 官方接口适配器
+| 适配器 | 状态 | 说明 |
+|---|---|---|
+| Amazon PA-API 5 | ready（mock 可跑） | 真实环境需 AWS SigV4，当前 mock 用 Bearer |
+| eBay Browse | ready | OAuth access token |
+| AliExpress Affiliate | ready | API Key |
+| 京东联盟 | ready | App Key / Secret |
+| 淘宝开放平台 | stub | 文档与资质门槛高；可配 mock 试跑 |
+| Keepa | ready | 第三方亚马逊历史价 |
+| SerpAPI Google Shopping | ready | api_key |
+
+凭证按工作区 Fernet 加密存储（`PRICEHUB_SECRET` 或 `data/.secret`）；界面只显示遮掩值。试跑填「模拟地址」指向本地 `tests/mock_official_api.py`，**不会向真实第三方发请求**。
+
+### 12.3 其它
+- 渲染池：`PRICEHUB_RENDER_WORKERS` / `PRICEHUB_RENDER_QUEUE`，设置页可改。
+- 浏览器扩展：`/downloads/pricehub-clipper.zip`（MV3），把当前页 POST 到本机 `/api/quick-monitor`。
+- pgvector：设 `PRICEHUB_PGVECTOR=1` 且 PostgreSQL 已装扩展后可用；否则接口返回原因并跳过。

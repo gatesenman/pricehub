@@ -4,6 +4,7 @@ import json, os
 from fastapi import HTTPException, Body
 from app import db
 from . import adapter, crypto
+from app.sdk import PluginError, RetryableError
 KEY = "official_adapters"
 def _load():
     r = db.q("SELECT v FROM settings WHERE k=?", (KEY,), one=True)
@@ -46,8 +47,11 @@ def sync(adapter_id: str, body: dict = Body(None)):
     body = body or {}; s = _load().get(adapter_id) or {}
     if not s.get("enabled") and not body.get("force"): raise HTTPException(400, "请先启用该适配器")
     mock = body["mock_base_url"] if "mock_base_url" in body else (s.get("mock_base_url") or "")
-    ad = adapter.make(adapter_id, credentials=_open_creds(s), config={**(s.get("config") or {}), **(body.get("config") or {})}, mock_base_url=mock)
-    items = ad.fetch_all(max_pages=int(body.get("max_pages") or 3))
+    try:
+        ad = adapter.make(adapter_id, credentials=_open_creds(s), config={**(s.get("config") or {}), **(body.get("config") or {})}, mock_base_url=mock)
+        items = ad.fetch_all(max_pages=int(body.get("max_pages") or 3))
+    except (PluginError, RetryableError, KeyError, ValueError) as e:
+        raise HTTPException(400, str(e))
     src = db.q("SELECT id FROM sources WHERE type=?", (f"official:{adapter_id}",), one=True)
     if not src:
         sid = db.ex("INSERT INTO sources(name,type,config,enabled) VALUES(?,?,?,1)", (ad.meta.name, f"official:{adapter_id}", json.dumps({"adapter": adapter_id})))
