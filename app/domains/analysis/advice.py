@@ -50,8 +50,20 @@ def buy_advice(pid: int):
     if promos and not promos[0]["in_progress"] and promos[0]["days_left"] <= 30: score -= 1; reasons.append(f"{promos[0]['days_left']} 天后是「{promos[0]['name']}」，通常有促销")
     elif promos and promos[0]["in_progress"]: score += 1; reasons.append(f"「{promos[0]['name']}」正在进行")
     if p.get("target_price"): reasons.append(f"你的目标价 {p['target_price']:g}，" + ("已达到" if cur <= p["target_price"] else f"还差 {cur - p['target_price']:.2f}"))
-    verdict = "现在买" if score >= 2 else ("可以买" if score == 1 else ("再等等" if score <= -1 else "观望"))
     season = seasonality(hist)
     if season: reasons.append(season["note"])
-    conf = CF.pack(min(0.9, 0.3 + 0.05 * len(ps)), [f"基于 {len(ps)} 条历史价", "结合走势与促销日历"])
-    return {"verdict": verdict, "score": score, "reasons": reasons, "percentile": round(pct, 3), "min": lo, "max": hi, "current": cur, "promos": promos[:3], "seasonality": season, "conf": conf}
+    # v8：用高级预测的买入概率覆盖旧打分
+    buy = f.get("buy") or {}
+    el = f.get("elasticity") or {}
+    if buy.get("label"):
+        verdict = {"建议现在买": "现在买", "可以考虑买": "可以买", "建议再等等": "再等等"}.get(buy["label"], "观望")
+        reasons.append(f"买入时机概率 {buy['probability']:.0%}（90% 区间 {buy['ci90'][0]:.0%}–{buy['ci90'][1]:.0%}），引擎 {f.get('engine')}")
+        if el.get("ok"): reasons.append(f"价格弹性粗估 {el['elasticity']}（{el['label']}）")
+        if f.get("ci90"): reasons.append(f"未来 {f.get('horizon', 7)} 天预测中枢 {f.get('point_forecast')}，90% 区间 {f['ci90'][0]}–{f['ci90'][1]}")
+    else:
+        verdict = "现在买" if score >= 2 else ("可以买" if score == 1 else ("再等等" if score <= -1 else "观望"))
+    conf = CF.pack(float(buy.get("confidence") or min(0.9, 0.3 + 0.05 * len(ps))), [f"基于 {len(ps)} 条历史价", f"模型 {f.get('engine') or 'baseline'}", "结合走势与促销日历"])
+    return {"verdict": verdict, "score": score, "reasons": reasons, "percentile": round(pct, 3), "min": lo, "max": hi, "current": cur,
+            "promos": promos[:3], "seasonality": season, "conf": conf, "buy": buy, "elasticity": el,
+            "forecast_engine": f.get("engine"), "point_forecast": f.get("point_forecast"), "ci90": f.get("ci90"),
+            "seasonal_points": f.get("seasonal_points"), "promo_intensity": f.get("promo_intensity")}

@@ -184,6 +184,8 @@ def quick_monitor(body):
     return submit("quick_monitor", f"一键监控 {host}", fn, url=url)
 @app.post("/api/quick-monitor")
 def quick_monitor_api(body: dict = Body(...)): return quick_monitor(body)
+@app.post("/api/monitor/quick")
+def quick_monitor_alias(body: dict = Body(...)): return quick_monitor(body)  # 浏览器扩展兼容
 
 # ---------------- 批量操作与撤销 ----------------
 UNDO = {}

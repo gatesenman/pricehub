@@ -1,5 +1,5 @@
 <!doctype html><html lang="zh-CN" data-theme="dark"><head><meta charset="utf-8"><title>PriceHub 价格管理工作台</title><link rel="icon" href="data:,">
-<link rel="stylesheet" href="/static/vendor/codicon.css"><link rel="stylesheet" href="/static/style.css"><script src="/static/vendor/chart.js"></script><script defer src="/static/v4.js"></script><script defer src="/static/app.js"></script><script defer src="/static/v5.js"></script><script defer src="/static/v7.js"></script><script defer src="/static/vendor/alpine.js"></script></head>
+<link rel="stylesheet" href="/static/vendor/codicon.css"><link rel="stylesheet" href="/static/style.css"><script src="/static/vendor/chart.js"></script><script defer src="/static/v4.js"></script><script defer src="/static/app.js"></script><script defer src="/static/v5.js"></script><script defer src="/static/v7.js"></script><script defer src="/static/v8.js"></script><script defer src="/static/vendor/alpine.js"></script></head>
 <body x-data="App()" @keydown.window="keys($event)" @click.window="menuOpen=null;ctx=null;openPid($event)" @mousemove.window="dragMove($event)" @mouseup.window="dragEnd()" @mouseover.window="tipOver($event)">
 <div class="app">
 <div class="menubar" data-menubar><span class="logo"><i class="codicon codicon-pulse"></i> PriceHub</span>
@@ -94,6 +94,10 @@
       <div class="grp" data-advice><h4><i class="codicon codicon-lightbulb"></i> 买入时机建议</h4><div class="b"><template x-if="!t.adv"><div class="muted">价格记录不足</div></template>
        <template x-if="t.adv"><div><div class="big" :class="verdictCls(t.adv.verdict)" x-text="t.adv.verdict" data-verdict></div> <span x-html="confBadge(t.adv.conf)"></span>
         <ul style="margin:6px 0;padding-left:18px"><template x-for="r in t.adv.reasons"><li x-text="r"></li></template></ul>
+        <template x-if="t.adv.buy"><div class="usage-it" data-buy-prob><div class="ul"><span>买入时机概率</span><span class="muted" x-text="Math.round(t.adv.buy.probability*100)+'%（90% 区间 '+Math.round(t.adv.buy.ci90[0]*100)+'–'+Math.round(t.adv.buy.ci90[1]*100)+'%）'"></span></div>
+          <div class="pbar"><div :style="'width:'+(t.adv.buy.probability*100)+'%'"></div></div></div></template>
+        <template x-if="t.adv.ci90"><div class="hint" data-forecast-ci x-text="'预测中枢 '+(t.adv.point_forecast??'')+'，90% 置信区间 '+t.adv.ci90[0]+'–'+t.adv.ci90[1]+'（引擎 '+(t.adv.forecast_engine||'')+'）'"></div></template>
+        <template x-if="t.adv.elasticity&&t.adv.elasticity.ok"><div class="hint" data-elasticity x-text="'价格弹性 '+t.adv.elasticity.elasticity+' · '+t.adv.elasticity.label"></div></template>
         <template x-for="e in t.adv.promos"><div class="hint" x-text="'促销：'+e.name+'（'+e.date+(e.in_progress?'，进行中':'，'+e.days_left+' 天后')+'）'"></div></template></div></template></div></div></div></template>
      <div class="row"><div class="grp" data-compare><h4>跨平台比价<span class="muted" x-text="t.d.c.spread?'价差 '+money(t.d.c.spread):''"></span></h4><div class="b">
        <template x-if="(t.d.c.offers||[]).length<2"><div class="muted">暂未发现其他平台同款</div></template>
@@ -260,6 +264,24 @@
       <span class="muted">推送到：</span><template x-for="c in t.ch.items" :key="c.id"><label class="chip" :class="(t.sch.channel_ids||[]).map(String).includes(String(c.id))&&'on'"><input type="checkbox" style="display:none" :checked="(t.sch.channel_ids||[]).map(String).includes(String(c.id))" @change="t.sch.channel_ids=$event.target.checked?[...(t.sch.channel_ids||[]),c.id]:(t.sch.channel_ids||[]).filter(x=>String(x)!==String(c.id))"><span x-text="c.name"></span></label></template>
       <span class="muted" x-show="!t.ch.items.length">请先在「告警与通知」添加渠道</span><button class="btn primary" style="margin-left:auto" @click="saveSchedule(t)" data-sch-save>保存</button></div></div></div></div></template></div></template>
 
+   <template x-if="t.type==='official'"><div data-v8-official>
+    <div class="hint" style="margin:8px 12px">凭证加密保存在当前工作区（<span x-text="t.secret"></span>）。没有真实密钥时，填「模拟地址」即可测连与同步（本机 mock，不访问第三方）。</div>
+    <template x-for="a in t.items" :key="a.id"><div class="grp" style="margin:8px 12px" :data-adapter="a.id">
+      <h4><i class="codicon" :class="a.status==='stub'?'codicon-warning':'codicon-cloud'"></i> <span x-text="a.name"></span>
+        <span class="muted" x-text="' · '+a.platform+(a.status==='stub'?' · 占位':'')"></span>
+        <label style="margin-left:auto;font-weight:400"><input type="checkbox" x-model="a.enabled" @change="saveOfficial(t,a)" data-adapter-enable> 启用</label></h4>
+      <div class="b">
+        <div class="hint" x-text="a.description||a.stub_note||''"></div>
+        <div class="field"><label>模拟地址（试跑用，如 http://127.0.0.1:8991）</label><input x-model="a.mock_base_url" :data-mock="a.id" placeholder="留空则走真实官方地址"></div>
+        <template x-for="f in a.auth_fields" :key="f.key"><div class="field"><label x-text="f.label+(f.required?' *':'')"></label>
+          <input :type="f.secret?'password':'text'" :placeholder="(a.credentials_masked&&a.credentials_masked[f.key])||'未填写'" @input="(a._cred=a._cred||{})[f.key]=$event.target.value" :data-cred="a.id+'.'+f.key"></div></template>
+        <div class="filterbar"><button class="btn primary" @click="saveOfficial(t,a)" data-adapter-save>保存</button>
+          <button class="btn" @click="testOfficial(t,a)" data-adapter-test>测连</button>
+          <button class="btn" @click="syncOfficial(t,a)" data-adapter-sync>同步商品</button>
+          <a class="btn" :href="a.docs_url" target="_blank" x-show="a.docs_url">文档</a></div>
+        <div class="hint" x-show="a.last_test" x-text="a.last_test.ok?('上次测连成功，样本 '+a.last_test.count+' 条'):('上次测连失败：'+a.last_test.error)"></div>
+      </div></div></template>
+   </div></template>
    <template x-if="t.type==='team'"><div data-v7-team>
     <div class="row"><div class="grp"><h4><i class="codicon codicon-organization"></i> 团队模式</h4><div class="b">
       <div class="hint" x-text="me.team_mode?'已开启：每个人用自己的账号登录，数据按工作区隔离。':'未开启：本机免登录使用默认工作区。需要多人协作时再开启。'"></div>
@@ -307,7 +329,15 @@
       <div class="hint" x-text="'已自定义：'+(Object.keys(t.fx.custom||{}).join('、')||'无')+'。其余为内置参考汇率。'"></div></div></div>
      <div class="grp"><h4><i class="codicon codicon-browser"></i> 采集方式</h4><div class="b"><label><input type="checkbox" x-model="t.col.render_fallback" data-render-toggle> 读不到价格时自动用无头浏览器渲染（适合需要脚本加载的网站，较慢）</label>
       <div class="hint" x-text="'无头浏览器：'+(t.col.render.ok===false?'不可用 '+t.col.render.error:(t.col.render.started?'已就绪':'按需启动'))"></div>
-      <div class="field"><label>代理池（每行一个，轮换使用；留空=直连）</label><textarea rows="3" x-model="t.proxyText" placeholder="http://user:pass@host:port" data-proxies></textarea></div><button class="btn primary" @click="saveCollect(t)" data-collect-save>保存</button></div></div></div>
+      <div class="field"><label>代理池（每行一个，轮换使用；留空=直连）</label><textarea rows="3" x-model="t.proxyText" placeholder="http://user:pass@host:port" data-proxies></textarea></div><button class="btn primary" @click="saveCollect(t)" data-collect-save>保存</button></div></div>
+     <div class="grp"><h4><i class="codicon codicon-server-process"></i> 渲染池与扩展</h4><div class="b" data-v8-render>
+      <div class="filterbar">并发 <input type="number" min="1" max="8" style="width:60px" x-model="t.col.render_workers" data-render-workers>
+        队列上限 <input type="number" min="1" max="200" style="width:70px" x-model="t.col.render_queue" data-render-queue>
+        <button class="btn primary" @click="saveRenderPool(t)" data-render-save>保存池配置</button></div>
+      <div class="hint" x-text="'当前：workers='+(t.col.render&&t.col.render.workers)+' 队列 '+(t.col.render&&t.col.render.queue)+'/'+(t.col.render&&t.col.render.queue_max)+' 完成 '+(t.col.render&&t.col.render.done)"></div>
+      <div class="hint" x-text="'pgvector：'+(t.col.pgvector&&t.col.pgvector.ok?'可用 dim='+t.col.pgvector.dim:(t.col.pgvector&&t.col.pgvector.reason)||'未检测')"></div>
+      <a class="btn" href="/downloads/pricehub-clipper.zip" data-ext-download><i class="codicon codicon-desktop-download"></i> 下载浏览器扩展（Chrome/Edge MV3）</a>
+      <div class="hint">扩展安装：打开 chrome://extensions → 开发者模式 → 加载已解压的扩展程序（先解压 zip）。点图标即可把当前页发到本机 PriceHub。</div></div></div></div>
     <div class="row"><div class="grp"><h4><i class="codicon codicon-key"></i> API 令牌与权限</h4><div class="b"><div class="filterbar"><input x-model="t.ntName" placeholder="令牌名称，如 ERP" style="width:140px" data-tok-name><select x-model="t.ntRole"><template x-for="(l,k) in t.tok.roles"><option :value="k" x-text="l" :selected="k===t.ntRole"></option></template></select><button class="btn primary" @click="addToken(t)" data-tok-add>生成令牌</button></div>
       <template x-if="t.newTok"><div class="result-card" data-tok-new><b>新令牌（只显示这一次）：</b><div class="mono" style="user-select:all;word-break:break-all" x-text="t.newTok.token"></div><div class="hint">调用接口时放在请求头 X-API-Key 中。</div></div></template>
       <table class="grid" x-show="t.tok.items.length"><thead><tr><th>名称</th><th style="width:150px">角色</th><th style="width:60px"></th></tr></thead><tbody><template x-for="k in t.tok.items" :key="k.id"><tr><td x-text="k.name"></td><td x-text="t.tok.roles[k.role]"></td><td><button class="btn danger" @click="delToken(t,k)"><i class="codicon codicon-trash"></i></button></td></tr></template></tbody></table>

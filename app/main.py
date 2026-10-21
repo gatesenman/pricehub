@@ -345,5 +345,7 @@ def _start():
 
 from . import v4  # noqa: E402  v4 体验优化：引导、任务队列、一键监控、撤销、建议
 from . import v5  # noqa: E402  v5 全生命周期补全
-from .api import team  # noqa: E402,F401  v7 团队协作（须在 v6 之前导入，使版本中间件保持最外层）
+from .api import team
+from .api import official  # noqa: F401  官方数据源适配器
+from .api import v8_platform  # noqa: F401  渲染池/扩展/pgvector  # noqa: E402,F401  v7 团队协作（须在 v6 之前导入，使版本中间件保持最外层）
 from . import v6  # noqa: E402  v6 平台化：插件 SDK、调度器、事件总线、指标、API 版本化
