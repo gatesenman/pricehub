@@ -90,8 +90,20 @@ def _metric_events(topic, **kw):
 bus.subscribe("*", _metric_events, "observability.metrics")
 @app.get("/api/events")
 def events(): return bus.stats()
+def _metrics_allowed(request: Request):
+    """/metrics 访问控制：本机直接放行；其他来源需 Bearer 令牌（环境变量 PRICEHUB_METRICS_TOKEN）或任一有效 API 令牌（X-API-Key）。"""
+    ip = request.client.host if request.client else ""
+    if ip in ("127.0.0.1", "::1", "localhost", "testclient") and not os.environ.get("PRICEHUB_METRICS_STRICT"): return True
+    auth = request.headers.get("authorization", ""); tok = os.environ.get("PRICEHUB_METRICS_TOKEN")
+    if tok and auth == f"Bearer {tok}": return True
+    key = request.headers.get("x-api-key")
+    if key:
+        import hashlib
+        return bool(db.q("SELECT id FROM tokens WHERE token_hash=?", (hashlib.sha256(key.encode()).hexdigest(),), one=True))
+    return False
 @app.get("/metrics")
-def metrics():
+def metrics(request: Request):
+    if not _metrics_allowed(request): return Response("需要指标访问令牌：请求头 Authorization: Bearer <PRICEHUB_METRICS_TOKEN> 或 X-API-Key\n", status_code=401, media_type="text/plain; charset=utf-8")
     try:
         obs.PRODUCTS.set(db.q("SELECT COUNT(*) n FROM products", one=True)["n"]); obs.PRICES.set(db.q("SELECT COUNT(*) n FROM prices", one=True)["n"])
         obs.DEAD.set(db.q("SELECT COUNT(*) n FROM dead_letters", one=True)["n"]); st = SCHED.stats(); obs.QUEUE.set(st["ready"] + st["delayed"])
@@ -135,5 +147,5 @@ def catalog_page(offset: int = 0, limit: int = 50, platform: str = "", q: str = 
         ids = [r["id"] for r in rows]; ph = ",".join("?" * len(ids))
         last = {r["product_id"]: r for r in db.q(f"SELECT p.product_id, p.price, p.ts FROM prices p JOIN (SELECT product_id, MAX(id) mid FROM prices WHERE product_id IN ({ph}) GROUP BY product_id) m ON p.id=m.mid", ids)}
         for r in rows: lr = last.get(r["id"]) or {}; r["last_price"], r["last_ts"] = lr.get("price"), lr.get("ts")
-    total = db.q(f"SELECT COUNT(*) n FROM products WHERE {w}", a, one=True)["n"]
-    return {"total": total, "offset": offset, "limit": limit, "items": rows}
+    total, exact = db.count("products", w, a)   # 总数缓存 30 秒；PostgreSQL 大表无条件时用统计估算
+    return {"total": total, "total_exact": exact, "offset": offset, "limit": limit, "items": rows}

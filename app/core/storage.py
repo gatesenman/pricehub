@@ -48,6 +48,21 @@ def _sqlite_init():
         for ix in INDEXES: c.execute(ix)
         c.commit()
 # ---------------- PostgreSQL ----------------
+COPY_MIN = int(os.environ.get("PRICEHUB_COPY_MIN", "200"))
+_COUNT = {}
+def count(table, where="1=1", args=(), ttl=30):
+    """带缓存的计数：同一条件 ttl 秒内复用；PostgreSQL 无条件计数且表很大时用统计信息估算（返回 (数量, 是否精确)）。"""
+    import time as _t
+    key = (table, where, tuple(args)); hit = _COUNT.get(key)
+    if hit and _t.time() - hit[0] < ttl and hit[2] == VER[0] // 1000: return hit[1], hit[3]
+    exact = True
+    if BACKEND == "postgresql" and where == "1=1":
+        est = (q("SELECT reltuples::bigint n FROM pg_class WHERE oid=to_regclass(?)", (table,), one=True) or {}).get("n") or 0
+        if est > 200_000: n, exact = int(est), False
+        else: n = q(f"SELECT COUNT(*) n FROM {table}", one=True)["n"]
+    else: n = q(f"SELECT COUNT(*) n FROM {table} WHERE {where}", args, one=True)["n"]
+    if len(_COUNT) > 500: _COUNT.clear()
+    _COUNT[key] = (_t.time(), n, VER[0] // 1000, exact); return n, exact
 UPSERT_KEY = {"settings": "k", "map_prices": "group_key", "sources": "name", "platforms": "slug"}
 NO_ID = {"settings", "map_prices"}
 _PG = threading.local(); PG_SCHEMA = [None]
@@ -166,6 +181,17 @@ def ex(sql, args=()):
         cur = c.execute(sql, args); c.commit(); VER[0] += 1; return cur.lastrowid
 def ex_many(sql, rows):
     if BACKEND == "postgresql":
+        m = re.match(r"\s*INSERT\s+INTO\s+(\w+)\s*\(([^)]*)\)\s*VALUES\s*\(\s*\?(\s*,\s*\?)*\s*\)\s*$", sql, re.I)
+        if m and len(rows) >= COPY_MIN:   # 纯批量插入走 COPY 协议，比逐条 INSERT 快数倍
+            cols = ",".join(c.strip() for c in m.group(2).split(","))
+            with _lock:
+                c = pg_conn()
+                try:
+                    with c.cursor() as cur, cur.copy(f"COPY {m.group(1)} ({cols}) FROM STDIN") as cp:
+                        for r in rows: cp.write_row(r)
+                    c.commit()
+                except Exception: c.rollback(); raise
+            VER[0] += 1; return
         tsql, returning = translate(sql)
         if returning: tsql = tsql[: -len(" RETURNING id")]
         with _lock:

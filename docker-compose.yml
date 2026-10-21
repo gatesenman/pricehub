@@ -14,12 +14,13 @@ services:
       PRICEHUB_WORKERS: "4"
       PRICEHUB_DOMAIN_RPS: "1"
       PRICEHUB_LOG_LEVEL: INFO
+      PRICEHUB_METRICS_TOKEN: ${METRICS_TOKEN:-change-me-metrics}
     ports: ["8800:8800"]
     volumes: [appdata:/data, ./plugins:/plugins]
     restart: unless-stopped
   prometheus:
     image: prom/prometheus:latest
     profiles: [monitoring]
-    volumes: [./deploy/prometheus.yml:/etc/prometheus/prometheus.yml:ro]
+    volumes: [./deploy/prometheus.yml:/etc/prometheus/prometheus.yml:ro, ./deploy/metrics_token:/etc/prometheus/metrics_token:ro]
     ports: ["9090:9090"]
 volumes: {pgdata: {}, appdata: {}}

@@ -28,6 +28,8 @@ for d in range(args.per):
         if len(rows) >= 50_000: db.ex_many("INSERT INTO prices(product_id,price,ts,method) VALUES(?,?,?,?)", rows); rows = []
 if rows: db.ex_many("INSERT INTO prices(product_id,price,ts,method) VALUES(?,?,?,?)", rows)
 el = time.perf_counter() - t0; R["insert_prices_s"] = round(el, 2); R["insert_prices_per_s"] = int(args.skus * args.per / el)
+if args.backend == "postgresql": t = time.perf_counter(); db.q("ANALYZE"); R["analyze_s"] = round(time.perf_counter() - t, 2)   # 正常运行时由 autovacuum 完成
+R["write_path"] = "COPY" if args.backend == "postgresql" else "executemany"
 pick = lambda: rnd.randint(1, args.skus)
 Q = {
   "单品最新价": lambda: db.q("SELECT price FROM prices WHERE product_id=? ORDER BY id DESC LIMIT 1", (pick(),), one=True),

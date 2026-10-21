@@ -3,6 +3,7 @@
 import os, sys, time, tempfile, subprocess, threading, textwrap, httpx, pytest, numpy as np
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__))); PY = sys.executable
 API, MOCK = "http://127.0.0.1:8962", "http://127.0.0.1:8961"
+MH = {"Authorization": "Bearer metrics-test-token"}
 sys.path.insert(0, ROOT)
 # ---------- 单元：调度器 ----------
 def mk_sched(**kw):
@@ -55,7 +56,7 @@ def c():
     shutil.copytree(os.path.join(ROOT, "plugins", "jsonfeed_example"), os.path.join(pdir, "jsonfeed_example"))
     open(os.path.join(pdir, "broken.py"), "w").write("import not_a_module_xyz\n")
     env = dict(os.environ, PRICEHUB_DB=tempfile.mktemp(suffix=".db"), PRICEHUB_NO_CLIP="1", PRICEHUB_PLUGINS_DIR=pdir, PRICEHUB_BACKOFF_S="0.05", PRICEHUB_DOMAIN_RPS="50",
-               PRICEHUB_PG_SCHEMA_FROM_DB="1", PYTHONPATH=ROOT)
+               PRICEHUB_PG_SCHEMA_FROM_DB="1", PYTHONPATH=ROOT, PRICEHUB_METRICS_STRICT="1", PRICEHUB_METRICS_TOKEN="metrics-test-token")
     env["PRICEHUB_EMB_CACHE"] = env["PRICEHUB_DB"] + ".npz"
     ps = [subprocess.Popen([PY, "-m", "uvicorn", "tests.mock_private_api:app", "--port", "8961"], cwd=ROOT),
           subprocess.Popen([PY, "-m", "uvicorn", "app.main:app", "--port", "8962"], cwd=ROOT, env=env)]
@@ -75,7 +76,7 @@ def test_api_v1_prefix_and_legacy(c):
 def test_health_and_metrics(c):
     assert c.get("/healthz").json()["status"] == "ok"
     r = c.get("/readyz").json(); assert r["status"] == "ready" and r["checks"]["database"]["ok"] and r["checks"]["vector_index"]["engine"].startswith("faiss")
-    m = c.get("/metrics").text
+    m = c.get("/metrics", headers=MH).text
     for k in ("pricehub_http_requests_total", "pricehub_products", "pricehub_job_queue_depth", "pricehub_up 1.0"): assert k in m
 def test_plugin_sdk_dynamic_load(c):
     cat = c.get("/api/v1/plugins").json(); ids = {p["id"]: p for p in cat["plugins"]}
@@ -108,5 +109,12 @@ def test_scheduler_api_event_chain_and_dead_letter(c):
     dl = c.get("/api/v1/deadletters").json(); assert dl and dl[0]["attempts"] == 3
     assert c.post(f"/api/v1/deadletters/{dl[0]['id']}/retry").json()["kind"] == "source.fetch"
     st = c.get("/api/v1/scheduler").json(); assert st["counters"]["retried"] >= 2 and st["counters"]["dead"] >= 1
-    m = c.get("/metrics").text; assert 'pricehub_collect_total{method="jsonfeed",result="ok"}' in m and "pricehub_jobs_total" in m
+    m = c.get("/metrics", headers=MH).text; assert 'pricehub_collect_total{method="jsonfeed",result="ok"}' in m and "pricehub_jobs_total" in m
     assert c.post("/api/v1/monitor/run").json()["ok"]
+
+def test_metrics_requires_token(c):
+    assert c.get("/metrics").status_code == 401
+    assert c.get("/metrics", headers={"Authorization": "Bearer wrong"}).status_code == 401
+    assert c.get("/metrics", headers=MH).status_code == 200
+    tok = c.post("/api/v1/tokens", json={"name": "监控", "role": "viewer"}).json()["token"]
+    assert c.get("/metrics", headers={"X-API-Key": tok}).status_code == 200
