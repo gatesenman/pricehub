@@ -11,3 +11,4 @@
 - [x] 2026-10-21 22:30 修复：RLS 表不允许 COPY → 改为 COPY 到临时表再 INSERT…SELECT；SQLite 启动执行 PRAGMA optimize 避免误用 workspace_id 索引（同款组比价 15ms 回退）。PG 压测完成（COPY 11 万点/秒，机器负载约 100，数字偏保守）
 
 - [x] 2026-10-21 23:51 SQLite 压测完成；修复多租户下分页退化（索引改为 products(workspace_id,id)，345ms→4.6ms）；BENCHMARK.md 追加 v7 复测
+- [x] 2026-10-22 00:22 重启 :8800（SQLite，单机免登录默认工作区，/readyz ready，/api/products 无需登录 200）和 :8901 模拟服务；清理了残留的 podman-compose -p ph7 循环（持续生成 podman wait 进程）
