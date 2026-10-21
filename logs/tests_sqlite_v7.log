@@ -1,0 +1,69 @@
+=== tests/test_e2e.py
+tests/test_e2e.py::test_16_ai_results_have_confidence
+  /workspace/pricehub/.venv/lib/python3.13/site-packages/fastapi/applications.py:4723: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    return self.router.on_event(event_type)  # ty: ignore[deprecated]
+
+tests/test_e2e.py: 40 warnings
+  /workspace/pricehub/app/domains/normalize/confidence.py:26: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    try: age = (datetime.datetime.utcnow() - datetime.datetime.fromisoformat(ts)).total_seconds() / 3600
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+26 passed, 42 warnings in 114.77s (0:01:54)
+rc=0
+=== tests/test_ui_e2e.py
+E       - definition: taobao.com 官方旗舰店
+E       - term: 属性
+E       - definition: 品牌:Xiaomi；发货地:中国；保修:1年
+E       - button " 打开详情"
+E       - button " 加入对比（ 0 ）"
+E       - text:  默认工作区  服务在线 商品 16 数据源 3 平台 已启用 0/920 最近抓取 10/21 23:53:49 (UTC+8)  后台任务 搜索中… 多语言语义搜索已就绪 深色 UTF-8
+
+tests/test_ui_e2e.py:76: AssertionError
+----------------------------- Captured stdout call -----------------------------
+INFO:     127.0.0.1:34122 - "GET /api/dashboard HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34138 - "GET /api/platforms/stats HTTP/1.1" 200 OK
+=========================== short test summary info ============================
+FAILED tests/test_ui_e2e.py::test_search_ctrl_f - AssertionError: Locator exp...
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 5 passed in 33.79s
+rc=1
+=== tests/test_v4_e2e.py
+............                                                             [100%]INFO:     Shutting down
+
+12 passed in 239.78s (0:03:59)
+rc=0
+=== tests/test_v5_api.py
+........                                                                 [100%]INFO:     Shutting down
+
+8 passed in 20.56s
+rc=0
+=== tests/test_v5_ui.py
+....                                                                     [100%]
+4 passed in 25.12s
+rc=0
+=== tests/test_v6_platform.py
+.........                                                                [100%]INFO:     Shutting down
+
+9 passed in 11.38s
+rc=0
+=== tests/test_v6_ui.py
+..                                                                       [100%]INFO:     Shutting down
+INFO:     Shutting down
+
+2 passed in 17.56s
+rc=0
+=== tests/test_v7_team.py
+...                                                                      [100%]INFO:     Shutting down
+
+3 passed in 40.95s
+rc=0
+=== tests/test_v7_ui.py
+.                                                                        [100%]
+1 passed in 33.94s
+rc=0
+ALLDONE

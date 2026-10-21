@@ -1,0 +1,54 @@
+=== tests/test_e2e.py
+tests/test_e2e.py::test_16_ai_results_have_confidence
+  /workspace/pricehub/.venv/lib/python3.13/site-packages/fastapi/applications.py:4723: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    return self.router.on_event(event_type)  # ty: ignore[deprecated]
+
+tests/test_e2e.py: 20 warnings
+  /workspace/pricehub/app/domains/normalize/confidence.py:26: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    try: age = (datetime.datetime.utcnow() - datetime.datetime.fromisoformat(ts)).total_seconds() / 3600
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+25 passed, 1 skipped, 22 warnings in 76.65s (0:01:16)
+rc=0
+=== tests/test_ui_e2e.py
+.................                                                        [100%]
+17 passed in 35.06s
+rc=0
+=== tests/test_v4_e2e.py
+............                                                             [100%]INFO:     Shutting down
+
+12 passed in 28.46s
+rc=0
+=== tests/test_v5_api.py
+........                                                                 [100%]
+8 passed in 15.77s
+rc=0
+=== tests/test_v5_ui.py
+....                                                                     [100%]
+4 passed in 24.19s
+rc=0
+=== tests/test_v6_platform.py
+.........                                                                [100%]
+9 passed in 12.91s
+rc=0
+=== tests/test_v6_ui.py
+..                                                                       [100%]
+2 passed in 21.29s
+rc=0
+=== tests/test_v7_team.py
+...                                                                      [100%]INFO:     Shutting down
+INFO:     Shutting down
+INFO:     Shutting down
+
+3 passed in 39.03s
+rc=0
+=== tests/test_v7_ui.py
+.                                                                        [100%]
+1 passed in 32.53s
+rc=0
+ALLDONE

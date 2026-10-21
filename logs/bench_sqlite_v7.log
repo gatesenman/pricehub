@@ -1,0 +1,78 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/398 [00:00<?, ?it/s]Loading weights:  32%|███▏      | 126/398 [00:00<00:00, 967.84it/s]Loading weights:  62%|██████▏   | 247/398 [00:00<00:00, 1091.93it/s]Loading weights:  90%|████████▉ | 358/398 [00:00<00:00, 947.44it/s] Loading weights: 100%|██████████| 398/398 [00:00<00:00, 1043.81it/s]
+{"ts": "2026-10-21T15:39:45Z", "level": "INFO", "logger": "pricehub", "msg": "v6 platform ready", "plugins": ["jsonfeed"], "db_backend": "sqlite"}
+{
+ "backend": "sqlite",
+ "skus": 100000,
+ "price_points": 1000000,
+ "at": "2026-10-21 23:38:48 UTC+8",
+ "cpu": 8,
+ "insert_products_s": 1.96,
+ "insert_prices_s": 4.0,
+ "insert_prices_per_s": 250162,
+ "analyze_s": 0.11,
+ "write_path": "executemany",
+ "queries": {
+  "单品最新价": {
+   "p50_ms": 0.398,
+   "p95_ms": 1.048,
+   "n": 200
+  },
+  "单品历史(全部点)": {
+   "p50_ms": 0.3,
+   "p95_ms": 0.574,
+   "n": 200
+  },
+  "同款组比价": {
+   "p50_ms": 0.265,
+   "p95_ms": 0.387,
+   "n": 200
+  },
+  "按平台分页(50条)": {
+   "p50_ms": 0.819,
+   "p95_ms": 2.738,
+   "n": 200
+  },
+  "标题模糊搜索(LIKE)": {
+   "p50_ms": 7.428,
+   "p95_ms": 9.946,
+   "n": 30
+  },
+  "全量最新价聚合(100万点)": {
+   "p50_ms": 384.598,
+   "p95_ms": 384.598,
+   "n": 3
+  },
+  "按类目统计均价": {
+   "p50_ms": 684.333,
+   "p95_ms": 684.333,
+   "n": 3
+  },
+  "分页接口 /api/catalog/page": {
+   "p50_ms": 345.516,
+   "p95_ms": 547.925,
+   "n": 50
+  }
+ },
+ "startup_with_conf_backfill_s": 47.2,
+ "conf_backfilled": 1000000,
+ "vector_100k_384d": {
+  "faiss-flat": {
+   "build_s": 0.1,
+   "p50_ms": 59.509,
+   "p95_ms": 193.831,
+   "top1_recall": 1.0
+  },
+  "faiss-hnsw": {
+   "build_s": 50.06,
+   "p50_ms": 1.025,
+   "p95_ms": 6.398,
+   "top1_recall": 0.995
+  },
+  "numpy 暴力(对照)": {
+   "p50_ms": 32.208,
+   "p95_ms": 52.147
+  }
+ },
+ "db_file_mb": 225.8
+}

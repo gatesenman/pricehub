@@ -1,0 +1,16 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights:  56%|█████▌    | 111/199 [00:00<00:00, 1043.56it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 1172.11it/s]
+Loading weights:   0%|          | 0/398 [00:00<?, ?it/s]Loading weights:  36%|███▌      | 144/398 [00:00<00:00, 1372.62it/s]Loading weights:  71%|███████   | 282/398 [00:00<00:00, 1249.71it/s]Loading weights: 100%|██████████| 398/398 [00:00<00:00, 1236.84it/s]
+{"ts": "2026-10-21T16:21:47Z", "level": "INFO", "logger": "pricehub", "msg": "v6 platform ready", "plugins": ["jsonfeed"], "db_backend": "sqlite"}
+INFO:     Started server process [1033617]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8800 (Press CTRL+C to quit)
+INFO:     127.0.0.1:55526 - "GET /readyz HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55536 - "GET /readyz HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55552 - "GET /api/me HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:60208 - "GET /api/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60210 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51238 - "GET /readyz HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51254 - "GET /readyz HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57656 - "GET /readyz HTTP/1.1" 200 OK

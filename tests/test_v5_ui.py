@@ -20,7 +20,7 @@ def env():
     c = httpx.Client(base_url=API, timeout=120)
     c.post("/api/sources", json={"name": "演示", "type": "mock", "config": {"platform": "taobao.com", "seed": 1}}); c.post("/api/sources/1/fetch")
     with sync_playwright() as p:
-        b = p.chromium.launch(); pg = b.new_page(viewport={"width": 1440, "height": 900}); errs = []
+        b = p.chromium.launch(executable_path="/usr/bin/google-chrome", args=["--no-sandbox","--disable-dev-shm-usage"]); pg = b.new_page(viewport={"width": 1440, "height": 900}); errs = []
         pg.on("console", lambda m: m.type == "error" and errs.append(m.text)); pg.on("pageerror", lambda x: errs.append(str(x)))
         pg.goto(API + "/"); pg.wait_for_timeout(1500)
         yield pg, c, errs

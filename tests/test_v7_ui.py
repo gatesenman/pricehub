@@ -19,7 +19,7 @@ def env():
     for u in (MOCK + "/docs", IDP + "/jwks", API + "/healthz"): wait(u)
     httpx.post(API + "/api/sources", json={"name": "演示", "type": "mock", "config": {"platform": "taobao.com", "seed": 1}}, timeout=60); httpx.post(API + "/api/sources/1/fetch", timeout=120)
     with sync_playwright() as p:
-        b = p.chromium.launch(); errs = []
+        b = p.chromium.launch(executable_path="/usr/bin/google-chrome", args=["--no-sandbox","--disable-dev-shm-usage"]); errs = []
         def page():
             ctx = b.new_context(viewport={"width": 1440, "height": 900}); pg = ctx.new_page()
             pg.on("console", lambda m: m.type == "error" and "401" not in m.text and "403" not in m.text and errs.append(m.text)); pg.on("pageerror", lambda x: errs.append(str(x))); return pg

@@ -19,7 +19,7 @@ def to_html(md_text, title):
 <body>{body}<script>mermaid.initialize({{startOnLoad:false,theme:'neutral',fontFamily:'Noto Sans CJK SC',flowchart:{{useMaxWidth:true}}}});
 mermaid.run({{querySelector:'.mermaid'}}).then(()=>document.body.dataset.done='1').catch(e=>{{document.body.dataset.done='err:'+e}});</script></body></html>"""
 with sync_playwright() as p:
-    b = p.chromium.launch(); pg = b.new_page()
+    b = p.chromium.launch(executable_path="/usr/bin/google-chrome", args=["--no-sandbox","--disable-dev-shm-usage"]); pg = b.new_page()
     for f in sys.argv[1:]:
         title = os.path.splitext(os.path.basename(f))[0]; h = os.path.join("/tmp", title + ".html")
         open(h, "w", encoding="utf-8").write(to_html(open(f, encoding="utf-8").read(), title))

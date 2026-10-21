@@ -21,7 +21,7 @@ def env():
     bad = c.post("/api/v1/sources", json={"name": "坏源", "type": "jsonfeed", "config": {"url": MOCK + "/feed.json?fail=1"}}).json()["id"]
     c.post("/api/v1/scheduler/submit", json={"source_id": bad, "wait": True, "max_attempts": 2})
     with sync_playwright() as p:
-        b = p.chromium.launch(); pg = b.new_page(viewport={"width": 1440, "height": 1000}); errs = []
+        b = p.chromium.launch(executable_path="/usr/bin/google-chrome", args=["--no-sandbox","--disable-dev-shm-usage"]); pg = b.new_page(viewport={"width": 1440, "height": 1000}); errs = []
         pg.on("console", lambda m: m.type == "error" and errs.append(m.text)); pg.on("pageerror", lambda x: errs.append(str(x)))
         pg.goto(API + "/"); pg.wait_for_timeout(1500); yield pg, c, errs; b.close()
     for x in ps: x.terminate()

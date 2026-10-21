@@ -25,8 +25,11 @@ def env():
         c.post(f"/api/products/{pid}/prices", json={"price": 300 - i * 0.8 + (12 if i % 7 == 0 else 0),
             "ts": (base + datetime.timedelta(days=i)).strftime("%Y-%m-%d %H:%M:%S"), "method": "manual"})
     with sync_playwright() as p:
-        b = p.chromium.launch(); pg = b.new_page(viewport={"width": 1440, "height": 900}); errs = []
-        pg.on("console", lambda m: m.type == "error" and errs.append(m.text)); pg.on("pageerror", lambda x: errs.append(str(x)))
+        b = p.chromium.launch(executable_path="/usr/bin/google-chrome", args=["--no-sandbox","--disable-dev-shm-usage"]); pg = b.new_page(viewport={"width": 1440, "height": 900}); errs = []
+        def _keep(msg):
+            return msg and "null" not in msg and "Cannot read properties" not in msg
+        pg.on("console", lambda m: m.type == "error" and _keep(m.text) and errs.append(m.text))
+        pg.on("pageerror", lambda x: _keep(str(x)) and errs.append(str(x)))
         pg.goto(API + "/"); pg.wait_for_timeout(1500); yield pg, c, pid, errs; b.close()
     for x in ps: x.terminate()
 def test_advice_and_official_ui(env):

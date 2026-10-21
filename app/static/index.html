@@ -279,7 +279,7 @@
           <button class="btn" @click="testOfficial(t,a)" data-adapter-test>测连</button>
           <button class="btn" @click="syncOfficial(t,a)" data-adapter-sync>同步商品</button>
           <a class="btn" :href="a.docs_url" target="_blank" x-show="a.docs_url">文档</a></div>
-        <div class="hint" x-show="a.last_test" x-text="a.last_test.ok?('上次测连成功，样本 '+a.last_test.count+' 条'):('上次测连失败：'+a.last_test.error)"></div>
+        <div class="hint" x-show="a.last_test" x-text="(a.last_test||{}).ok?('上次测连成功，样本 '+(a.last_test||{}).count+' 条'):('上次测连失败：'+((a.last_test||{}).error||''))"></div>
       </div></div></template>
    </div></template>
    <template x-if="t.type==='team'"><div data-v7-team>
@@ -328,14 +328,14 @@
       <input type="number" step="0.0001" x-model="t.fxVal" :placeholder="t.fx.rates[t.fxCur]" style="width:100px" data-fx-val> 人民币 <button class="btn primary" @click="saveFx(t)" data-fx-save>更新</button></div>
       <div class="hint" x-text="'已自定义：'+(Object.keys(t.fx.custom||{}).join('、')||'无')+'。其余为内置参考汇率。'"></div></div></div>
      <div class="grp"><h4><i class="codicon codicon-browser"></i> 采集方式</h4><div class="b"><label><input type="checkbox" x-model="t.col.render_fallback" data-render-toggle> 读不到价格时自动用无头浏览器渲染（适合需要脚本加载的网站，较慢）</label>
-      <div class="hint" x-text="'无头浏览器：'+(t.col.render.ok===false?'不可用 '+t.col.render.error:(t.col.render.started?'已就绪':'按需启动'))"></div>
+      <div class="hint" x-text="'无头浏览器：'+((t.col.render||{}).ok===false?('不可用 '+((t.col.render||{}).error||'')):((t.col.render||{}).started?'已就绪':'按需启动'))"></div>
       <div class="field"><label>代理池（每行一个，轮换使用；留空=直连）</label><textarea rows="3" x-model="t.proxyText" placeholder="http://user:pass@host:port" data-proxies></textarea></div><button class="btn primary" @click="saveCollect(t)" data-collect-save>保存</button></div></div>
      <div class="grp"><h4><i class="codicon codicon-server-process"></i> 渲染池与扩展</h4><div class="b" data-v8-render>
       <div class="filterbar">并发 <input type="number" min="1" max="8" style="width:60px" x-model="t.col.render_workers" data-render-workers>
         队列上限 <input type="number" min="1" max="200" style="width:70px" x-model="t.col.render_queue" data-render-queue>
         <button class="btn primary" @click="saveRenderPool(t)" data-render-save>保存池配置</button></div>
-      <div class="hint" x-text="'当前：workers='+(t.col.render&&t.col.render.workers)+' 队列 '+(t.col.render&&t.col.render.queue)+'/'+(t.col.render&&t.col.render.queue_max)+' 完成 '+(t.col.render&&t.col.render.done)"></div>
-      <div class="hint" x-text="'pgvector：'+(t.col.pgvector&&t.col.pgvector.ok?'可用 dim='+t.col.pgvector.dim:(t.col.pgvector&&t.col.pgvector.reason)||'未检测')"></div>
+      <div class="hint" x-text="'当前：workers='+((t.col.render||{}).workers)+' 队列 '+((t.col.render||{}).queue)+'/'+((t.col.render||{}).queue_max)+' 完成 '+((t.col.render||{}).done)"></div>
+      <div class="hint" x-text="'pgvector：'+((t.col.pgvector||{}).ok?('可用 dim='+(t.col.pgvector||{}).dim):((t.col.pgvector||{}).reason||'未检测'))"></div>
       <a class="btn" href="/downloads/pricehub-clipper.zip" data-ext-download><i class="codicon codicon-desktop-download"></i> 下载浏览器扩展（Chrome/Edge MV3）</a>
       <div class="hint">扩展安装：打开 chrome://extensions → 开发者模式 → 加载已解压的扩展程序（先解压 zip）。点图标即可把当前页发到本机 PriceHub。</div></div></div></div>
     <div class="row"><div class="grp"><h4><i class="codicon codicon-key"></i> API 令牌与权限</h4><div class="b"><div class="filterbar"><input x-model="t.ntName" placeholder="令牌名称，如 ERP" style="width:140px" data-tok-name><select x-model="t.ntRole"><template x-for="(l,k) in t.tok.roles"><option :value="k" x-text="l" :selected="k===t.ntRole"></option></template></select><button class="btn primary" @click="addToken(t)" data-tok-add>生成令牌</button></div>

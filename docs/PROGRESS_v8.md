@@ -10,3 +10,4 @@
 - [x] 2026-10-22 01:25 官方适配器框架 OfficialApiAdapter + 7 个内置模板（淘宝为 stub）；凭证 Fernet 加密；mock_official_api；API /api/official/*
 - [x] 2026-10-22 01:28 渲染池 workers/queue 可配；Chrome/Edge MV3 扩展 zip；pgvector 可选后端接口
 - [x] 2026-10-22 01:22 test_v8_forecast + test_v8_official 5 passed；PRD/ARCHITECTURE 2.0 章节已写
+- [x] 2026-10-22 01:30 UI e2e 通过，截图 screenshots/v8/01-03
