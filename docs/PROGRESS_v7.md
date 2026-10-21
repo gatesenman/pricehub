@@ -12,3 +12,5 @@
 
 - [x] 2026-10-21 23:51 SQLite 压测完成；修复多租户下分页退化（索引改为 products(workspace_id,id)，345ms→4.6ms）；BENCHMARK.md 追加 v7 复测
 - [x] 2026-10-22 00:22 重启 :8800（SQLite，单机免登录默认工作区，/readyz ready，/api/products 无需登录 200）和 :8901 模拟服务；清理了残留的 podman-compose -p ph7 循环（持续生成 podman wait 进程）
+
+- [x] 2026-10-22 00:50 收尾：SQLite 分批测试 82 通过（e2e26+ui17+v4 12+v5api8+v5ui4+v6plat9+v6ui2+v7team3+v7ui1）；PG 分批 81 通过 +1 skipped（修 test_v4_e2e 启用按钮断言竞态：`to_contain_text("启用")` 误匹配「已启用」）；重导 PRD.pdf / ARCHITECTURE.pdf；重打 dist/PriceHub-linux-x64.tar.gz（214MB，gitignore）；:8800/:8901 仍在跑；未启动压测、未向真实第三方发消息

@@ -92,9 +92,16 @@ def test_platform_unavailable_in_catalog(page):
     page.reload(); page.click("[data-tb='平台目录']"); v = V(page, "catalog"); v.locator("[data-cat-q]").fill("amazon.co.jp")
     row = v.locator("[data-cat-row]").first; expect(row).to_contain_text("拦截自动访问"); row.click()
     ex = page.locator("[data-explain]"); expect(ex).to_contain_text("网站拦截了自动访问"); expect(ex).to_contain_text("建议下一步")
-    if "已启用" in row.locator("[data-enable]").inner_text(): row.locator("[data-enable]").click(); expect(row.locator("[data-enable]")).to_contain_text("启用")
-    row.locator("[data-enable]").click(); d = page.locator("[data-dialog]"); expect(d).to_contain_text("启用前请注意"); expect(d).to_contain_text("开放接口")
-    shot(page, "08-platform-unavailable.png"); page.locator("[data-dlg-ok]").click(); expect(row.locator("[data-enable]")).to_contain_text("已启用")
+    # 「已启用」也包含「启用」，必须用精确匹配等停用完成，否则会连点两次 disable
+    btn = row.locator("[data-enable]")
+    if "已启用" in btn.inner_text():
+        btn.click()
+        expect(btn).to_have_text(re.compile(r"^\s*启用\s*$"))
+    btn.click()
+    d = page.locator("[data-dialog]")
+    expect(d).to_contain_text("启用前请注意", timeout=10000)
+    expect(d).to_contain_text("开放接口")
+    shot(page, "08-platform-unavailable.png"); page.locator("[data-dlg-ok]").click(); expect(btn).to_contain_text("已启用")
 
 def test_catalog_virtual_scroll(page):
     v = V(page, "catalog"); v.locator("[data-cat-q]").fill(""); expect(v.locator("[data-cat-total]")).to_have_text("920")
