@@ -489,8 +489,7 @@ async def auth_audit(request: Request, call_next):
 # ================= 备份与恢复 =================
 @app.get("/api/backup")
 def backup():
-    out = tempfile.mktemp(suffix=".db")
-    with sqlite3.connect(db.DB_PATH) as src, sqlite3.connect(out) as dst: src.backup(dst)
+    out = db.export_sqlite(tempfile.mktemp(suffix=".db"))   # 任意后端都导出为 SQLite 备份文件
     return FileResponse(out, media_type="application/octet-stream", filename=f"pricehub-backup-{datetime.datetime.now():%Y%m%d-%H%M}.db")
 @app.post("/api/restore")
 async def restore(file: UploadFile = File(...)):
@@ -499,8 +498,11 @@ async def restore(file: UploadFile = File(...)):
         with sqlite3.connect(tmp) as c: names = {r[0] for r in c.execute("SELECT name FROM sqlite_master WHERE type='table'")}
     except Exception: raise HTTPException(400, "不是有效的 PriceHub 备份文件")
     if not {"products", "prices", "sources"} <= names: raise HTTPException(400, "备份文件缺少商品/价格/数据源表，不是 PriceHub 备份")
-    safety = db.DB_PATH + f".before-restore-{int(time.time())}"; shutil.copy(db.DB_PATH, safety)
-    with sqlite3.connect(tmp) as src, sqlite3.connect(db.DB_PATH) as dst: src.backup(dst)
+    if db.BACKEND == "postgresql":
+        safety = db.export_sqlite(os.path.join(tempfile.gettempdir(), f"pricehub-before-restore-{int(time.time())}.db")); db.import_sqlite(tmp)
+    else:
+        safety = db.DB_PATH + f".before-restore-{int(time.time())}"; shutil.copy(db.DB_PATH, safety)
+        with sqlite3.connect(tmp) as src, sqlite3.connect(db.DB_PATH) as dst: src.backup(dst)
     db.init(); db.VER[0] += 1
     return {"ok": True, "message": "已恢复。恢复前的数据已另存，可用于回退", "safety_copy": safety}
 

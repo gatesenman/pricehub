@@ -99,6 +99,7 @@ def test_16_ai_results_have_confidence(c):
     try: r = M.s_ai("iPhone")
     finally: os.environ.pop("DEEPSEEK_API_KEY"); os.environ.pop("DEEPSEEK_BASE_URL")
     assert len(r["results"]) == 10 and all(x["conf"]["level"] == "低" and any("AI 搜索" in b for b in x["conf"]["basis"]) for x in r["results"])
+@pytest.mark.skipif(bool(os.environ.get("PRICEHUB_DB_URL")), reason="SQLite 旧库文件迁移专用；PostgreSQL 用 scripts/migrate_sqlite_to_pg.py")
 def test_17_migration_backfills_old_db():
     import sqlite3
     path = tempfile.mktemp(suffix=".db"); con = sqlite3.connect(path)

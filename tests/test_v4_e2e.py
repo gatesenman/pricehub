@@ -84,7 +84,11 @@ def test_unavailable_link_explained(page):
     page.keyboard.press("Escape"); expect(qm).to_be_hidden()
 
 def test_platform_unavailable_in_catalog(page):
-    con = sqlite3.connect(DB); con.execute("UPDATE platforms SET status='反爬拦截', status_detail='HTTP 403 验证/拦截页' WHERE domain='amazon.co.jp'"); con.commit(); con.close()
+    sql = "UPDATE platforms SET status='反爬拦截', status_detail='HTTP 403 验证/拦截页' WHERE domain='amazon.co.jp'"
+    if os.environ.get("PRICEHUB_DB_URL"):   # PostgreSQL 后端：通过同一存储层（同一 schema）直接改库
+        os.environ["PRICEHUB_DB"] = DB; from app.core import storage; storage.PG_SCHEMA[0] = None; storage.DB_PATH = DB; storage._PG.c = None; storage.ex(sql)
+    else:
+        con = sqlite3.connect(DB); con.execute(sql); con.commit(); con.close()
     page.reload(); page.click("[data-tb='平台目录']"); v = V(page, "catalog"); v.locator("[data-cat-q]").fill("amazon.co.jp")
     row = v.locator("[data-cat-row]").first; expect(row).to_contain_text("拦截自动访问"); row.click()
     ex = page.locator("[data-explain]"); expect(ex).to_contain_text("网站拦截了自动访问"); expect(ex).to_contain_text("建议下一步")

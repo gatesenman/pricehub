@@ -276,6 +276,21 @@
      <div class="grp"><h4><i class="codicon codicon-database"></i> 备份与恢复</h4><div class="b"><div class="filterbar"><a class="btn primary" href="/api/backup" data-backup><i class="codicon codicon-cloud-download"></i> 下载完整备份</a>
       <label class="btn"><i class="codicon codicon-cloud-upload"></i> 从备份恢复…<input type="file" accept=".db" style="display:none" @change="restoreDb(t,$event)" data-restore></label></div><div class="hint">恢复前会自动保留当前数据的副本，可随时回退。</div>
       <h4 style="margin:12px 0 4px;font-size:12px">浏览器一键收藏</h4><div class="hint">把书签工具拖到浏览器书签栏，在任意商品页点一下即可开始监控。</div><a class="btn" href="/bookmarklet" target="_blank" data-bookmarklet-link><i class="codicon codicon-bookmark"></i> 获取书签工具</a></div></div></div>
+    <div class="row" data-v6-platform><div class="grp"><h4><i class="codicon codicon-extensions"></i> 数据源插件 <span class="hint" x-text="'SDK '+(t.pl.sdk_version||'')"></span></h4><div class="b">
+      <div class="filterbar"><button class="btn" @click="reloadPlugins(t)" data-plugin-reload><i class="codicon codicon-refresh"></i> 重新加载插件</button><span class="hint mono" x-text="t.pl.dir"></span></div>
+      <table class="grid"><thead><tr><th style="width:120px">标识</th><th>名称</th><th style="width:80px">来源</th><th style="width:70px">状态</th></tr></thead><tbody>
+       <template x-for="p in (t.pl.plugins||[])" :key="p.id"><tr data-plugin-row><td class="mono" x-text="p.id"></td><td x-text="p.name"></td><td x-text="p.origin==='builtin'?'内置':'插件目录'"></td><td :class="p.state==='active'?'ok':'err'" x-text="p.state==='active'?'可用':'出错'"></td></tr></template>
+       <template x-for="r in (t.pl.last_load||[]).filter(x=>x.state==='error')" :key="r.file"><tr data-plugin-error><td class="mono" x-text="r.file.split('/').slice(-2).join('/')"></td><td colspan="2" class="err" x-text="r.error"></td><td class="err">出错</td></tr></template>
+      </tbody></table><div class="hint">把插件放进上面的目录后点“重新加载”。开发说明见 docs/PLUGIN_SDK.md。</div></div></div>
+     <div class="grp"><h4><i class="codicon codicon-server-process"></i> 采集队列与运行状态</h4><div class="b">
+      <div class="kv" data-sched-stats><span>工作线程</span><b x-text="t.sc.workers"></b><span>执行中</span><b x-text="t.sc.active"></b><span>排队</span><b x-text="(t.sc.ready||0)+(t.sc.delayed||0)"></b>
+       <span>已完成</span><b x-text="(t.sc.counters||{}).done||0"></b><span>重试</span><b x-text="(t.sc.counters||{}).retried||0"></b><span>限速等待</span><b x-text="(t.sc.counters||{}).throttled||0"></b>
+       <span>数据库</span><b x-text="((t.rd.checks||{}).database||{}).backend||'—'"></b><span>向量索引</span><b x-text="((t.rd.checks||{}).vector_index||{}).engine||'—'"></b></div>
+      <h4 style="margin:12px 0 4px;font-size:12px">失败任务（死信） <span class="hint" x-text="t.dl.length+' 条'"></span></h4>
+      <div style="max-height:150px;overflow:auto"><table class="grid"><tbody><template x-for="d in t.dl" :key="d.id"><tr data-dead-row><td style="width:150px" x-text="fmtTs(d.ts)"></td><td class="mono" x-text="d.job_key"></td><td class="err" x-text="d.error"></td>
+       <td style="width:110px"><button class="btn" @click="retryDead(t,d)" data-dead-retry>重试</button> <button class="btn" @click="delDead(t,d)">删除</button></td></tr></template>
+       <tr x-show="!t.dl.length"><td class="hint">暂无失败任务</td></tr></tbody></table></div>
+      <div class="hint">监控指标：<a href="/metrics" target="_blank">/metrics</a>（Prometheus）　健康检查：<a href="/readyz" target="_blank">/readyz</a>　接口文档：<a href="/docs" target="_blank">/docs</a>（正式路径 /api/v1）</div></div></div></div>
     <div class="grp"><h4><i class="codicon codicon-history"></i> 操作审计（最近 50 条）</h4><div class="b" style="max-height:260px;overflow:auto"><table class="grid"><thead><tr><th style="width:170px">时间 (UTC+8)</th><th style="width:180px">操作者</th><th style="width:70px">方式</th><th>接口</th><th style="width:60px" class="num">结果</th></tr></thead><tbody>
      <template x-for="a in t.au" :key="a.id"><tr data-audit-row><td x-text="fmtTs(a.ts)"></td><td x-text="a.actor"></td><td x-text="{POST:'新增',PUT:'修改',DELETE:'删除'}[a.method]||a.method"></td><td class="mono" x-text="a.path"></td><td class="num" :class="a.status>=400?'err':'ok'" x-text="a.status"></td></tr></template></tbody></table></div></div></div></template>
 

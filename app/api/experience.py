@@ -38,7 +38,7 @@ def save_settings(body: dict = Body(...)):
     return settings()
 @app.get("/api/onboarding/countries")
 def ob_countries():
-    return db.q("SELECT country k, region, COUNT(*) n, SUM(CASE WHEN status IN ('解析成功','可达') THEN 1 ELSE 0 END) ok, SUM(enabled) e "
+    return db.q("SELECT country k, MIN(region) region, COUNT(*) n, SUM(CASE WHEN status IN ('解析成功','可达') THEN 1 ELSE 0 END) ok, SUM(enabled) e "
                 "FROM platforms WHERE domain<>'' GROUP BY country ORDER BY n DESC, MIN(id)")
 
 # ---------------- 后台任务队列 ----------------

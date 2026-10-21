@@ -7,12 +7,12 @@ const V5 = {
     if (t.type === 'match') { t.loading = true; t.sug = await A('/api/match/suggest?threshold=' + (t.th || 0.75)); t.loading = false; }
     if (t.type === 'map') { [t.v, t.ev, t.sel, t.mp] = await Promise.all([A('/api/map/violations'), A('/api/map/evidence'), A('/api/sellers'), A('/api/map/prices')]); }
     if (t.type === 'reports') { [t.r, t.cal, t.sch, t.ch] = await Promise.all([A('/api/reports/summary'), A('/api/promo/calendar?days=365'), A('/api/reports/schedule'), A('/api/channels')]); }
-    if (t.type === 'admin') { [t.fx, t.col, t.tok, t.au] = await Promise.all([A('/api/fx'), A('/api/collect/settings'), A('/api/tokens'), A('/api/audit?limit=50')]); t.proxyText = (t.col.proxies || []).join('\n'); }
+    if (t.type === 'admin') { [t.fx, t.col, t.tok, t.au] = await Promise.all([A('/api/fx'), A('/api/collect/settings'), A('/api/tokens'), A('/api/audit?limit=50')]); t.proxyText = (t.col.proxies || []).join('\n'); [t.pl, t.sc, t.dl, t.rd] = await Promise.all([A('/api/v1/plugins'), A('/api/v1/scheduler'), A('/api/v1/deadletters'), A('/readyz')]); }
     if (t.type === 'pricing') { t.pr = await A('/api/pricing/rules'); }
   },
   v5Defaults() { return {rules: {ch: {types: {}, items: []}, ru: {types: {}, items: []}, no: [], nc: {type: 'webhook', name: '', url: '', chat_id: '', events: false}, nr: {type: 'target', value: '', product_id: '', channel_ids: [], cooldown_min: 60}},
     match: {sug: null, th: 0.75}, map: {v: [], ev: [], sel: [], mp: [], nm: {group_key: '', price: ''}}, reports: {r: null, cal: [], sch: {}, ch: {items: []}},
-    admin: {fx: {rates: {}}, col: {render: {}}, tok: {items: [], roles: {}}, au: [], fxCur: 'USD', fxVal: '', proxyText: '', newTok: null, ntRole: 'viewer', ntName: ''}}; },
+    admin: {fx: {rates: {}}, col: {render: {}}, tok: {items: [], roles: {}}, au: [], fxCur: 'USD', fxVal: '', proxyText: '', pl: {plugins: []}, sc: {counters: {}}, dl: [], rd: {checks: {}}, newTok: null, ntRole: 'viewer', ntName: ''}}; },
   // ----- 通知渠道与规则 -----
   async addChannel(t) { const n = t.nc; try { await this.post('/api/channels', {name: n.name, type: n.type, url: n.url, config: n.type === 'telegram' ? {chat_id: n.chat_id} : (n.type === 'webhook' && n.events ? {events: ['price_change', 'price_suggestion']} : {})});
       this.toast('已添加通知渠道'); t.nc = {type: 'webhook', name: '', url: '', chat_id: '', events: false}; await this.loadV5(t); } catch (e) { this.toast(e.message, true); } },
@@ -60,3 +60,8 @@ const V5 = {
     return this.newTab(type, JSON.parse(JSON.stringify(this.v5Defaults()[type] || {})), focus); };
   b.init = async function () { await init.call(this); const m = new URLSearchParams(location.search).get('monitor'); if (m) { history.replaceState(null, '', '/'); this.openQuickMonitor(m, true); } };
   return b; }; App.confBadge = base.confBadge; App.money = base.money; })();
+Object.assign(V5, {
+  async reloadPlugins(t) { try { const r = await this.post('/api/v1/plugins/reload', {}); const bad = (r.report || []).filter(x => x.state === 'error').length; this.toast(bad ? `已重新加载，${bad} 个插件出错` : '插件已重新加载', !!bad); await this.loadV5(t); } catch (e) { this.toast(e.message, true); } },
+  async retryDead(t, d) { try { await this.post(`/api/v1/deadletters/${d.id}/retry`, {}); this.toast('已重新加入采集队列'); await this.loadV5(t); } catch (e) { this.toast(e.message, true); } },
+  async delDead(t, d) { await this.api('/api/v1/deadletters/' + d.id, {method: 'DELETE'}); await this.loadV5(t); },
+});

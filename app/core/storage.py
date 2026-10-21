@@ -160,7 +160,7 @@ def q(sql, args=(), one=False):
 def ex(sql, args=()):
     if BACKEND == "postgresql":
         _, rid, rc = _pg_exec(sql, args, False); VER[0] += 1
-        if rid is None and re.match(r"\s*INSERT", sql, re.I): return None if rc == 0 else (rc or None)
+        if rid is None and re.match(r"\s*INSERT", sql, re.I): return 0 if not rc or rc < 0 else rc
         return rid if rid is not None else rc
     with _lock, conn() as c:
         cur = c.execute(sql, args); c.commit(); VER[0] += 1; return cur.lastrowid
@@ -177,3 +177,39 @@ def ex_many(sql, rows):
         VER[0] += 1; return
     with _lock, conn() as c: c.executemany(sql, rows); c.commit(); VER[0] += 1
 def info(): return {"backend": BACKEND, "path": None if BACKEND == "postgresql" else os.path.abspath(DB_PATH), "schema": _pg_schema() if BACKEND == "postgresql" else None}
+# ---------------- 跨后端备份 / 迁移 ----------------
+def tables(): return re.findall(r"CREATE TABLE IF NOT EXISTS (\w+)", SCHEMA)
+def export_sqlite(out):
+    """把当前库（任意后端）导出为 SQLite 文件：既是备份格式，也是 SQLite ↔ PostgreSQL 迁移介质。"""
+    if BACKEND == "sqlite":
+        with sqlite3.connect(DB_PATH) as src, sqlite3.connect(out) as dst: src.backup(dst)
+        return out
+    dst = sqlite3.connect(out); dst.executescript(SCHEMA)
+    for t, cols in MIGRATIONS.items():
+        have = {r[1] for r in dst.execute(f"PRAGMA table_info({t})")}
+        for col, typ in cols:
+            if col not in have: dst.execute(f"ALTER TABLE {t} ADD COLUMN {col} {typ}")
+    for t in tables():
+        rows = q(f"SELECT * FROM {t}")
+        if rows:
+            cols = list(rows[0]); dst.executemany(f"INSERT INTO {t}({','.join(cols)}) VALUES({','.join('?' * len(cols))})", [tuple(r[c] for c in cols) for r in rows])
+    dst.commit(); dst.close(); return out
+def import_sqlite(path):
+    """用 SQLite 备份文件整体替换当前库内容（PostgreSQL 后端）。"""
+    src = sqlite3.connect(path); src.row_factory = sqlite3.Row
+    with _lock:
+        c = pg_conn()
+        try:
+            with c.cursor() as cur:
+                for t in tables():
+                    try: rows = src.execute(f"SELECT * FROM {t}").fetchall()
+                    except sqlite3.OperationalError: continue
+                    cur.execute(f"SELECT column_name FROM information_schema.columns WHERE table_schema=%s AND table_name=%s", (_pg_schema(), t)); have = {r[0] for r in cur.fetchall()}
+                    cur.execute(f"DELETE FROM {t}")
+                    if rows:
+                        cols = [k for k in rows[0].keys() if k in have]
+                        cur.executemany(f"INSERT INTO {t}({','.join(cols)}) VALUES({','.join(['%s'] * len(cols))})", [tuple(r[k] for k in cols) for r in rows])
+                    if t not in NO_ID: cur.execute(f"SELECT setval(pg_get_serial_sequence('{t}','id'), COALESCE((SELECT MAX(id) FROM {t}),0)+1, false)")
+            c.commit()
+        except Exception: c.rollback(); raise
+        finally: src.close()

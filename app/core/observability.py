@@ -25,6 +25,6 @@ class JsonFormatter(logging.Formatter):
 def setup_logging():
     lg = logging.getLogger("pricehub")
     if lg.handlers: return lg
-    h = logging.StreamHandler(sys.stdout) if os.environ.get("PRICEHUB_LOG_FILE") is None else logging.FileHandler(os.environ["PRICEHUB_LOG_FILE"], encoding="utf-8")
+    h = logging.StreamHandler(sys.stderr) if os.environ.get("PRICEHUB_LOG_FILE") is None else logging.FileHandler(os.environ["PRICEHUB_LOG_FILE"], encoding="utf-8")
     h.setFormatter(JsonFormatter()); lg.addHandler(h); lg.setLevel(os.environ.get("PRICEHUB_LOG_LEVEL", "INFO")); lg.propagate = False
     return lg
