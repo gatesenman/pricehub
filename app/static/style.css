@@ -189,7 +189,7 @@ input:hover,select:hover,textarea:hover{border-color:color-mix(in srgb,var(--acc
 
 /* v7 团队协作 */
 .wsw{position:relative;cursor:pointer;padding:0 6px}.wsw:hover{background:rgba(255,255,255,.12)}
-.wsmenu{position:absolute;bottom:22px;left:0;min-width:260px;background:var(--panel);color:var(--fg);border:1px solid var(--border);box-shadow:0 4px 16px rgba(0,0,0,.3);z-index:60;padding:4px 0}
+.wsmenu{position:fixed;bottom:24px;left:4px;min-width:260px;background:var(--panel);color:var(--fg);border:1px solid var(--border);box-shadow:0 4px 16px rgba(0,0,0,.3);z-index:1000;padding:4px 0}
 .wsmenu .mi{display:flex;justify-content:space-between;padding:4px 12px;cursor:pointer}.wsmenu .mi:hover{background:var(--hover)}.wsmenu .sep{border-top:1px solid var(--border);margin:4px 0}
 .login-ov{place-items:center;background:var(--bg)}
 .usage-it{margin:8px 0}.usage-it .ul{display:flex;justify-content:space-between;margin-bottom:3px}
