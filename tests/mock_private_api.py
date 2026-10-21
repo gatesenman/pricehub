@@ -79,3 +79,11 @@ async def tg(bot: str, req: _Req):
 def hook_list(name: str): return HOOKS.get(name, [])
 @app.delete("/hooks")
 def hook_clear(): HOOKS.clear(); return {"ok": True}
+
+@app.get("/feed.json")
+def feed_json(fail: int = 0):
+    """v6：插件 SDK 示例用的 JSON 商品源；fail=1 时返回 503 用于测试重试/死信。"""
+    from fastapi.responses import JSONResponse
+    if fail: return JSONResponse({"error": "busy"}, status_code=503)
+    return {"items": [{"id": "F1", "name": "Feed 测试耳机 Pro", "price": "1,299.00", "brand": "FeedAudio", "category": "耳机", "in_stock": 1, "gtin": "6900000000011"},
+                      {"id": "F2", "name": "Feed 测试键盘", "price": 399, "category": "外设"}]}

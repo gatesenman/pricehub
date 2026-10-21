@@ -1,0 +1,9 @@
+.venv
+dist
+build
+data
+logs
+screenshots
+tests
+*.db
+*.tar.gz

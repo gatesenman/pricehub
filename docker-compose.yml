@@ -1,0 +1,25 @@
+# 团队版部署：PriceHub + PostgreSQL（可选 Prometheus）。启动：docker compose up -d；带监控：docker compose --profile monitoring up -d
+services:
+  db:
+    image: postgres:17
+    environment: {POSTGRES_USER: pricehub, POSTGRES_PASSWORD: ${PG_PASSWORD:-change-me}, POSTGRES_DB: pricehub}
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck: {test: ["CMD-SHELL", "pg_isready -U pricehub"], interval: 10s, retries: 10}
+    restart: unless-stopped
+  app:
+    build: .
+    depends_on: {db: {condition: service_healthy}}
+    environment:
+      PRICEHUB_DB_URL: postgresql://pricehub:${PG_PASSWORD:-change-me}@db:5432/pricehub
+      PRICEHUB_WORKERS: "4"
+      PRICEHUB_DOMAIN_RPS: "1"
+      PRICEHUB_LOG_LEVEL: INFO
+    ports: ["8800:8800"]
+    volumes: [appdata:/data, ./plugins:/plugins]
+    restart: unless-stopped
+  prometheus:
+    image: prom/prometheus:latest
+    profiles: [monitoring]
+    volumes: [./deploy/prometheus.yml:/etc/prometheus/prometheus.yml:ro]
+    ports: ["9090:9090"]
+volumes: {pgdata: {}, appdata: {}}

@@ -38,11 +38,16 @@ def _conf_of(r):
     return {"confidence": r.get("confidence"), "level": r.get("conf_level"), "basis": json.loads(r.get("conf_basis") or "[]"), "method": r.get("method")}
 def _group_latest(gk, exclude_pid):
     return [r["price"] for r in db.q("SELECT (SELECT price FROM prices WHERE product_id=p.id ORDER BY id DESC LIMIT 1) price FROM products p WHERE group_key=? AND id<>?", (gk, exclude_pid)) if r["price"]]
-HOOKS = []   # v5：价格记录/库存变化后的回调（告警规则、Webhook 事件）
-def _fire(event, **kw):
+from .core.events import bus
+HOOKS = []   # 兼容 v5 的回调列表；v6 起统一走事件总线，HOOKS 作为总线订阅者被调用
+TOPIC = {"price": "price.recorded", "stock": "stock.changed"}
+def _fire(event, **kw): bus.publish(TOPIC.get(event, event), **kw)
+def _legacy_hooks(topic, **kw):
+    ev = {v: k for k, v in TOPIC.items()}.get(topic)
     for h in HOOKS:
-        try: h(event, **kw)
-        except Exception as e: print("hook fail", event, e)
+        try: h(ev, **kw)
+        except Exception as e: __import__("logging").getLogger("pricehub").warning("hook fail", extra={"event": ev, "error": str(e)})
+bus.subscribe("price.recorded", _legacy_hooks, "alerting.rules"); bus.subscribe("stock.changed", _legacy_hooks, "alerting.rules")
 def record_price(pid, price, method, ts=None, in_stock=None):
     p = db.q("SELECT * FROM products WHERE id=?", (pid,), one=True)
     hist = [r["price"] for r in db.q("SELECT price FROM prices WHERE product_id=? ORDER BY id DESC LIMIT 10", (pid,))]
@@ -191,12 +196,16 @@ def fetch_source(sid: int):
     s = db.q("SELECT * FROM sources WHERE id=?", (sid,), one=True)
     if not s: raise HTTPException(404)
     try: items = sources.make(s["type"], json.loads(s["config"])).fetch()
-    except Exception as e: raise HTTPException(502, f"数据源抓取失败: {e}")
-    return {"fetched": len(items), "product_ids": [upsert(sid, it) for it in items]}
-def fetch_all():
-    for s in db.q("SELECT id FROM sources WHERE enabled=1 AND NOT (type='platform' AND config LIKE '%\"urls\": []%' AND config LIKE '%\"query\": \"\"%')"):
-        try: fetch_source(s["id"])
-        except Exception as e: print("monitor fail", s, e)
+    except Exception as e:
+        bus.publish("collect.failed", source_id=sid, type=s["type"], error=str(e)); raise HTTPException(502, f"数据源抓取失败: {e}")
+    ids = [upsert(sid, it) for it in items]
+    bus.publish("collect.succeeded", source_id=sid, type=s["type"], items=len(items)); return {"fetched": len(items), "product_ids": ids}
+def fetch_all(wait=True):
+    """定时监控：每个数据源作为一个调度任务提交（按域名限速、失败退避重试、最终进死信）。"""
+    from .v6 import submit_source_fetch, SCHED
+    jobs = [submit_source_fetch(s["id"], priority=5) for s in db.q("SELECT id FROM sources WHERE enabled=1 AND NOT (type='platform' AND config LIKE '%\"urls\": []%' AND config LIKE '%\"query\": \"\"%')")]
+    if wait: SCHED.wait(jobs, timeout=600)
+    return jobs
 @app.post("/api/monitor/run")
 def monitor_run(): fetch_all(); return {"ok": True}
 @app.post("/api/products")
@@ -318,3 +327,4 @@ def _start():
 
 from . import v4  # noqa: E402  v4 体验优化：引导、任务队列、一键监控、撤销、建议
 from . import v5  # noqa: E402  v5 全生命周期补全
+from . import v6  # noqa: E402  v6 平台化：插件 SDK、调度器、事件总线、指标、API 版本化

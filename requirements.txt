@@ -1,0 +1,16 @@
+fastapi==0.156.7
+uvicorn==0.54.0
+httpx==0.28.1
+beautifulsoup4==4.15.0
+APScheduler==3.11.3
+numpy==2.5.4
+scikit-learn==1.9.1
+ImageHash==4.3.2
+pillow==13.0.0
+python-multipart==0.0.32
+playwright==1.64.0
+faiss-cpu==1.15.1
+psycopg[binary]==3.3.6
+prometheus_client==0.26.0
+# 语义搜索模型（可选，体积大；不装时自动回退 TF-IDF）
+sentence-transformers==6.1.0
