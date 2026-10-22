@@ -31,6 +31,7 @@ fi
 rm -f "$B"/cache/wheels/cffi-*-manylinux*.whl
 $PIP download -q -d "$B/cache/wheels" $W cffi pycparser typing_extensions || true
 
+python3 scripts/_dedupe_wheels.py "$B/cache/wheels"
 $PIP install -q --no-deps --no-compile --target "$ST/python/Lib/site-packages" $W "$B"/cache/wheels/*.whl
 SP="$ST/python/Lib/site-packages"
 find "$SP" -type d \( -name tests -o -name test \) \( -path "*/scipy/*" -o -path "*/sklearn/*" -o -path "*/numpy/*" -o -path "*/pandas/*" \) -prune -exec rm -rf {} + || true
