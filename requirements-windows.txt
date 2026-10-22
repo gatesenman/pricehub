@@ -6,6 +6,7 @@
 #   Prophet 预测             → 统计预测（线性/指数平滑）
 #   无头浏览器 playwright     → 直连抓取
 #   PostgreSQL / Redis       → SQLite（data/pricehub.db）/ 内存任务队列
+# 桌面窗口：pywebview + pythonnet（Windows 用系统 WebView2 / EdgeChromium）
 fastapi>=0.115
 uvicorn>=0.30
 httpx>=0.27
@@ -21,3 +22,7 @@ prometheus_client>=0.20
 sqlglot>=25
 PyJWT[crypto]>=2.8
 cryptography>=42
+pywebview>=5.0
+pythonnet>=3.0
+bottle>=0.12
+proxy_tools>=0.1.0

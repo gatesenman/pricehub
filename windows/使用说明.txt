@@ -13,8 +13,7 @@ PriceHub 价格管理工作台 —— Windows 使用说明
      不要直接在压缩包里双击运行。
   2. 双击「启动PriceHub.bat」。
      - 第一次会创建虚拟环境 .venv 并安装依赖，需要 1–5 分钟；以后启动只要几秒。
-     - 就绪后自动打开浏览器访问 http://127.0.0.1:8800/
-       （如果装了 pywebview：.venv\Scripts\pip install pywebview，会改用独立窗口）。
+     - 就绪后优先打开独立桌面窗口（标题 PriceHub）；仅当 pywebview/WebView2 不可用时才打开系统浏览器。
   3. 使用期间不要关闭黑色命令行窗口；关闭它就停止 PriceHub。
 
 三、数据

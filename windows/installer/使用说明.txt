@@ -5,9 +5,14 @@ PriceHub 价格管理工作台 —— 使用说明（安装版）
   默认安装到 %LOCALAPPDATA%\PriceHub（无需管理员权限）。
 
 启动 / 停止
-  - 双击桌面或开始菜单里的「PriceHub」。几秒后浏览器自动打开 http://127.0.0.1:8800/
-  - PriceHub 在后台运行（没有黑色窗口）。再次双击图标只会重新打开浏览器。
-  - 要停止：开始菜单 → PriceHub → 「停止 PriceHub」。
+  - 双击桌面或开始菜单里的「PriceHub」。几秒后会出现独立的 PriceHub 桌面窗口
+    （不是系统浏览器）。窗口标题为 PriceHub。
+  - PriceHub 在后台运行（没有黑色控制台窗口）。再次双击图标会再开一个桌面窗口。
+  - 要停止：开始菜单 → PriceHub → 「停止 PriceHub」，或关闭所有 PriceHub 窗口后
+    用「停止 PriceHub」结束后台服务。
+  - 若本机缺少 WebView2 运行时导致无法开窗口，会自动改用系统浏览器，并在
+    %APPDATA%\PriceHub\logs\pricehub.log 里写下原因。可安装「Microsoft Edge WebView2
+    Runtime」后重试。
 
 数据
   - 数据库与日志在 %APPDATA%\PriceHub（pricehub.db、logs\pricehub.log）。
@@ -24,6 +29,7 @@ PriceHub 价格管理工作台 —— 使用说明（安装版）
   卸载会保留 %APPDATA%\PriceHub 里的数据；如需彻底删除，请手动删除该文件夹。
 
 常见问题
-  - 浏览器没有自动打开：手动访问 http://127.0.0.1:8800/
-  - 提示端口 8800 被占用：关闭占用该端口的程序后再启动。
+  - 没有出现桌面窗口、却打开了浏览器：查看日志中的 pywebview 失败原因；通常是缺少
+    WebView2。安装 WebView2 Runtime 后重新启动即可。
+  - 提示端口 8800 被占用：关闭占用该端口的程序后再启动，或用「停止 PriceHub」。
   - 启动失败：查看 %APPDATA%\PriceHub\logs\pricehub.log。

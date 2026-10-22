@@ -47,6 +47,9 @@ if not exist ".venv\Scripts\python.exe" (
   )
 )
 set "VPY=.venv\Scripts\python.exe"
+rem 若缺少桌面窗口依赖，强制重装一次
+"%VPY%" -c "import webview" >nul 2>&1
+if errorlevel 1 if exist ".venv\.deps_ok" del ".venv\.deps_ok"
 if not exist ".venv\.deps_ok" (
   echo 正在安装依赖（只需一次，约 1–5 分钟）...
   "%VPY%" -m pip install --upgrade pip -i https://pypi.tuna.tsinghua.edu.cn/simple --timeout 60 >nul 2>&1
@@ -65,11 +68,11 @@ if not exist ".venv\.deps_ok" (
   echo ok> ".venv\.deps_ok"
 )
 
-rem ---------- 3. 启动（127.0.0.1:8800，SQLite）并打开浏览器 ----------
+rem ---------- 3. 启动（127.0.0.1:8800，SQLite）并打开桌面窗口 ----------
 set "PRICEHUB_DB=%CD%\data\pricehub.db"
 set "PRICEHUB_DB_URL="
 set "PRICEHUB_QUEUE=memory"
-echo 正在启动 PriceHub：http://127.0.0.1:8800/  （关闭本窗口即停止）
+echo 正在启动 PriceHub 桌面窗口：http://127.0.0.1:8800/  （关闭本窗口即停止）
 "%VPY%" run_windows.py
 if errorlevel 1 pause
 endlocal

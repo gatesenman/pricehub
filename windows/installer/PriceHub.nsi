@@ -1,4 +1,4 @@
-; PriceHub Windows 安装程序（NSIS，中文界面）。自带 Python 3.11 嵌入版及全部核心依赖，无需预装 Python、无需联网。
+; PriceHub Windows 安装程序（NSIS，中文界面）。自带 Python 3.11 嵌入版、核心依赖与 pywebview，安装后以独立桌面窗口启动，无需预装 Python、无需联网。
 Unicode true
 SetCompressor /SOLID lzma
 SetCompressorDictSize 64
