@@ -8,3 +8,5 @@ data/emb_cache.npz
 data/images/
 data/*.log
 .pytest_cache/
+data/*.db-shm
+data/*.db-wal
