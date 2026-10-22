@@ -31,7 +31,7 @@ fi
 rm -f "$B"/cache/wheels/cffi-*-manylinux*.whl
 $PIP download -q -d "$B/cache/wheels" $W cffi pycparser typing_extensions || true
 
-$PIP install -q --no-deps --no-compile --target "$ST/python/Lib/site-packages" "$B"/cache/wheels/*.whl
+$PIP install -q --no-deps --no-compile --target "$ST/python/Lib/site-packages" $W "$B"/cache/wheels/*.whl
 SP="$ST/python/Lib/site-packages"
 find "$SP" -type d \( -name tests -o -name test \) \( -path "*/scipy/*" -o -path "*/sklearn/*" -o -path "*/numpy/*" -o -path "*/pandas/*" \) -prune -exec rm -rf {} + || true
 find "$SP" -name "*.pyi" -delete; rm -rf "$SP/bin"
