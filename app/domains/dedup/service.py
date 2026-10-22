@@ -12,7 +12,8 @@ import numpy as np
 from fastapi import HTTPException, Body
 from app import db
 from .features import extract
-DEFAULTS = {"suggest_threshold": 0.70, "same_platform": {"auto": False, "threshold": 0.97}, "cross_platform": {"auto": False, "threshold": 0.985}, "auto_detect": True}
+DEFAULTS = {"suggest_threshold": 0.70, "same_platform": {"auto": False, "threshold": 0.97}, "cross_platform": {"auto": False, "threshold": 0.985}, "auto_detect": True,
+            "blocking": {"enabled": True, "exact_max": 20000, "ann_k": 30, "max_block": 200}}
 def _gs(k, d=None):
     r = db.q("SELECT v FROM settings WHERE k=?", (k,), one=True)
     try: return json.loads(r["v"]) if r else d
@@ -27,6 +28,9 @@ def put_settings(body: dict = Body(...)):
     s = get_settings()
     for k in ("suggest_threshold", "auto_detect"):
         if k in body: s[k] = body[k]
+    if isinstance(body.get("blocking"), dict):
+        bb = body["blocking"]; s["blocking"].update({x: (bool(bb[x]) if x == "enabled" else int(bb[x])) for x in ("enabled", "exact_max", "ann_k", "max_block") if x in bb})
+        s["blocking"]["ann_k"] = max(5, min(200, s["blocking"]["ann_k"])); s["blocking"]["max_block"] = max(20, min(5000, s["blocking"]["max_block"]))
     for k in ("same_platform", "cross_platform"):
         if isinstance(body.get(k), dict): s[k].update({x: body[k][x] for x in ("auto", "threshold") if x in body[k]})
     for k in ("same_platform", "cross_platform"):
@@ -87,6 +91,26 @@ def score_pair(a, b, fa, fb, text_sim, text_engine="向量"):
     for c, w in caps: sc = min(sc, c); why.append("✕ " + w)
     return round(min(sc, 0.98), 4), why, sig
 
+_BIDX = {"key": None, "index": None, "engine": None}
+def _vectors(ps, F):
+    """返回 (vec, engine)：有多语言模型时为 L2 归一化 dense 向量，否则为 TF-IDF 字符 n-gram 稀疏向量（行归一化）。"""
+    from app import search
+    docs = [f["norm"] or (p.get("title") or "") for p, f in zip(ps, F)]
+    if getattr(search, "_ST", None): return np.asarray(search._emb(docs), dtype=np.float32), "多语言向量"
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    return TfidfVectorizer(analyzer="char_wb", ngram_range=(1, 3)).fit_transform(docs).tocsr(), "字符 n-gram"
+def _block_index(ps, F, new_ids):
+    """取得分块索引；仅新增商品时在缓存索引上增量 add（dense 向量时），否则重建。返回 (index, engine, incremental)。"""
+    from .blocking import BlockIndex
+    b = (get_settings().get("blocking") or {})
+    sig = [(p["id"], p.get("title")) for p in ps]; newset = set(new_ids or [])
+    old = _BIDX["key"]
+    if new_ids and old is not None and _BIDX["engine"] == "多语言向量" and sig[:len(old)] == old and {x[0] for x in sig[len(old):]} <= newset and len(sig) > len(old):
+        add_ps, add_F = ps[len(old):], F[len(old):]; vec, _ = _vectors(add_ps, add_F)
+        _BIDX["index"].add(add_F, vec); _BIDX["key"] = sig; return _BIDX["index"], _BIDX["engine"], True
+    ix = BlockIndex(exact_max=int(b.get("exact_max", 20000)), k=int(b.get("ann_k", 30)), max_block=int(b.get("max_block", 200)))
+    vec, eng = _vectors(ps, F); ix.add(F, vec); _BIDX.update(key=sig, index=ix, engine=eng); return ix, eng, False
+
 def detect(new_ids=None, record=True):
     """检测候选。new_ids 给定时只比较这些商品与其余商品（新采集增量检测）；否则全量。返回新增/更新的候选数与自动合并数。"""
     st = get_settings(); thr = float(st["suggest_threshold"])
@@ -95,10 +119,18 @@ def detect(new_ids=None, record=True):
     for p in ps:
         try: p["attrs"] = json.loads(p.get("attrs") or "{}")
         except Exception: p["attrs"] = {}
-    F = [extract(p) for p in ps]; S, eng = _text_sim(ps); idx = {p["id"]: i for i, p in enumerate(ps)}
+    ps.sort(key=lambda p: p["id"])
+    F = [extract(p) for p in ps]; idx = {p["id"]: i for i, p in enumerate(ps)}
     decided = {(r["a_id"], r["b_id"]): r["status"] for r in db.q("SELECT a_id,b_id,status FROM dedup_candidates")}
     focus = [idx[i] for i in (new_ids or []) if i in idx] if new_ids else None
-    pairs = ((i, j) for i in (focus if focus is not None else range(len(ps))) for j in range(len(ps)) if (focus is not None and i != j) or (focus is None and j > i))
+    t0 = time.time()
+    if (st.get("blocking") or {}).get("enabled", True):
+        bix, eng, incr = _block_index(ps, F, new_ids); cand, bstats = bix.candidate_pairs(focus)
+        pairs = sorted(cand); simf = bix.sim; mode = "blocking"
+    else:   # v12 全比较（保留作对照）
+        S, eng = _text_sim(ps); incr = False; bstats = {}; simf = lambda i, j: float(S[i, j]); mode = "all_pairs"
+        pairs = ((i, j) for i in (focus if focus is not None else range(len(ps))) for j in range(len(ps)) if (focus is not None and i != j) or (focus is None and j > i))
+    n = len(ps); all_pairs = n * (n - 1) // 2 if focus is None else len(focus) * (n - 1) - len(focus) * (len(focus) - 1) // 2
     found, seen, n_pairs, auto = 0, set(), 0, 0
     for i, j in pairs:
         a, b = ps[i], ps[j]
@@ -106,8 +138,9 @@ def detect(new_ids=None, record=True):
         if (a["id"], b["id"]) in seen: continue
         seen.add((a["id"], b["id"])); n_pairs += 1
         # 预筛：语义很低且无条码时跳过
-        if float(S[i, j]) < 0.45 and not (F[i]["ids"] and F[j]["ids"]): continue
-        sc, why, sig = score_pair(a, b, F[i], F[j], S[i, j], eng)
+        sij = simf(i, j)
+        if sij < 0.45 and not (F[i]["ids"] and F[j]["ids"]): continue
+        sc, why, sig = score_pair(a, b, F[i], F[j], sij, eng)
         if sc < thr: continue
         scope = "same_platform" if a["platform"] == b["platform"] else "cross_platform"
         if scope == "same_platform": why.insert(0, f"同一平台（{a['platform']}）的不同商品页")
@@ -123,7 +156,8 @@ def detect(new_ids=None, record=True):
             c = db.q("SELECT id FROM dedup_candidates WHERE a_id=? AND b_id=?", (a["id"], b["id"]), one=True)
             try: merge(c["id"], mode="auto"); auto += 1
             except HTTPException: pass
-    return {"pairs": n_pairs, "candidates": found, "auto_merged": auto, "engine": eng}
+    return {"pairs": n_pairs, "candidates": found, "auto_merged": auto, "engine": eng, "mode": mode, "all_pairs": all_pairs,
+            "incremental": incr, "blocking": bstats, "seconds": round(time.time() - t0, 3)}
 
 def _view(r, pm):
     def brief(pid):

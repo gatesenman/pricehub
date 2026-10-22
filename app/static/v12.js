@@ -8,7 +8,7 @@ const V12 = {
   ddTime(s) { if (!s) return ''; const d = new Date(s.replace(' ', 'T') + 'Z'); return isNaN(d) ? s : d.toLocaleString('zh-CN', {hour12: false}); },
   scopeLabel(s) { return s === 'same_platform' ? '同平台不同商品页' : '跨平台同款'; },
   ddSelIds(t) { return Object.keys(t.sel || {}).filter(k => t.sel[k]).map(Number); },
-  async ddScan(t) { t.busy = true; try { const r = await this.post('/api/dedup/scan', {}); this.toast(`扫描 ${r.pairs} 对，新增/更新候选 ${r.candidates} 条` + (r.auto_merged ? `，自动合并 ${r.auto_merged} 条` : '')); } catch (e) { this.toast(e.message, true); } t.busy = false; this.loadDedup(t); },
+  async ddScan(t) { t.busy = true; try { const r = await this.post('/api/dedup/scan', {}); t.lastScan = (r.mode === 'blocking' ? `分块候选 ${r.pairs} 对 / 全比较 ${r.all_pairs} 对` : `全比较 ${r.pairs} 对`) + ` · ${r.seconds}s`; this.toast(`扫描 ${r.pairs} 对（全比较需 ${r.all_pairs} 对），新增/更新候选 ${r.candidates} 条` + (r.auto_merged ? `，自动合并 ${r.auto_merged} 条` : '')); } catch (e) { this.toast(e.message, true); } t.busy = false; this.loadDedup(t); },
   async ddMerge(t, c, keep) {
     try { const r = await this.post(`/api/dedup/candidates/${c.id}/merge`, keep ? {canonical_id: keep} : {});
       this.toast(r.message, false, {label: '撤销', run: async () => { await this.post(`/api/dedup/merges/${r.merge_id}/undo`, {}); this.toast('已撤销合并'); this.loadDedup(t); this.refresh && this.refresh(); }});
@@ -30,7 +30,7 @@ const V12 = {
   b.openMod = function (type, focus = true) {
     if (type !== 'dedup') return om.call(this, type, focus);
     const ex = this.tabs.find(t => t.type === type); if (ex) { if (focus) this.active = ex.id; this.loadDedup(ex); return ex; }
-    return this.newTab(type, {items: [], counts: {}, cfg: null, sel: {}, f: {status: 'pending', scope: ''}, view: 'queue', log: [], busy: false}, focus); };
+    return this.newTab(type, {items: [], counts: {}, cfg: null, sel: {}, f: {status: 'pending', scope: ''}, view: 'queue', log: [], busy: false, lastScan: ''}, focus); };
   if (lp) b.loadProductV5 = async function (t) { await lp.call(this, t); try { t.listings = (await this.api(`/api/products/${t.pid}/listings`)).listings; } catch (e) { t.listings = []; } };
   return b;
 }; App.confBadge = base.confBadge; App.money = base.money; })();

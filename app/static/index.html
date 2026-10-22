@@ -338,6 +338,7 @@
       <button class="btn" :class="t.view==='settings'&&'primary'" @click="ddView(t,'settings')" data-dd-view-settings>自动合并设置</button>
       <button class="btn" :class="t.view==='log'&&'primary'" @click="ddView(t,'log')" data-dd-view-log>合并记录</button>
       <span class="muted" x-text="'待处理 '+(t.counts.pending||0)+' · 已合并 '+((t.counts.merged||0)+(t.counts.auto_merged||0))+' · 不是同款 '+(t.counts.not_same||0)" data-dd-counts></span>
+      <span class="muted" x-show="t.lastScan" x-text="t.lastScan" data-dd-lastscan></span>
       <button class="btn" style="margin-left:auto" @click="ddScan(t)" :disabled="t.busy" data-dd-scan><i class="codicon codicon-search"></i> <span x-text="t.busy?'扫描中…':'重新扫描'"></span></button></div>
     <template x-if="t.view==='queue'"><div>
      <div class="filterbar" style="margin:0 12px 8px;flex-wrap:wrap">
@@ -371,6 +372,9 @@
        <label>新采集商品自动检测</label><label><input type="checkbox" x-model="t.cfg.auto_detect" data-dd-autodetect> 采集完成后检测新商品</label>
        <label>同平台：自动合并</label><label><input type="checkbox" x-model="t.cfg.same_platform.auto" data-dd-same-auto> 开启　阈值 <input type="number" step="0.005" min="0.9" max="1" style="width:80px" x-model.number="t.cfg.same_platform.threshold" data-dd-same-thr></label>
        <label>跨平台：自动合并</label><label><input type="checkbox" x-model="t.cfg.cross_platform.auto" data-dd-cross-auto> 开启　阈值 <input type="number" step="0.005" min="0.9" max="1" style="width:80px" x-model.number="t.cfg.cross_platform.threshold" data-dd-cross-thr></label>
+       <label>候选生成（分块）</label><label><input type="checkbox" x-model="t.cfg.blocking.enabled" data-dd-block-on> 分块检索（条码 / 品牌+型号 / MinHash-LSH / 向量近邻）；关闭则两两全比较（仅适合少量商品）</label>
+       <label>向量近邻数 k</label><input type="number" min="5" max="200" x-model.number="t.cfg.blocking.ann_k" data-dd-block-k>
+       <label>单块上限</label><input type="number" min="20" max="5000" x-model.number="t.cfg.blocking.max_block" data-dd-block-max>
       </div>
       <div class="hint">阈值只能设在 0.90–1.00。条码 / ASIN 一致记 0.99 分；品牌、容量、型号、颜色、成色任一冲突都会压低分数，不会被自动合并。所有合并都记录在「合并记录」里，可随时撤销。</div>
       <div class="filterbar" style="margin-top:8px"><button class="btn primary" @click="ddSaveCfg(t)" data-dd-save>保存</button></div></div></div></template>
