@@ -107,8 +107,9 @@ def test_catalog(page):
     nav(page, "work"); page.click("[data-node='平台目录']"); v = V(page, "catalog"); v.locator("[data-cat-country]").select_option("日本")
     expect(v.locator("[data-cat-total]")).to_have_text("6"); expect(v.locator("[data-cat-row]").first).to_contain_text("日本")
 def test_command_palette_and_theme(page):
-    page.keyboard.press("Control+k"); expect(page.locator("[data-palette]")).to_be_visible(); page.keyboard.type("主题"); expect(page.locator("[data-cmd]").first).to_contain_text("主题"); shot(page, "05-palette.png")
-    page.keyboard.press("Enter"); expect(page.locator("html")).to_have_attribute("data-theme", "light")
+    page.keyboard.press("Control+k"); expect(page.locator("[data-palette]")).to_be_visible(); expect(page.locator("[data-palette-input]")).to_be_focused(); page.keyboard.type("主题"); expect(page.locator("[data-cmd]").first).to_contain_text("主题"); shot(page, "05-palette.png")
+    page.keyboard.press("Enter"); expect(page.locator("html")).to_have_attribute("data-theme", "light"); expect(page.locator("[data-palette]")).to_be_hidden()
+    assert page.evaluate("!document.activeElement.matches('[data-palette-input]')")   # 关闭面板后焦点不能残留在隐藏的输入框上
     page.keyboard.press("Control+k"); expect(page.locator("[data-palette-input]")).to_be_focused(); page.keyboard.type("打开商品: 有机")
     expect(page.locator("[data-cmd]").first).to_contain_text("绿茶"); page.keyboard.press("Enter"); expect(V(page, "product").locator("[data-product-title]")).to_contain_text("绿茶")
     shot(page, "06-light.png"); page.keyboard.press("Control+Shift+T"); expect(page.locator("html")).to_have_attribute("data-theme", "dark")

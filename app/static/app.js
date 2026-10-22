@@ -126,7 +126,7 @@ function AppBase() { return {
   filterProducts(k, v) { const t = this.openMod('products'); t.f = {q: '', platform: '', category: '', [k]: v}; t.pg = 1; },
   // ---------- 快捷键/命令 ----------
   keysBase(e) { const c = e.ctrlKey || e.metaKey, k = e.key.toLowerCase();
-    if (e.key === 'Escape') { this.palette = false; this.ctx = null; this.menuOpen = null; if (!this.form && this.dlg) this.dlg = null; else this.form = null; return; }
+    if (e.key === 'Escape') { this.closePalette(); this.ctx = null; this.menuOpen = null; if (!this.form && this.dlg) this.dlg = null; else this.form = null; return; }
     if (e.key === 'Escape') this.tip = null;
     const map = {d: () => this.openDeep(this.checked), k: () => this.openPalette(), f: () => this.openSearch(), n: () => this.editSource(null), w: () => this.closeTab(this.active), b: () => e.altKey ? this.showProps = !this.showProps : this.showSide = !this.showSide, r: () => this.runMonitor(), e: () => this.exportCsv()};
     if (c && e.shiftKey && k === 't') { e.preventDefault(); return this.toggleTheme(); }
@@ -135,12 +135,15 @@ function AppBase() { return {
     if (e.key === 'F5') { e.preventDefault(); this.reload(); }
     if (c && e.key === 'Tab' && this.tabs.length) { e.preventDefault(); const i = this.tabs.findIndex(t => t.id === this.active); this.active = this.tabs[(i + (e.shiftKey ? -1 : 1) + this.tabs.length) % this.tabs.length].id; } },
   openPalette() { this.palette = true; this.pq = ''; this.pi = 0; this.$nextTick(() => this.$refs.pin.focus()); },
+  // 关闭前先显式移除输入框焦点：x-show 隐藏后 Chrome 要到下一帧才把焦点从隐藏元素移走，
+  // 期间若立刻重开面板，activeElement 仍是旧输入框（看似已聚焦），随后焦点被浏览器回收到 body，输入的文字就丢了。
+  closePalette() { const i = this.$refs.pin; if (i && document.activeElement === i) i.blur(); this.palette = false; },
   pcmds() { const q = this.pq.trim().toLowerCase(); const cmds = [];
     this.menus.forEach(m => m.items.forEach(it => it !== '-' && cmds.push({label: m.name + ': ' + it.label, icon: it.icon, key: it.key, run: it.run})));
     this.all.forEach(p => cmds.push({label: '打开商品: ' + p.title, icon: 'file', cat: p.platform, run: () => this.openProduct(p.id)}));
     cmds.push({label: '工具: 深度对比已勾选（' + this.checked.length + '）', icon: 'split-horizontal', run: () => this.openDeep(this.checked)});
     return cmds.filter(c => !q || c.label.toLowerCase().includes(q)).slice(0, 30); },
-  runCmd(c) { if (!c) return; this.palette = false; c.run(); },
+  runCmd(c) { if (!c) return; this.closePalette(); c.run(); },
   toggleTheme() { this.theme = this.theme === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.theme = this.theme; localStorage.setItem('ph-theme', this.theme); this.$nextTick(() => this.redrawCharts()); },
   showKeys() { this.dlg = {title: '键盘快捷键', lines: [['Ctrl+K','命令面板'],['Ctrl+M','一键监控商品链接（也可直接 Ctrl+V 粘贴链接）'],['Ctrl+Z','撤销删除/批量操作'],['Ctrl+F','查找商品'],['Ctrl+N','新建数据源'],['Ctrl+R','立即抓取全部'],['Ctrl+E','导出 CSV'],['Ctrl+W','关闭标签页'],['Ctrl+Tab','切换标签页'],['Ctrl+B','切换资源管理器'],['Ctrl+Alt+B','切换属性面板'],['Ctrl+Shift+T','切换主题'],['Ctrl+Shift+C','复制选中项'],['Ctrl+D','深度对比已勾选'],['F5','刷新'],['Esc','关闭对话框/菜单']].map(r => `<b style="display:inline-block;width:130px">${r[0]}</b>${r[1]}`)}; },
   about() { this.dlg = {title: '关于 PriceHub', lines: ['<b>PriceHub</b> 全球交易平台商品价格全生命周期管理', '文本引擎：' + this.health.text_engine, '图像引擎：' + this.health.image_engine, '接入方式：' + (this.health.adapters || []).map(a => TYPE_LABEL[a] || a).join('、'), '平台目录：' + this.health.platform_catalog + ' 个']}; },
