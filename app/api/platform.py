@@ -40,7 +40,12 @@ def _h_source_fetch(p):
         bus.publish("collect.failed", source_id=s["id"], type=s["type"], error=str(e)); raise PermanentError(str(e))
     except Exception as e:
         bus.publish("collect.failed", source_id=s["id"], type=s["type"], error=str(e)); raise
+    before = (db.q("SELECT MAX(id) m FROM products", one=True) or {}).get("m") or 0
     ids = [upsert(s["id"], it) for it in items]
+    new_ids = [i for i in ids if i and i > before]
+    if new_ids:   # v12：新采集到的商品自动做同款去重检测
+        from app.domains.dedup.service import on_new_products
+        on_new_products(new_ids)
     bus.publish("collect.succeeded", source_id=s["id"], type=s["type"], items=len(items)); return {"fetched": len(items), "product_ids": ids}
 def _h_source_fetch_ws(p):
     from app.core import tenancy

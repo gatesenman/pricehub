@@ -1,5 +1,5 @@
 <!doctype html><html lang="zh-CN" data-theme="dark"><head><meta charset="utf-8"><title>PriceHub 价格管理工作台</title><link rel="icon" href="data:,">
-<link rel="stylesheet" href="/static/vendor/codicon.css"><link rel="stylesheet" href="/static/style.css"><script src="/static/vendor/chart.js"></script><script defer src="/static/v4.js"></script><script defer src="/static/app.js"></script><script defer src="/static/v5.js"></script><script defer src="/static/v7.js"></script><script defer src="/static/v8.js"></script><script defer src="/static/v10.js"></script><script defer src="/static/nav.js"></script><script defer src="/static/vendor/alpine.js"></script></head>
+<link rel="stylesheet" href="/static/vendor/codicon.css"><link rel="stylesheet" href="/static/style.css"><script src="/static/vendor/chart.js"></script><script defer src="/static/v4.js"></script><script defer src="/static/app.js"></script><script defer src="/static/v5.js"></script><script defer src="/static/v7.js"></script><script defer src="/static/v8.js"></script><script defer src="/static/v10.js"></script><script defer src="/static/v12.js"></script><script defer src="/static/nav.js"></script><script defer src="/static/vendor/alpine.js"></script></head>
 <body x-data="App()" @keydown.window="keys($event)" @click.window="menuOpen=null;ctx=null;openPid($event)" @mousemove.window="dragMove($event)" @mouseup.window="dragEnd()" @mouseover.window="tipOver($event)">
 <div class="app">
 <div class="menubar" data-menubar><span class="logo"><i class="codicon codicon-pulse"></i> PriceHub</span>
@@ -99,6 +99,9 @@
         <label>最低限价</label><input type="number" x-model="t.cf.map_price" placeholder="控价用，可空"><span></span><button class="btn primary" @click="saveCosts(t)" data-cf-save>保存</button></div>
        <div class="hint" style="margin-top:6px"><span x-text="t.x.in_stock===1?'有货':t.x.in_stock===0?'缺货/下架':'库存未知'" :class="t.x.in_stock===0?'err':t.x.in_stock===1?'ok':''" data-stock></span><span x-show="t.x.gtin" x-text="' · 条码 '+t.x.gtin"></span><span x-show="t.x.rendered" > · 经无头浏览器读取</span></div>
        <template x-if="t.x.variants&&t.x.variants.length"><div style="margin-top:6px" data-variants><b>规格</b><template x-for="v in t.x.variants" :key="v.id"><div class="kvrow"><a href="#" @click.prevent="openProduct(v.id)" x-text="v.variant"></a><span class="mono"><span x-text="money(v.price)"></span> <span :class="v.in_stock===0?'err':'muted'" x-text="v.in_stock===0?'缺货':''"></span></span></div></template></div></template></div></div>
+      <template x-if="(t.listings||[]).length>1"><div class="grp" data-listings><h4><i class="codicon codicon-link"></i> 商品页（已合并 <span x-text="t.listings.length-1"></span> 个）</h4><div class="b">
+        <template x-for="l in t.listings" :key="l.id"><div class="kvrow"><span><span class="mono muted" x-text="'#'+l.id"></span> <span x-text="l.platform"></span> <span class="chip" x-show="l.canonical">主</span></span>
+          <span><span class="muted" x-text="l.n_prices+' 条价格'"></span> <a :href="l.url" target="_blank" x-show="l.url"><i class="codicon codicon-link-external"></i></a></span></div></template></div></div></template>
       <div class="grp" data-advice><h4><i class="codicon codicon-lightbulb"></i> 买入时机建议</h4><div class="b"><template x-if="!t.adv"><div class="muted">价格记录不足</div></template>
        <template x-if="t.adv"><div><div class="big" :class="verdictCls(t.adv.verdict)" x-text="t.adv.verdict" data-verdict></div> <span x-html="confBadge(t.adv.conf)"></span>
         <ul style="margin:6px 0;padding-left:18px"><template x-for="r in t.adv.reasons"><li x-text="r"></li></template></ul>
@@ -328,6 +331,57 @@
        <td><select x-model="r.fallback"><option value="any">任意节点执行</option><option value="wait">等待匹配节点</option><option value="fail">失败进死信</option></select></td>
        <td class="muted" style="white-space:normal" x-text="r.desc||''"></td><td style="width:44px"><button class="btn" @click="t.rules.splice(i,1)" title="删除"><i class="codicon codicon-trash"></i></button></td></tr></template>
       <tr x-show="!(t.rules||[]).length"><td colspan="6" class="muted">还没有规则：所有任务由任意在线节点领取</td></tr></tbody></table></div></div>
+   </div></template>
+   <template x-if="t.type==='dedup'"><div data-v12-dedup style="min-width:0">
+    <div class="filterbar" style="margin:8px 12px;flex-wrap:wrap">
+      <button class="btn" :class="t.view==='queue'&&'primary'" @click="ddView(t,'queue')" data-dd-view-queue>复核队列</button>
+      <button class="btn" :class="t.view==='settings'&&'primary'" @click="ddView(t,'settings')" data-dd-view-settings>自动合并设置</button>
+      <button class="btn" :class="t.view==='log'&&'primary'" @click="ddView(t,'log')" data-dd-view-log>合并记录</button>
+      <span class="muted" x-text="'待处理 '+(t.counts.pending||0)+' · 已合并 '+((t.counts.merged||0)+(t.counts.auto_merged||0))+' · 不是同款 '+(t.counts.not_same||0)" data-dd-counts></span>
+      <button class="btn" style="margin-left:auto" @click="ddScan(t)" :disabled="t.busy" data-dd-scan><i class="codicon codicon-search"></i> <span x-text="t.busy?'扫描中…':'重新扫描'"></span></button></div>
+    <template x-if="t.view==='queue'"><div>
+     <div class="filterbar" style="margin:0 12px 8px;flex-wrap:wrap">
+      状态 <select x-model="t.f.status" @change="loadDedup(t)" data-dd-status><option value="pending">待处理</option><option value="merged">已合并</option><option value="auto_merged">自动合并</option><option value="not_same">不是同款</option><option value="all">全部</option></select>
+      类型 <select x-model="t.f.scope" @change="loadDedup(t)" data-dd-scope><option value="">全部</option><option value="same_platform">同平台不同商品页</option><option value="cross_platform">跨平台同款</option></select>
+      <label><input type="checkbox" @change="ddSelectAll(t,$event.target.checked)" data-dd-selall> 全选</label>
+      <button class="btn primary" @click="ddBatch(t,'merge')" data-dd-batch-merge>批量合并（<span x-text="ddSelIds(t).length"></span>）</button>
+      <button class="btn" @click="ddBatch(t,'not_same')" data-dd-batch-notsame>批量标为不同</button></div>
+     <div class="muted" style="margin:12px" x-show="!(t.items||[]).length">没有符合条件的候选</div>
+     <template x-for="c in t.items" :key="c.id"><div class="grp" style="margin:0 12px 8px" :data-dd-cand="c.a.id+'-'+c.b.id" :data-dd-status-v="c.status">
+      <h4 style="flex-wrap:wrap"><input type="checkbox" x-show="c.status==='pending'" :checked="!!t.sel[c.id]" @change="t.sel[c.id]=$event.target.checked" data-dd-check>
+        <span class="chip" :class="c.score>=0.95?'ok':c.score>=0.85?'':'warn'" x-text="'匹配度 '+Math.round(c.score*100)+'%'" data-dd-score></span>
+        <span class="chip muted" x-text="scopeLabel(c.scope)"></span>
+        <span class="muted" x-show="c.status!=='pending'" x-text="({merged:'已合并',auto_merged:'已自动合并',not_same:'已标为不是同款',superseded:'已失效'})[c.status]||c.status"></span>
+        <span style="margin-left:auto" x-show="c.status==='pending'">
+          <button class="btn primary" @click="ddMerge(t,c)" data-dd-merge title="自动选价格记录多的为主商品">合并</button>
+          <button class="btn" @click="ddMerge(t,c,c.a.id)" data-dd-keep-a x-text="'保留 #'+c.a.id"></button>
+          <button class="btn" @click="ddMerge(t,c,c.b.id)" data-dd-keep-b x-text="'保留 #'+c.b.id"></button>
+          <button class="btn" @click="ddNotSame(t,c)" data-dd-notsame>不是同款</button></span>
+        <span style="margin-left:auto" x-show="c.status==='not_same'"><button class="btn" @click="ddReopen(t,c)">重新考虑</button></span></h4>
+      <div class="b"><div class="row" style="gap:8px">
+        <template x-for="p in [c.a,c.b]" :key="p.id"><div class="grp" style="flex:1;min-width:0"><div class="b">
+          <div><span class="mono muted" x-text="'#'+p.id"></span> <a href="#" @click.prevent="openProduct(p.id)" x-text="p.title"></a></div>
+          <div class="hint"><span x-text="p.platform"></span> · <span x-text="p.last_price!=null?money(p.last_price,p.currency):'无价格'"></span> · <span x-text="(p.n_prices||0)+' 条价格记录'"></span>
+            <a x-show="p.url" :href="p.url" target="_blank" title="打开原商品页"> <i class="codicon codicon-link-external"></i></a></div></div></div></template></div>
+        <ul style="margin:6px 0 0;padding-left:18px" data-dd-reasons><template x-for="w in c.reasons"><li :class="w.startsWith('✕')?'err':''" x-text="w"></li></template></ul></div></div></template>
+    </div></template>
+    <template x-if="t.view==='settings'&&t.cfg"><div class="grp" style="margin:0 12px" data-dd-settings><h4><i class="codicon codicon-settings"></i> 自动合并（只合并高置信候选，跨平台默认关闭）</h4><div class="b">
+      <div class="form" style="grid-template-columns:200px 1fr">
+       <label>进入复核队列的最低匹配度</label><input type="number" step="0.01" min="0.5" max="0.99" x-model.number="t.cfg.suggest_threshold" data-dd-suggest>
+       <label>新采集商品自动检测</label><label><input type="checkbox" x-model="t.cfg.auto_detect" data-dd-autodetect> 采集完成后检测新商品</label>
+       <label>同平台：自动合并</label><label><input type="checkbox" x-model="t.cfg.same_platform.auto" data-dd-same-auto> 开启　阈值 <input type="number" step="0.005" min="0.9" max="1" style="width:80px" x-model.number="t.cfg.same_platform.threshold" data-dd-same-thr></label>
+       <label>跨平台：自动合并</label><label><input type="checkbox" x-model="t.cfg.cross_platform.auto" data-dd-cross-auto> 开启　阈值 <input type="number" step="0.005" min="0.9" max="1" style="width:80px" x-model.number="t.cfg.cross_platform.threshold" data-dd-cross-thr></label>
+      </div>
+      <div class="hint">阈值只能设在 0.90–1.00。条码 / ASIN 一致记 0.99 分；品牌、容量、型号、颜色、成色任一冲突都会压低分数，不会被自动合并。所有合并都记录在「合并记录」里，可随时撤销。</div>
+      <div class="filterbar" style="margin-top:8px"><button class="btn primary" @click="ddSaveCfg(t)" data-dd-save>保存</button></div></div></div></template>
+    <template x-if="t.view==='log'"><div class="grp" style="margin:0 12px" data-dd-log><h4><i class="codicon codicon-history"></i> 合并记录（审计）</h4><div class="b">
+      <table class="grid"><thead><tr><th>时间</th><th>方式</th><th>主商品</th><th>被合并</th><th class="num">移动价格</th><th>状态</th><th></th></tr></thead><tbody>
+      <template x-for="m in t.log" :key="m.id"><tr :data-dd-merge-row="m.id">
+        <td class="mono" x-text="ddTime(m.ts)"></td><td x-text="m.mode==='auto'?'自动':'人工'"></td>
+        <td x-text="'#'+m.canonical_id+' '+((m.canonical||{}).title||'')"></td><td x-text="'#'+m.merged_id+' '+((m.merged||{}).platform||'')"></td>
+        <td class="num" x-text="(m.detail.moved_price_ids||[]).length"></td><td x-text="m.undone_at?'已撤销':'生效中'"></td>
+        <td><button class="btn" x-show="!m.undone_at" @click="ddUndo(t,m)" data-dd-undo>撤销合并</button></td></tr></template>
+      <tr x-show="!(t.log||[]).length"><td colspan="7" class="muted">还没有合并记录</td></tr></tbody></table></div></div></template>
    </div></template>
    <template x-if="t.type==='team'"><div data-v7-team>
     <div class="row"><div class="grp"><h4><i class="codicon codicon-organization"></i> 团队模式</h4><div class="b">

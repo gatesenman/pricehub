@@ -1,7 +1,7 @@
 // 侧栏导航重构：活动栏（工作台 / 商品 / 平台目录 / 设置）+ 按用途分组；筛选节点与打开页面节点区分。
 // 用词：「来源平台」= 商品所在的电商平台；「平台目录」= 内置的 920 个平台。
 const NAV_GROUPS = {
-  work: [['mon', '监控', ['dashboard', 'products', 'alerts', 'rules']], ['ana', '分析', ['compare', 'deep', 'match', 'reports']],
+  work: [['mon', '监控', ['dashboard', 'products', 'alerts', 'rules']], ['ana', '分析', ['compare', 'deep', 'match', 'dedup', 'reports']],
          ['dec', '决策', ['pricing', 'map']], ['srch', '搜索', ['search', 'ai']], ['data', '数据', ['sources', 'official', 'catalog']]],
   settings: [['set', '设置', ['admin', 'nodes']], ['teamg', '团队', ['team', 'usage']]],
 };

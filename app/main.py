@@ -49,11 +49,13 @@ def _legacy_hooks(topic, **kw):
         except Exception as e: __import__("logging").getLogger("pricehub").warning("hook fail", extra={"event": ev, "error": str(e)})
 bus.subscribe("price.recorded", _legacy_hooks, "alerting.rules"); bus.subscribe("stock.changed", _legacy_hooks, "alerting.rules")
 def record_price(pid, price, method, ts=None, in_stock=None):
-    p = db.q("SELECT * FROM products WHERE id=?", (pid,), one=True)
+    p = db.q("SELECT * FROM products WHERE id=?", (pid,), one=True); listing = None
+    if p and p.get("merged_into"):   # v12：已合并的商品页继续采到的价格，记到主商品名下并保留来源商品页
+        listing = pid; pid = p["merged_into"]; p = db.q("SELECT * FROM products WHERE id=?", (pid,), one=True)
     hist = [r["price"] for r in db.q("SELECT price FROM prices WHERE product_id=? ORDER BY id DESC LIMIT 10", (pid,))]
     c = CF.score_price(price, method, hist, _group_latest(p["group_key"], pid), p.get("currency"), p.get("title"))
-    db.ex("INSERT INTO prices(product_id,price,ts,confidence,conf_level,conf_basis,method,in_stock) VALUES(?,?,COALESCE(?,datetime('now')),?,?,?,?,?)",
-          (pid, price, ts, c["confidence"], c["level"], json.dumps(c["basis"], ensure_ascii=False), method, in_stock))
+    db.ex("INSERT INTO prices(product_id,price,ts,confidence,conf_level,conf_basis,method,in_stock,listing_id) VALUES(?,?,COALESCE(?,datetime('now')),?,?,?,?,?,?)",
+          (pid, price, ts, c["confidence"], c["level"], json.dumps(c["basis"], ensure_ascii=False), method, in_stock, listing))
     if not ts: _fire("price", pid=pid, price=price, prev=hist[0] if hist else None)
     return c
 def migrate_confidence():
@@ -211,7 +213,11 @@ def fetch_source(sid: int):
     try: items = sources.make(s["type"], json.loads(s["config"])).fetch()
     except Exception as e:
         bus.publish("collect.failed", source_id=sid, type=s["type"], error=str(e)); raise HTTPException(502, f"数据源抓取失败: {e}")
+    before = (db.q("SELECT MAX(id) m FROM products", one=True) or {}).get("m") or 0
     ids = [upsert(sid, it) for it in items]
+    if [i for i in ids if i and i > before]:
+        from app.domains.dedup.service import on_new_products
+        on_new_products([i for i in ids if i and i > before])
     bus.publish("collect.succeeded", source_id=sid, type=s["type"], items=len(items)); return {"fetched": len(items), "product_ids": ids}
 def fetch_all(wait=True):
     """定时监控：每个数据源作为一个调度任务提交（按域名限速、失败退避重试、最终进死信）。"""
@@ -239,7 +245,7 @@ def products(category: str = "", chain: str = "", platform: str = "", q: str = "
     return out
 _CACHE = {}
 def _products(category, chain, platform, q):
-    sql = "SELECT p.* FROM products p WHERE 1=1"; a = []
+    sql = "SELECT p.* FROM products p WHERE p.merged_into IS NULL"; a = []
     for col, v in (("category", category), ("platform", platform)):
         if v: sql += f" AND {col}=?"; a.append(v)
     if chain: sql += " AND chain LIKE ?"; a.append(chain + "%")
@@ -351,3 +357,4 @@ from .api import v8_platform  # noqa: F401  渲染池/扩展/pgvector  # noqa: E
 from .api import backtest as _bt  # noqa: E402,F401  v9 预测回测
 from . import v6  # noqa: E402  v6 平台化：插件 SDK、调度器、事件总线、指标、API 版本化
 from .api import nodes as _nodes  # noqa: E402,F401  v10 分布式采集节点（须在 v6/platform 之后导入）
+from .api import dedup as _dedup  # noqa: E402,F401  v12 同款去重

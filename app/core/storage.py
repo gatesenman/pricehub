@@ -34,11 +34,15 @@ CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, email TEXT UNIQUE, name
 CREATE TABLE IF NOT EXISTS memberships(id INTEGER PRIMARY KEY, user_id INTEGER, ws_id INTEGER, role TEXT, created TEXT DEFAULT (datetime('now')), UNIQUE(user_id, ws_id));
 CREATE TABLE IF NOT EXISTS invites(id INTEGER PRIMARY KEY, ws_id INTEGER, email TEXT, role TEXT, token_hash TEXT UNIQUE, created_by INTEGER, created TEXT DEFAULT (datetime('now')), accepted_at TEXT);
 CREATE TABLE IF NOT EXISTS sessions(id INTEGER PRIMARY KEY, token_hash TEXT UNIQUE, user_id INTEGER, ws_id INTEGER, created TEXT DEFAULT (datetime('now')), expires TEXT);
+CREATE TABLE IF NOT EXISTS dedup_candidates(id INTEGER PRIMARY KEY, a_id INTEGER, b_id INTEGER, score REAL, scope TEXT, reasons TEXT, signals TEXT, status TEXT DEFAULT 'pending',
+  created TEXT DEFAULT (datetime('now')), decided_at TEXT, workspace_id INTEGER NOT NULL DEFAULT 1, UNIQUE(workspace_id, a_id, b_id));
+CREATE TABLE IF NOT EXISTS product_merges(id INTEGER PRIMARY KEY, canonical_id INTEGER, merged_id INTEGER, candidate_id INTEGER, mode TEXT, actor TEXT, detail TEXT,
+  ts TEXT DEFAULT (datetime('now')), undone_at TEXT, workspace_id INTEGER NOT NULL DEFAULT 1);
 CREATE TABLE IF NOT EXISTS usage(id INTEGER PRIMARY KEY, ws_id INTEGER, metric TEXT, period TEXT, n INTEGER DEFAULT 0, UNIQUE(ws_id, metric, period));
 """
-MIGRATIONS = {"prices": [("confidence", "REAL"), ("conf_level", "TEXT"), ("conf_basis", "TEXT"), ("method", "TEXT"), ("in_stock", "INTEGER")],
+MIGRATIONS = {"prices": [("listing_id", "INTEGER"), ("confidence", "REAL"), ("conf_level", "TEXT"), ("conf_basis", "TEXT"), ("method", "TEXT"), ("in_stock", "INTEGER")],
               "products": [("seller", "TEXT"), ("attrs", "TEXT"), ("gtin", "TEXT"), ("model", "TEXT"), ("in_stock", "INTEGER"), ("shipping", "REAL"), ("tax_rate", "REAL"),
-                           ("coupon", "REAL"), ("map_price", "REAL"), ("target_price", "REAL"), ("variant", "TEXT"), ("parent_id", "INTEGER"), ("rendered", "INTEGER")]}
+                           ("coupon", "REAL"), ("map_price", "REAL"), ("target_price", "REAL"), ("variant", "TEXT"), ("parent_id", "INTEGER"), ("rendered", "INTEGER"), ("merged_into", "INTEGER")]}
 INDEXES = ["CREATE INDEX IF NOT EXISTS ix_products_ws_id ON products(workspace_id, id)", "DROP INDEX IF EXISTS ix_products_ws", "CREATE INDEX IF NOT EXISTS ix_sources_ws ON sources(workspace_id)",
            "INSERT OR IGNORE INTO workspaces(id,name,slug,plan) VALUES(1,'默认工作区','default','desktop')","CREATE INDEX IF NOT EXISTS ix_prices_pid ON prices(product_id, id)", "CREATE INDEX IF NOT EXISTS ix_products_gk ON products(group_key)",
            "CREATE INDEX IF NOT EXISTS ix_products_platform ON products(platform)", "CREATE INDEX IF NOT EXISTS ix_alerts_pid ON alerts(product_id)"]
