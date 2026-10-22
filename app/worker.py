@@ -1,7 +1,10 @@
 """独立采集 worker 进程：python -m app.worker [--concurrency 4]
 从 Redis Streams 队列取任务执行（需 PRICEHUB_QUEUE=redis）。与 API 进程共用数据库与插件目录，可多机多进程水平扩展。"""
 import os, sys, time, argparse, signal, logging
-ap = argparse.ArgumentParser(); ap.add_argument("--concurrency", type=int, default=int(os.environ.get("PRICEHUB_WORKERS", "4"))); a = ap.parse_args()
+ap = argparse.ArgumentParser(); ap.add_argument("--concurrency", type=int, default=int(os.environ.get("PRICEHUB_WORKERS", "4")))
+ap.add_argument("--region", default=None, help="节点地域，如 cn / us"); ap.add_argument("--tags", default=None, help="节点标签，逗号分隔，如 residential-proxy,playwright"); a = ap.parse_args()
+if a.region is not None: os.environ["PRICEHUB_NODE_REGION"] = a.region
+if a.tags is not None: os.environ["PRICEHUB_NODE_TAGS"] = a.tags
 os.environ["PRICEHUB_QUEUE"] = os.environ.get("PRICEHUB_QUEUE", "redis"); os.environ["PRICEHUB_EMBEDDED_WORKER"] = "1"; os.environ["PRICEHUB_WORKERS"] = str(a.concurrency)
 os.environ.setdefault("PRICEHUB_NO_ST", "1"); os.environ.setdefault("PRICEHUB_NO_CLIP", "1")   # worker 不需要搜索模型
 from app import main  # noqa: E402  加载数据源、插件、任务处理函数

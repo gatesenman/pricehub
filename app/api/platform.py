@@ -49,7 +49,10 @@ SCHED.register_handler("source.fetch", _h_source_fetch_ws)
 def submit_source_fetch(sid, priority=5, max_attempts=4):
     s = db.q("SELECT * FROM sources WHERE id=?", (sid,), one=True) or {"type": "default"}
     from app.core import tenancy
-    return SCHED.submit("source.fetch", {"source_id": sid, "ws": tenancy.current()}, key=source_key(s), priority=priority, max_attempts=max_attempts)
+    from app.core import routing
+    pl = {"source_id": sid, "ws": tenancy.current()}; req = routing.require_for_source(s)
+    if req: pl["_require"] = req
+    return SCHED.submit("source.fetch", pl, key=source_key(s), priority=priority, max_attempts=max_attempts)
 @app.get("/api/scheduler")
 def scheduler_stats():
     st = SCHED.stats(); st["dead_letters"] = (db.q("SELECT COUNT(*) n FROM dead_letters", one=True) or {}).get("n", 0); obs.QUEUE.set(st["ready"] + st["delayed"]); return st
@@ -131,7 +134,7 @@ def readyz():
     checks["renderer"] = {"ok": True, **render.status()}
     checks["plugins"] = {"ok": all(p["state"] == "active" for p in sdk.PLUGINS.values()), "count": len(sdk.PLUGINS)}
     from app import search
-    checks["vector_index"] = {"ok": True, "engine": search.VECTOR_ENGINE}
+    checks["vector_index"] = {"ok": True, "engine": search.VECTOR_ENGINE, "active": getattr(search, "vector_engine_now", lambda: None)(), "pgvector": __import__("app.core.pgvector_store", fromlist=["status"]).status()}
     ok = checks["database"]["ok"]
     return Response(json.dumps({"status": "ready" if ok else "not_ready", "checks": checks}, ensure_ascii=False), status_code=200 if ok else 503, media_type="application/json")
 @app.middleware("http")

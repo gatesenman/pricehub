@@ -296,16 +296,17 @@
         <div class="hint" x-show="a.last_test" x-text="(a.last_test||{}).ok?('上次测连成功，样本 '+(a.last_test||{}).count+' 条'):('上次测连失败：'+((a.last_test||{}).error||''))"></div>
       </div></div></template>
    </div></template>
-   <template x-if="t.type==='nodes'"><div data-v10-nodes>
+   <template x-if="t.type==='nodes'"><div data-v10-nodes style="min-width:0;overflow-x:hidden">
     <div class="hint" style="margin:8px 12px" x-show="t.n&&t.n.hint" x-text="t.n&&t.n.hint" data-nodes-hint></div>
     <div class="hint err" style="margin:8px 12px" x-show="t.err" x-text="t.err"></div>
     <div class="grp" style="margin:8px 12px"><h4><i class="codicon codicon-server-environment"></i> 采集节点
       <span class="muted" x-text="t.n?(' · 队列 '+(t.n.backend==='redis'?'Redis Streams':'内存')+' · 在线 '+t.n.online+' 个 · 待执行 '+((t.n.queue||{}).ready||0)+(t.n.lease_s?' · 租约 '+t.n.lease_s+' 秒':'')):''" data-nodes-summary></span>
       <span style="margin-left:auto"><button class="btn" @click="loadNodes(t)" data-nodes-refresh><i class="codicon codicon-refresh"></i> 刷新</button>
       <button class="btn primary" @click="probeNodes(t)" :disabled="t.probing" data-nodes-probe><i class="codicon codicon-pulse"></i> <span x-text="t.probing?'探测中…':'派发探测任务'"></span></button></span></h4>
-     <div class="b"><table class="grid" data-nodes-table><thead><tr><th>节点</th><th>状态</th><th class="num">并发</th><th class="num">执行中</th><th class="num">完成</th><th class="num">失败</th><th class="num">接管</th><th>最后心跳</th><th class="num">本次探测</th><th style="width:150px"></th></tr></thead>
+     <div class="b" style="overflow-x:auto"><table class="grid" data-nodes-table><thead><tr><th>节点</th><th>地域 / 标签</th><th>状态</th><th class="num">并发</th><th class="num">执行中</th><th class="num">完成</th><th class="num">失败</th><th class="num">接管</th><th>最后心跳</th><th class="num">本次探测</th><th style="width:150px"></th></tr></thead>
       <tbody><template x-for="n in (t.n&&t.n.nodes)||[]" :key="n.id"><tr :data-node="n.id" :data-node-status="n.status">
        <td><i class="codicon codicon-vm"></i> <span class="mono" x-text="n.id"></span><span class="muted" x-show="n.embedded"> · 内嵌</span></td>
+       <td data-node-labels><span class="chip" x-show="n.region" x-text="n.region"></span><template x-for="g in n.tags||[]" :key="g"><span class="chip muted" x-text="g"></span></template><span class="muted" x-show="!n.region&&!(n.tags||[]).length">未声明</span></td>
        <td><span :class="nodeStatus(n.status)[1]" x-text="nodeStatus(n.status)[0]"></span></td>
        <td class="num" x-text="n.concurrency"></td><td class="num" x-text="n.busy"></td><td class="num" x-text="n.done"></td><td class="num" x-text="n.failed"></td><td class="num" x-text="n.reclaimed"></td>
        <td x-text="nodeAge(n.age_s)"></td><td class="num" x-text="(t.probe||{})[n.id]||''"></td>
@@ -313,7 +314,20 @@
          <button class="btn" x-show="n.status==='online'" @click="nodeCmd(t,n,'drain')" data-node-drain>排空</button>
          <button class="btn" x-show="n.status==='draining'" @click="nodeCmd(t,n,'resume')" data-node-resume>恢复</button>
          <button class="btn" x-show="n.status==='offline'||n.status==='stopped'" @click="nodeCmd(t,n,'forget')" data-node-forget>移除</button></span></template></td></tr></template></tbody></table>
+      <div class="filterbar" style="margin-top:8px;flex-wrap:wrap" data-route-probe><b>按要求派发探测</b> 地域 <input style="width:70px" x-model="t.pq.region" placeholder="如 cn" data-pq-region> 标签 <input style="width:180px" x-model="t.pq.tags" placeholder="如 playwright,residential-proxy" data-pq-tags>
+        无匹配时 <select x-model="t.pq.fallback" data-pq-fallback><option value="any">任意节点执行</option><option value="wait">等待</option><option value="fail">失败</option></select>
+        <button class="btn" @click="probeRouted(t)" :disabled="t.probing" data-pq-run>派发</button><span class="hint" x-text="t.probeMsg" data-pq-msg></span></div>
       <div class="hint" style="margin-top:6px">节点每隔几秒发一次心跳；超过 3 次没心跳显示为离线。节点宕机后，它手上的任务在租约到期后由其他在线节点自动接管重跑。启动新节点：<span class="mono">PRICEHUB_QUEUE=redis python -m app.worker</span></div></div></div>
+    <div class="grp" style="margin:8px 12px" data-route-rules><h4 style="flex-wrap:wrap"><i class="codicon codicon-list-filter"></i> 派发规则 <span class="muted">· 按平台域名或数据源类型（* 表示全部）指定所需节点，从上到下第一条命中生效；数据源配置里的 require 优先</span>
+      <span style="margin-left:auto"><button class="btn" @click="addRule(t)" data-rule-add><i class="codicon codicon-add"></i> 添加</button><button class="btn primary" @click="saveRules(t)" data-rule-save>保存</button></span></h4>
+     <div class="b" style="overflow-x:auto"><table class="grid" style="table-layout:fixed;width:100%"><thead><tr><th>匹配（平台 / 类型）</th><th>地域（逗号分隔，满足其一）</th><th>标签（需全部具备）</th><th>无匹配节点时</th><th>当前说明</th><th></th></tr></thead><tbody>
+      <template x-for="(r,i) in t.rules||[]" :key="i"><tr data-rule-row>
+       <td><input x-model="r.match" placeholder="如 jd.com / platform / *" data-rule-match style="width:100%;box-sizing:border-box"></td>
+       <td><input :value="ruleText(r,'region')" @input="r._region=$event.target.value" placeholder="cn" data-rule-region style="width:100%;box-sizing:border-box"></td>
+       <td><input :value="ruleText(r,'tags')" @input="r._tags=$event.target.value" placeholder="playwright" data-rule-tags style="width:100%;box-sizing:border-box"></td>
+       <td><select x-model="r.fallback"><option value="any">任意节点执行</option><option value="wait">等待匹配节点</option><option value="fail">失败进死信</option></select></td>
+       <td class="muted" style="white-space:normal" x-text="r.desc||''"></td><td style="width:44px"><button class="btn" @click="t.rules.splice(i,1)" title="删除"><i class="codicon codicon-trash"></i></button></td></tr></template>
+      <tr x-show="!(t.rules||[]).length"><td colspan="6" class="muted">还没有规则：所有任务由任意在线节点领取</td></tr></tbody></table></div></div>
    </div></template>
    <template x-if="t.type==='team'"><div data-v7-team>
     <div class="row"><div class="grp"><h4><i class="codicon codicon-organization"></i> 团队模式</h4><div class="b">

@@ -316,7 +316,7 @@ def s_cat(category: str): return products(category=category)
 @app.get("/api/search/keyword")
 def s_kw(q: str): return products(q=q)
 @app.get("/api/search/semantic")
-def s_sem(q: str, k: int = 10, min_score: float = 0.0): return {"engine": search.ENGINE, "results": search.semantic(q, products(), k, min_score, key=("all", db.VER[0]))}
+def s_sem(q: str, k: int = 10, min_score: float = 0.0): r = search.semantic(q, products(), k, min_score, key=("all", db.VER[0])); return {"engine": search.ENGINE, "vector_engine": getattr(search, "vector_engine_now", lambda: None)(), "results": r}
 @app.post("/api/search/image")
 async def s_img(file: UploadFile = File(...), k: int = 10):
     t = tempfile.NamedTemporaryFile(delete=False, suffix=".img"); t.write(await file.read()); t.close()

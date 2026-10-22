@@ -23,7 +23,7 @@ class RJob:
         raise AttributeError(name)
     def view(self):
         h = self._h(); return {"id": self.id, "kind": h.get("kind"), "key": h.get("key"), "priority": int(h.get("priority") or 0), "attempts": int(h.get("attempts") or 0),
-                               "state": h.get("state"), "error": h.get("error") or None, "worker": h.get("worker"), "reclaimed_from": h.get("reclaimed_from") or None, "payload": json.loads(h.get("payload") or "{}"), "backend": "redis"}
+                               "state": h.get("state"), "error": h.get("error") or None, "worker": h.get("worker"), "reclaimed_from": h.get("reclaimed_from") or None, "route": h.get("route") or None, "route_desc": h.get("route_desc") or None, "payload": json.loads(h.get("payload") or "{}"), "backend": "redis"}
 class RedisScheduler:
     backend = "redis"
     def __init__(self, url, workers=4, rate=1.0, burst=3, base_backoff=2.0, max_backoff=300.0, dead_sink=None, on_result=None, prefix="pricehub:", consume=True):
@@ -35,7 +35,8 @@ class RedisScheduler:
         # v10 分布式采集节点：注册、心跳、租约
         self.heartbeat_s = float(os.environ.get("PRICEHUB_HEARTBEAT_S", "5")); self.lease_s = float(os.environ.get("PRICEHUB_LEASE_S", "30"))
         self.node_ttl = max(3 * self.heartbeat_s, 10); self.started_at = time.time(); self._inflight = {}; self._il = threading.Lock()
-        self._n = {"done": 0, "failed": 0, "reclaimed": 0}; self.draining = False
+        self._n = {"done": 0, "failed": 0, "reclaimed": 0, "deferred": 0, "fallback": 0}; self.draining = False
+        from . import routing as _routing; self.routing = _routing; self.labels = _routing.node_labels(); self._online_cache = (0, [])
         for p in range(10):
             try: self.r.xgroup_create(self.k(f"q:{p}"), "workers", id="0", mkstream=True)
             except Exception as e:
@@ -70,7 +71,8 @@ class RedisScheduler:
         with self._il: busy = len(self._inflight)
         return {"id": self.consumer, "host": socket.gethostname(), "pid": os.getpid(), "concurrency": self.workers_n, "busy": busy,
                 "done": self._n["done"], "failed": self._n["failed"], "reclaimed": self._n["reclaimed"], "started_at": self.started_at,
-                "last_seen": time.time(), "status": "draining" if self.draining else "online", "lease_s": self.lease_s}
+                "last_seen": time.time(), "status": "draining" if self.draining else "online", "lease_s": self.lease_s,
+                "region": self.labels["region"], "tags": self.labels["tags"], "deferred": self._n["deferred"], "fallback": self._n["fallback"]}
     def _remember(self, **extra):
         info = {**self._node_info(), **extra}; self.r.hset(self.k("nodes:last"), self.consumer, json.dumps(info))
     def _beat(self):
@@ -152,9 +154,42 @@ class RedisScheduler:
     def _throttle(self, key):
         rate = float(self.r.hget(self.k("rates"), key) or self.default_rate)
         return float(self._rl(keys=[self.k(f"rl:{key}")], args=[time.time(), 1.0 / rate]))
+    def _online_labels(self):
+        t, v = self._online_cache
+        if time.time() - t < 1.0: return v
+        out = []
+        for nid in self.r.smembers(self.k("nodes")):
+            raw = self.r.hgetall(self.k(f"node:{nid}"))
+            if not raw: continue
+            info = {k: json.loads(x) for k, x in raw.items()}
+            if info.get("status") == "online" and self.r.hget(self.k("nodes:cmd"), nid) != "drain": out.append(info)
+        self._online_cache = (time.time(), out); return out
+    def _route(self, jid, hk, h):
+        """返回 True 表示本节点执行；False 表示已延后/处理掉。"""
+        req = self.routing.normalize((json.loads(h.get("payload") or "{}") or {}).get("_require"))
+        if not req: return True
+        if self.routing.match(self.labels, req):
+            self.r.hset(hk, mapping={"route": "matched", "route_desc": self.routing.describe(req)}); return True
+        others = [n for n in self._online_labels() if n.get("id") != self.consumer and self.routing.match(n, req)]
+        if others:   # 有匹配节点在线：放回队列让它领
+            self._n["deferred"] += 1; self.r.hincrby(self.k("stats"), "deferred", 1)
+            self.r.hset(hk, mapping={"state": "routing", "route_desc": self.routing.describe(req)}); self.r.zadd(self.k("delayed"), {jid: time.time() + 0.2}); return False
+        fb = req["fallback"]
+        if fb == "any":
+            self._n["fallback"] += 1; self.r.hincrby(self.k("stats"), "fallback", 1)
+            self.r.hset(hk, mapping={"route": "fallback", "route_desc": self.routing.describe(req)}); return True
+        if fb == "wait":
+            self.r.hset(hk, mapping={"state": "waiting_node", "route_desc": self.routing.describe(req)}); self.r.zadd(self.k("delayed"), {jid: time.time() + 2}); return False
+        self.r.hset(hk, mapping={"state": "dead", "error": "没有满足要求的在线节点：" + self.routing.describe(req), "route": "unroutable"})
+        self.r.hincrby(self.k("stats"), "dead", 1)
+        if self.dead_sink:
+            try: self.dead_sink(RJob(self, jid))
+            except Exception as e: log.error("dead sink failed", extra={"error": str(e)})
+        self._emit(RJob(self, jid), "dead"); return False
     def _run(self, jid):
         hk = self.k(f"job:{jid}"); h = self.r.hgetall(hk)
         if not h or h.get("state") in ("done", "dead"): return
+        if not self._route(jid, hk, h): return
         wait = self._throttle(h["key"])
         if wait > 0:
             self.r.hset(hk, "state", "throttled"); self.r.hincrby(self.k("stats"), "throttled", 1); self.r.zadd(self.k("delayed"), {jid: time.time() + wait}); return

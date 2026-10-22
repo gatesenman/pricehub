@@ -38,3 +38,32 @@ class VectorIndex:
         if self.index is not None:
             D, I = self.index.search(q, k); m = I[0] >= 0; return I[0][m], D[0][m]
         s = self.M @ q[0]; idx = np.argpartition(-s, k - 1)[:k] if n > k else np.arange(n); idx = idx[np.argsort(-s[idx])]; return idx, s[idx]
+
+def make_index(n):
+    """v11：按规模与配置选择向量引擎。PRICEHUB_VECTOR_ENGINE=auto|pgvector|faiss|numpy。
+    auto：PostgreSQL + pgvector 可用且 n ≥ HNSW_MIN 时用 pgvector，否则 FAISS HNSW / numpy 精确。"""
+    eng = os.environ.get("PRICEHUB_VECTOR_ENGINE", "auto")
+    if eng == "pgvector" or (eng == "auto" and n >= HNSW_MIN):
+        try:
+            from app.core import pgvector_store as pv
+            if pv.available().get("ok"): return pv.PgVectorIndex()
+        except Exception: pass
+    return VectorIndex(kind="numpy" if eng == "numpy" else "auto")
+class FallbackIndex:
+    """包一层：主引擎（pgvector）出错时自动换成 FAISS/numpy 并记录原因。"""
+    def __init__(self, n): self.primary = make_index(n); self.fallback = None; self.error = None
+    @property
+    def engine(self): return (self.fallback or self.primary).engine
+    def build(self, M):
+        self.M = M
+        try: self.primary.build(M)
+        except Exception as e: self._fall(e)
+        return self
+    def _fall(self, e):
+        self.error = str(e); self.fallback = VectorIndex().build(self.M)
+        import logging; logging.getLogger("pricehub.vector").warning("vector engine fallback", extra={"error": self.error})
+    def size(self): return (self.fallback or self.primary).size()
+    def search(self, q, k=10):
+        if self.fallback: return self.fallback.search(q, k)
+        try: return self.primary.search(q, k)
+        except Exception as e: self._fall(e); return self.fallback.search(q, k)

@@ -22,7 +22,9 @@ class Job:
     def __init__(self, kind, payload, key, priority, max_attempts):
         self.id = next(Job._ids); self.kind, self.payload, self.key, self.priority, self.max_attempts = kind, payload, key, priority, max_attempts
         self.attempts = 0; self.state = "queued"; self.result = None; self.error = None; self.created = time.time(); self.done = threading.Event(); self.history = []
-    def view(self): return {"id": self.id, "kind": self.kind, "key": self.key, "priority": self.priority, "attempts": self.attempts, "state": self.state, "error": self.error, "payload": self.payload}
+    def view(self): return {"id": self.id, "kind": self.kind, "key": self.key, "priority": self.priority, "attempts": self.attempts, "state": self.state, "error": self.error, "payload": self.payload, "route": getattr(self, "route", None), "route_desc": getattr(self, "route_desc", None)}
+def routing_labels():
+    from . import routing; return routing.node_labels()
 class Scheduler:
     def __init__(self, workers=4, rate=1.0, burst=2, base_backoff=2.0, max_backoff=300.0, dead_sink=None, on_result=None):
         self.handlers = {}; self.ready = []; self.delayed = []; self.seq = itertools.count(); self.cv = threading.Condition()
@@ -71,6 +73,22 @@ class Scheduler:
                 with self.cv: self.active -= 1
     def backoff(self, attempt): return min(self.max_backoff, self.base_backoff * (2 ** (attempt - 1))) * random.uniform(0.8, 1.2)
     def _run(self, j):
+        from . import routing
+        req = routing.normalize((j.payload or {}).get("_require") if isinstance(j.payload, dict) else None)
+        if req:
+            j.route_desc = routing.describe(req)
+            if routing.match(routing.node_labels(), req): j.route = "matched"
+            elif req["fallback"] == "any": j.route = "fallback"; self.stats_c["fallback"] += 1
+            elif req["fallback"] == "wait":
+                j.state = "waiting_node"
+                with self.cv: heapq.heappush(self.delayed, (time.monotonic() + 2, next(self.seq), j))
+                return
+            else:
+                j.state = "dead"; j.route = "unroutable"; j.error = "没有满足要求的在线节点：" + j.route_desc; self.stats_c["dead"] += 1
+                if self.dead_sink:
+                    try: self.dead_sink(j)
+                    except Exception as e: log.error("dead sink failed", extra={"error": str(e)})
+                self._emit(j, "dead"); j.done.set(); return
         fn, retry_on, permanent_on = self.handlers[j.kind]; j.attempts += 1; j.state = "running"; t0 = time.time()
         try:
             j.result = fn(j.payload); j.state = "done"; j.error = None; self.stats_c["done"] += 1
@@ -102,7 +120,7 @@ class Scheduler:
         import socket, os
         c = self.stats_c
         return [{"id": f"{socket.gethostname()}-{os.getpid()}", "host": socket.gethostname(), "pid": os.getpid(), "concurrency": self.workers_n,
-                 "busy": self.active, "done": c.get("done", 0), "failed": c.get("dead", 0), "reclaimed": 0, "status": "online" if self.running else "idle",
+                 "busy": self.active, "done": c.get("done", 0), "failed": c.get("dead", 0), "reclaimed": 0, **routing_labels(), "fallback": c.get("fallback", 0), "deferred": 0, "status": "online" if self.running else "idle",
                  "last_seen": time.time(), "age_s": 0, "embedded": True, "lease_s": None, "cmd": None}]
     def node_command(self, nid, cmd): raise ValueError("内存队列不支持远程节点控制，请改用 Redis 队列")
     def forget_node(self, nid): return False
