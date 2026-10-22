@@ -88,7 +88,11 @@ def _stl_arima(y, horizon):
         trend_fc = [k * (len(y) + i) + b for i in range(horizon)]
     pts = [round(float(t + seasonal_last), 2) for t in trend_fc]
     lo, hi, sigma = _ci_from_resid(np.asarray(resid[~np.isnan(resid)]), pts[-1])
-    return {"points": pts, "ci_low": [round(p - 1.645 * sigma, 2) for p in pts], "ci_high": [round(p + 1.645 * sigma, 2) for p in pts],
+    # v9：回测发现仅用 STL 残差的区间过窄（90% 区间实际覆盖约 15%）。改为取残差与一阶差分波动的较大者，并随步长按 sqrt(h) 放宽。
+    sigma = max(sigma, float(np.std(np.diff(y))) if len(y) > 2 else sigma)
+    lo_hi = [(round(p - 1.645 * sigma * math.sqrt(i + 1), 2), round(p + 1.645 * sigma * math.sqrt(i + 1), 2)) for i, p in enumerate(pts)]
+    lo, hi = lo_hi[-1]
+    return {"points": pts, "ci_low": [a for a, _ in lo_hi], "ci_high": [b for _, b in lo_hi],
             "point": pts[-1], "ci90": [lo, hi], "sigma": sigma, "engine": "stl+arima",
             "seasonal_strength": round(float(1 - np.var(resid[~np.isnan(resid)]) / max(np.var(y), 1e-9)), 3)}
 

@@ -22,3 +22,12 @@ def tb(q: str = "headphones", page: str = "1"): return {"items": _items("tb-"+q,
 def keepa(q: str = "headphones", page: str = "1"): return {"items": _items("keepa-"+q, page)}
 @app.get("/search.json")
 def serp(q: str = "headphones", page: str = "1"): return {"items": _items("serp-"+q, page)}
+_FLAKY = {"n": 0}
+@app.get("/flaky/search")
+def flaky(q: str = "x", page: str = "1", fail: int = 2, code: int = 503):
+    """前 fail 次返回错误（带 Retry-After），之后成功；用于重试/熔断测试。"""
+    _FLAKY["n"] += 1
+    if _FLAKY["n"] <= fail: return JSONResponse({"error": "busy"}, code, headers={"Retry-After": "0.1"})
+    return {"items": _items("flaky-"+q, page)}
+@app.post("/flaky/reset")
+def flaky_reset(): _FLAKY["n"] = 0; return {"ok": True}

@@ -30,6 +30,32 @@ class RateLimiter:
             now = time.time(); nxt = self._next.get(key, 0); delay = max(0, nxt - now); self._next[key] = max(now, nxt) + gap
         if delay: time.sleep(delay)
 _RL = RateLimiter()
+class CircuitBreaker:
+    """连续失败达到阈值后熔断一段时间，避免对官方接口反复冲击（尊重对方限流，不做绕过）。"""
+    def __init__(self, threshold=5, cooldown=60.0):
+        self.threshold, self.cooldown = threshold, cooldown; self._s = {}; self._lock = threading.Lock()
+    def state(self, key):
+        with self._lock:
+            st = self._s.get(key) or {"fails": 0, "open_until": 0}
+            return {"fails": st["fails"], "open": time.time() < st["open_until"], "open_until": st["open_until"]}
+    def check(self, key):
+        st = self.state(key)
+        if st["open"]: raise RetryableError(f"熔断中：连续失败 {st['fails']} 次，{int(st['open_until'] - time.time()) + 1} 秒后再试")
+    def record(self, key, ok, threshold=None, cooldown=None):
+        with self._lock:
+            st = self._s.setdefault(key, {"fails": 0, "open_until": 0})
+            if ok: st["fails"] = 0; st["open_until"] = 0; return
+            st["fails"] += 1
+            if st["fails"] >= (threshold or self.threshold): st["open_until"] = time.time() + (cooldown if cooldown is not None else self.cooldown)
+    def reset(self, key=None):
+        with self._lock:
+            if key: self._s.pop(key, None)
+            else: self._s.clear()
+BREAKER = CircuitBreaker()
+def _retry_after(r, default):
+    v = r.headers.get("retry-after") if r is not None else None
+    try: return min(30.0, max(0.0, float(v)))
+    except (TypeError, ValueError): return default
 class OfficialApiAdapter:
     meta: AdapterMeta = None
     def __init__(self, credentials: dict = None, config: dict = None, mock_base_url: str = None):
@@ -47,6 +73,20 @@ class OfficialApiAdapter:
         if self.mock_base_url: return self.mock_base_url + path
         return (self.config.get("base_url") or "") + path
     def request(self, method, path, **kw):
+        """带重试：429/5xx/网络错误按指数退避重试（遵守 Retry-After），连续失败触发熔断。"""
+        key = self.meta.id; BREAKER.check(key)
+        retries = int(self.config.get("max_retries", 2)); base = float(self.config.get("backoff_base", 0.5))
+        thr = int(self.config.get("breaker_threshold", 5)); cool = float(self.config.get("breaker_cooldown", 60))
+        attempt = 0
+        while True:
+            try:
+                r = self._request_once(method, path, **dict(kw)); BREAKER.record(key, True); return r
+            except RetryableError as e:
+                BREAKER.record(key, False, thr, cool); attempt += 1
+                if attempt > retries or BREAKER.state(key)["open"]: raise
+                delay = _retry_after(getattr(e, "response", None), base * (2 ** (attempt - 1)))
+                self._audit.append({"ok": False, "retry": attempt, "sleep": round(delay, 2), "error": str(e)}); time.sleep(delay)
+    def _request_once(self, method, path, **kw):
         _RL.wait(self.meta.id, float(self.config.get("rate_limit_rps") or self.meta.rate_limit_rps))
         url = self.build_url(path); headers = {**(kw.pop("headers", {}) or {}), **self.auth_headers()}
         t0 = time.time()
@@ -58,7 +98,8 @@ class OfficialApiAdapter:
         entry = {"ok": 200 <= r.status_code < 300, "status": r.status_code, "url": url, "ms": int((time.time()-t0)*1000), "bytes": len(r.content)}
         self._audit.append(entry)
         if r.status_code in (401, 403): raise PluginError(f"鉴权失败 HTTP {r.status_code}")
-        if r.status_code == 429 or r.status_code >= 500: raise RetryableError(f"HTTP {r.status_code}")
+        if r.status_code == 429 or r.status_code >= 500:
+            err = RetryableError(f"HTTP {r.status_code}"); err.response = r; raise err
         if r.status_code >= 400: raise PluginError(self.map_error(r))
         return r
     def map_error(self, r) -> str:

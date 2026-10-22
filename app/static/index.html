@@ -106,6 +106,11 @@
           <div class="pbar"><div :style="'width:'+((t.adv.buy.probability||0)*100)+'%'"></div></div></div></template>
         <template x-if="t.adv.ci90"><div class="hint" data-forecast-ci x-text="'预测中枢 '+(t.adv.point_forecast??'')+'，90% 置信区间 '+((t.adv.ci90||[])[0]??'')+'–'+((t.adv.ci90||[])[1]??'')+'（引擎 '+(t.adv.forecast_engine||'')+'）'"></div></template>
         <template x-if="t.adv.elasticity&&t.adv.elasticity.ok"><div class="hint" data-elasticity x-text="'价格弹性 '+t.adv.elasticity.elasticity+' · '+t.adv.elasticity.label"></div></template>
+        <div data-backtest style="margin-top:8px"><button class="btn" @click="runBacktest(t)" :disabled="t.btLoading===t.pid" data-backtest-run><i class="codicon codicon-beaker"></i> <span x-text="t.btLoading===t.pid?'回测中…':'回测预测准确度'"></span></button>
+         <template x-if="t.bt&&t.bt.pid===t.pid&&!t.bt.ok"><div class="hint" data-backtest-reason x-text="t.bt.reason"></div></template>
+         <template x-if="t.bt&&t.bt.pid===t.pid&&t.bt.ok"><div><div class="hint" data-backtest-note x-text="t.bt.note+'；可靠度 '+t.bt.reliability"></div>
+          <table class="grid" data-backtest-table><thead><tr><th>引擎</th><th class="num">平均误差%</th><th class="num">MAE</th><th class="num">90%区间覆盖</th></tr></thead><tbody>
+          <template x-for="k in Object.keys(t.bt.engines)" :key="k"><tr :class="k===t.bt.best&&'sel'"><td><span x-text="k==='naive'?'维持现价(基准)':k"></span> <i class="codicon codicon-star-full" x-show="k===t.bt.best"></i></td><td class="num" x-text="t.bt.engines[k].mape"></td><td class="num" x-text="t.bt.engines[k].mae"></td><td class="num" x-text="t.bt.engines[k].ci90_coverage==null?'—':t.bt.engines[k].ci90_coverage+'%'"></td></tr></template></tbody></table></div></template></div>
         <template x-for="e in t.adv.promos"><div class="hint" x-text="'促销：'+e.name+'（'+e.date+(e.in_progress?'，进行中':'，'+e.days_left+' 天后')+'）'"></div></template></div></template></div></div></div></template>
      <div class="row"><div class="grp" data-compare><h4>跨平台比价<span class="muted" x-text="t.d.c.spread?'价差 '+money(t.d.c.spread):''"></span></h4><div class="b">
        <template x-if="(t.d.c.offers||[]).length<2"><div class="muted">暂未发现其他平台同款</div></template>
