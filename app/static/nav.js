@@ -3,7 +3,7 @@
 const NAV_GROUPS = {
   work: [['mon', '监控', ['dashboard', 'products', 'alerts', 'rules']], ['ana', '分析', ['compare', 'deep', 'match', 'reports']],
          ['dec', '决策', ['pricing', 'map']], ['srch', '搜索', ['search', 'ai']], ['data', '数据', ['sources', 'official', 'catalog']]],
-  settings: [['set', '设置', ['admin']], ['teamg', '团队', ['team', 'usage']]],
+  settings: [['set', '设置', ['admin', 'nodes']], ['teamg', '团队', ['team', 'usage']]],
 };
 const NAV = {
   navView: localStorage.getItem('ph-nav') || 'work', catDim: localStorage.getItem('ph-catdim') || 'region', navQ: '', favs: JSON.parse(localStorage.getItem('ph-fav') || '[]'),

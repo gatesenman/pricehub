@@ -1,7 +1,13 @@
 // v8：智能预测展示、官方数据源、渲染池与浏览器扩展、pgvector 状态
 Object.assign(MODS, {official: ['cloud-download', '官方数据源']});
 const V8 = {
-  async runBacktest(t) { const pid = t.pid; t.btLoading = pid; let r; try { r = await this.api(`/api/products/${pid}/backtest?horizon=7&folds=4`); } catch (e) { r = {ok: false, reason: e.message}; } r.pid = pid; if (t.pid === pid) { t.bt = r; t.btLoading = null; } },
+  async runBacktest(t) { const pid = t.pid; t.btLoading = pid; let r;
+    try { r = await this.api(`/api/products/${pid}/backtest?horizon=7&folds=4`); } catch (e) { r = {ok: false, reason: e.message}; }
+    r.pid = pid; if (t.pid === pid) { t.bt = r; t.btLoading = null; }
+    // Prophet 在后台回测，结果出来前每 2 秒轮询一次（最多 3 分钟）
+    for (let k = 0; k < 90 && r.ok && r.prophet && r.prophet.status === 'running' && t.pid === pid; k++) {
+      await new Promise(f => setTimeout(f, 2000));
+      try { r = await this.api(`/api/products/${pid}/backtest?horizon=7&folds=4`); r.pid = pid; if (t.pid === pid) t.bt = r; } catch (e) { break; } } },
   async loadV8(t) {
     if (t.type === 'official') { t.items = (await this.api('/api/official/adapters')).items; t.secret = (await this.api('/api/official/adapters')).secret_source; t.edit = null; }
   },

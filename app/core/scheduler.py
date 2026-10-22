@@ -97,6 +97,15 @@ class Scheduler:
         for j in jobs:
             if not j.done.wait(None if end is None else max(0, end - time.time())): return False
         return True
+    def nodes(self):
+        """内存队列只有本进程一个节点（无法跨进程分发）；要多节点请用 PRICEHUB_QUEUE=redis。"""
+        import socket, os
+        c = self.stats_c
+        return [{"id": f"{socket.gethostname()}-{os.getpid()}", "host": socket.gethostname(), "pid": os.getpid(), "concurrency": self.workers_n,
+                 "busy": self.active, "done": c.get("done", 0), "failed": c.get("dead", 0), "reclaimed": 0, "status": "online" if self.running else "idle",
+                 "last_seen": time.time(), "age_s": 0, "embedded": True, "lease_s": None, "cmd": None}]
+    def node_command(self, nid, cmd): raise ValueError("内存队列不支持远程节点控制，请改用 Redis 队列")
+    def forget_node(self, nid): return False
     def stats(self):
         with self.cv:
             return {"backend": getattr(self, "backend", "memory"), "workers": self.workers_n, "running": self.running, "active": self.active, "ready": len(self.ready), "delayed": len(self.delayed),

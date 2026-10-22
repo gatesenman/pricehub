@@ -1,5 +1,5 @@
 <!doctype html><html lang="zh-CN" data-theme="dark"><head><meta charset="utf-8"><title>PriceHub 价格管理工作台</title><link rel="icon" href="data:,">
-<link rel="stylesheet" href="/static/vendor/codicon.css"><link rel="stylesheet" href="/static/style.css"><script src="/static/vendor/chart.js"></script><script defer src="/static/v4.js"></script><script defer src="/static/app.js"></script><script defer src="/static/v5.js"></script><script defer src="/static/v7.js"></script><script defer src="/static/v8.js"></script><script defer src="/static/nav.js"></script><script defer src="/static/vendor/alpine.js"></script></head>
+<link rel="stylesheet" href="/static/vendor/codicon.css"><link rel="stylesheet" href="/static/style.css"><script src="/static/vendor/chart.js"></script><script defer src="/static/v4.js"></script><script defer src="/static/app.js"></script><script defer src="/static/v5.js"></script><script defer src="/static/v7.js"></script><script defer src="/static/v8.js"></script><script defer src="/static/v10.js"></script><script defer src="/static/nav.js"></script><script defer src="/static/vendor/alpine.js"></script></head>
 <body x-data="App()" @keydown.window="keys($event)" @click.window="menuOpen=null;ctx=null;openPid($event)" @mousemove.window="dragMove($event)" @mouseup.window="dragEnd()" @mouseover.window="tipOver($event)">
 <div class="app">
 <div class="menubar" data-menubar><span class="logo"><i class="codicon codicon-pulse"></i> PriceHub</span>
@@ -109,6 +109,7 @@
         <div data-backtest style="margin-top:8px"><button class="btn" @click="runBacktest(t)" :disabled="t.btLoading===t.pid" data-backtest-run><i class="codicon codicon-beaker"></i> <span x-text="t.btLoading===t.pid?'回测中…':'回测预测准确度'"></span></button>
          <template x-if="t.bt&&t.bt.pid===t.pid&&!t.bt.ok"><div class="hint" data-backtest-reason x-text="t.bt.reason"></div></template>
          <template x-if="t.bt&&t.bt.pid===t.pid&&t.bt.ok"><div><div class="hint" data-backtest-note x-text="t.bt.note+'；可靠度 '+t.bt.reliability"></div>
+          <div class="hint" data-prophet-status x-show="t.bt.prophet" x-text="({running:'Prophet 正在后台回测，完成后自动加入对比…',done:'已包含 Prophet 回测结果（已缓存）',failed:'Prophet 回测失败：'+((t.bt.prophet||{}).error||''),unavailable:'未安装 Prophet，仅对比其余引擎'})[(t.bt.prophet||{}).status]||''"></div>
           <table class="grid" data-backtest-table><thead><tr><th>引擎</th><th class="num">平均误差%</th><th class="num">MAE</th><th class="num">90%区间覆盖</th></tr></thead><tbody>
           <template x-for="k in Object.keys(t.bt.engines)" :key="k"><tr :class="k===t.bt.best&&'sel'"><td><span x-text="k==='naive'?'维持现价(基准)':k"></span> <i class="codicon codicon-star-full" x-show="k===t.bt.best"></i></td><td class="num" x-text="t.bt.engines[k].mape"></td><td class="num" x-text="t.bt.engines[k].mae"></td><td class="num" x-text="t.bt.engines[k].ci90_coverage==null?'—':t.bt.engines[k].ci90_coverage+'%'"></td></tr></template></tbody></table></div></template></div>
         <template x-for="e in t.adv.promos"><div class="hint" x-text="'促销：'+e.name+'（'+e.date+(e.in_progress?'，进行中':'，'+e.days_left+' 天后')+'）'"></div></template></div></template></div></div></div></template>
@@ -294,6 +295,25 @@
           <a class="btn" :href="a.docs_url" target="_blank" x-show="a.docs_url">文档</a></div>
         <div class="hint" x-show="a.last_test" x-text="(a.last_test||{}).ok?('上次测连成功，样本 '+(a.last_test||{}).count+' 条'):('上次测连失败：'+((a.last_test||{}).error||''))"></div>
       </div></div></template>
+   </div></template>
+   <template x-if="t.type==='nodes'"><div data-v10-nodes>
+    <div class="hint" style="margin:8px 12px" x-show="t.n&&t.n.hint" x-text="t.n&&t.n.hint" data-nodes-hint></div>
+    <div class="hint err" style="margin:8px 12px" x-show="t.err" x-text="t.err"></div>
+    <div class="grp" style="margin:8px 12px"><h4><i class="codicon codicon-server-environment"></i> 采集节点
+      <span class="muted" x-text="t.n?(' · 队列 '+(t.n.backend==='redis'?'Redis Streams':'内存')+' · 在线 '+t.n.online+' 个 · 待执行 '+((t.n.queue||{}).ready||0)+(t.n.lease_s?' · 租约 '+t.n.lease_s+' 秒':'')):''" data-nodes-summary></span>
+      <span style="margin-left:auto"><button class="btn" @click="loadNodes(t)" data-nodes-refresh><i class="codicon codicon-refresh"></i> 刷新</button>
+      <button class="btn primary" @click="probeNodes(t)" :disabled="t.probing" data-nodes-probe><i class="codicon codicon-pulse"></i> <span x-text="t.probing?'探测中…':'派发探测任务'"></span></button></span></h4>
+     <div class="b"><table class="grid" data-nodes-table><thead><tr><th>节点</th><th>状态</th><th class="num">并发</th><th class="num">执行中</th><th class="num">完成</th><th class="num">失败</th><th class="num">接管</th><th>最后心跳</th><th class="num">本次探测</th><th style="width:150px"></th></tr></thead>
+      <tbody><template x-for="n in (t.n&&t.n.nodes)||[]" :key="n.id"><tr :data-node="n.id" :data-node-status="n.status">
+       <td><i class="codicon codicon-vm"></i> <span class="mono" x-text="n.id"></span><span class="muted" x-show="n.embedded"> · 内嵌</span></td>
+       <td><span :class="nodeStatus(n.status)[1]" x-text="nodeStatus(n.status)[0]"></span></td>
+       <td class="num" x-text="n.concurrency"></td><td class="num" x-text="n.busy"></td><td class="num" x-text="n.done"></td><td class="num" x-text="n.failed"></td><td class="num" x-text="n.reclaimed"></td>
+       <td x-text="nodeAge(n.age_s)"></td><td class="num" x-text="(t.probe||{})[n.id]||''"></td>
+       <td><template x-if="t.n.backend==='redis'"><span>
+         <button class="btn" x-show="n.status==='online'" @click="nodeCmd(t,n,'drain')" data-node-drain>排空</button>
+         <button class="btn" x-show="n.status==='draining'" @click="nodeCmd(t,n,'resume')" data-node-resume>恢复</button>
+         <button class="btn" x-show="n.status==='offline'||n.status==='stopped'" @click="nodeCmd(t,n,'forget')" data-node-forget>移除</button></span></template></td></tr></template></tbody></table>
+      <div class="hint" style="margin-top:6px">节点每隔几秒发一次心跳；超过 3 次没心跳显示为离线。节点宕机后，它手上的任务在租约到期后由其他在线节点自动接管重跑。启动新节点：<span class="mono">PRICEHUB_QUEUE=redis python -m app.worker</span></div></div></div>
    </div></template>
    <template x-if="t.type==='team'"><div data-v7-team>
     <div class="row"><div class="grp"><h4><i class="codicon codicon-organization"></i> 团队模式</h4><div class="b">
