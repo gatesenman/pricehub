@@ -36,14 +36,14 @@ VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "ProductVersion" "${VERSION}"
 VIAddVersionKey /LANG=${LANG_SIMPCHINESE} "LegalCopyright" "PriceHub"
 
 Function LaunchPriceHub
-  Exec '"$INSTDIR\PriceHub.exe" "$INSTDIR\PriceHub.pyw"'
+  Exec '"$INSTDIR\python\PriceHub.exe" "$INSTDIR\PriceHub.pyw"'
 FunctionEnd
 
 Section "PriceHub" SecMain
   SectionIn RO
   ; 升级：先停止正在运行的旧版本（用户数据在 %APPDATA%\PriceHub，不受影响）
-  IfFileExists "$INSTDIR\PriceHub.exe" 0 +3
-    ExecWait '"$INSTDIR\PriceHub.exe" "$INSTDIR\PriceHub.pyw" --stop'
+  IfFileExists "$INSTDIR\python\PriceHub.exe" 0 +3
+    ExecWait '"$INSTDIR\python\PriceHub.exe" "$INSTDIR\PriceHub.pyw" --stop'
     Sleep 1500
   IfFileExists "$INSTDIR\python\pythonw.exe" 0 +3
     ExecWait '"$INSTDIR\python\pythonw.exe" "$INSTDIR\PriceHub.pyw" --stop'
@@ -54,11 +54,11 @@ Section "PriceHub" SecMain
   File /r "${STAGE}\*.*"
   WriteUninstaller "$INSTDIR\uninstall.exe"
   CreateDirectory "$SMPROGRAMS\PriceHub"
-  CreateShortcut "$SMPROGRAMS\PriceHub\PriceHub.lnk" "$INSTDIR\PriceHub.exe" '"$INSTDIR\PriceHub.pyw"' "$INSTDIR\PriceHub.ico" 0 SW_SHOWNORMAL "" "PriceHub 价格管理工作台"
-  CreateShortcut "$SMPROGRAMS\PriceHub\停止 PriceHub.lnk" "$INSTDIR\PriceHub.exe" '"$INSTDIR\PriceHub.pyw" --stop' "$INSTDIR\PriceHub.ico" 0
+  CreateShortcut "$SMPROGRAMS\PriceHub\PriceHub.lnk" "$INSTDIR\python\PriceHub.exe" '"$INSTDIR\PriceHub.pyw"' "$INSTDIR\PriceHub.ico" 0 SW_SHOWNORMAL "" "PriceHub 价格管理工作台"
+  CreateShortcut "$SMPROGRAMS\PriceHub\停止 PriceHub.lnk" "$INSTDIR\python\PriceHub.exe" '"$INSTDIR\PriceHub.pyw" --stop' "$INSTDIR\PriceHub.ico" 0
   CreateShortcut "$SMPROGRAMS\PriceHub\使用说明.lnk" "$INSTDIR\使用说明.txt"
   CreateShortcut "$SMPROGRAMS\PriceHub\卸载 PriceHub.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\PriceHub.ico" 0
-  CreateShortcut "$DESKTOP\PriceHub.lnk" "$INSTDIR\PriceHub.exe" '"$INSTDIR\PriceHub.pyw"' "$INSTDIR\PriceHub.ico" 0 SW_SHOWNORMAL "" "PriceHub 价格管理工作台"
+  CreateShortcut "$DESKTOP\PriceHub.lnk" "$INSTDIR\python\PriceHub.exe" '"$INSTDIR\PriceHub.pyw"' "$INSTDIR\PriceHub.ico" 0 SW_SHOWNORMAL "" "PriceHub 价格管理工作台"
   WriteRegStr HKCU "Software\PriceHub" "InstallDir" "$INSTDIR"
   !define UK "Software\Microsoft\Windows\CurrentVersion\Uninstall\PriceHub"
   WriteRegStr HKCU "${UK}" "DisplayName" "PriceHub 价格管理工作台"
@@ -73,8 +73,8 @@ Section "PriceHub" SecMain
 SectionEnd
 
 Section "Uninstall"
-  IfFileExists "$INSTDIR\PriceHub.exe" 0 +2
-    ExecWait '"$INSTDIR\PriceHub.exe" "$INSTDIR\PriceHub.pyw" --stop'
+  IfFileExists "$INSTDIR\python\PriceHub.exe" 0 +2
+    ExecWait '"$INSTDIR\python\PriceHub.exe" "$INSTDIR\PriceHub.pyw" --stop'
   IfFileExists "$INSTDIR\python\pythonw.exe" 0 +2
     ExecWait '"$INSTDIR\python\pythonw.exe" "$INSTDIR\PriceHub.pyw" --stop'
   Sleep 1500

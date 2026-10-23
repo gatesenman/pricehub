@@ -8,7 +8,7 @@ PYV=3.11.9; B=build_win; ST=$B/stage; PIP=${PIP:-python3 -m pip}
 rm -rf "$ST"; mkdir -p "$ST/python" "$ST/seed" "$B/cache/wheels" dist
 [ -f "$B/cache/python-$PYV-embed-amd64.zip" ] || curl -sSL -o "$B/cache/python-$PYV-embed-amd64.zip" "https://www.python.org/ftp/python/$PYV/python-$PYV-embed-amd64.zip"
 python3 -c "import zipfile,sys;zipfile.ZipFile(sys.argv[1]).extractall(sys.argv[2])" "$B/cache/python-$PYV-embed-amd64.zip" "$ST/python"
-printf 'python311.zip\r\n.\r\nLib\\site-packages\r\n..\r\nimport site\r\n' > "$ST/python/python311._pth"
+printf 'python311.zip\r\n.\r\nLib\\site-packages\r\n..\r\n' > "$ST/python/python311._pth"  # no 'import site' — avoid user-site / version-fox pollution
 W="--only-binary=:all: --platform win_amd64 --python-version 3.11 --implementation cp --abi cp311"
 
 # 核心依赖（全二进制）
@@ -71,14 +71,14 @@ cp windows/installer/PriceHub.pyw "$ST/"; sed 's/\r*$/\r/' windows/installer/使
 cp -f windows/installer/PriceHub.ico "$ST/PriceHub.ico"
 mkdir -p "$ST/app/static/icons"
 cp -f app/static/icons/* "$ST/app/static/icons/"
-# Branded launcher EXE = pythonw.exe + embedded PriceHub.ico (taskbar / title-bar process icon)
-cp -f "$ST/python/pythonw.exe" "$ST/PriceHub.exe"
+# Branded launcher must live NEXT TO python311._pth (inside python/), otherwise embed runtime breaks.
+cp -f "$ST/python/pythonw.exe" "$ST/python/PriceHub.exe"
 RCEDIT="$B/cache/rcedit-x64.exe"
 if [ ! -f "$RCEDIT" ]; then
   curl -sSL -o "$RCEDIT" "https://github.com/electron/rcedit/releases/download/v2.0.0/rcedit-x64.exe"
 fi
 export WINEPREFIX="$(realpath "$B/wineprefix")"; mkdir -p "$WINEPREFIX"
-if wine "$RCEDIT" "$(winepath -w "$(realpath "$ST/PriceHub.exe")")" \
+if wine "$RCEDIT" "$(winepath -w "$(realpath "$ST/python/PriceHub.exe")")" \
   --set-icon "$(winepath -w "$(realpath "$ST/PriceHub.ico")")" \
   --set-version-string ProductName "PriceHub" \
   --set-version-string FileDescription "PriceHub" \
@@ -87,10 +87,13 @@ if wine "$RCEDIT" "$(winepath -w "$(realpath "$ST/PriceHub.exe")")" \
   --set-version-string OriginalFilename "PriceHub.exe" \
   --set-file-version "1.13.0" \
   --set-product-version "1.13.0"; then
-  echo "PriceHub.exe icon embedded"
+  echo "python/PriceHub.exe icon embedded"
 else
-  echo "WARN: rcedit failed; PriceHub.exe kept as pythonw copy (shortcuts still use .ico)" >&2
+  echo "WARN: rcedit failed; using untouched pythonw copy as PriceHub.exe" >&2
+  cp -f "$ST/python/pythonw.exe" "$ST/python/PriceHub.exe"
 fi
+# Sanity: branded exe must still be embed 3.11 and see sqlglot
+"$ST/python/python.exe" -c "import sys,sqlglot; assert sys.version_info[:2]==(3,11); print('embed ok', sys.version.split()[0], 'sqlglot', sqlglot.__version__)"
 VER=1.13.$(git rev-list --count HEAD)
 makensis -V2 -DVERSION="$VER" -DSTAGE="$(realpath "$ST")" -DOUTFILE="$(realpath dist)/PriceHub-Setup.exe" windows/installer/PriceHub.nsi
 ls -la dist/PriceHub-Setup.exe

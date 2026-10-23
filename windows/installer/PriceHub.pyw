@@ -9,7 +9,14 @@ from __future__ import annotations
 import os, sys, time, json, shutil, socket, threading, traceback, urllib.request, webbrowser
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
+# Isolate from any system / version-fox Python on PATH
+for _k in ("PYTHONPATH", "PYTHONHOME", "PYTHONSTARTUP"):
+    os.environ.pop(_k, None)
 sys.path.insert(0, ROOT)
+# Prefer install-dir packages if present (embed layout: ROOT/python/Lib/site-packages)
+_sp = os.path.join(ROOT, "python", "Lib", "site-packages")
+if os.path.isdir(_sp) and _sp not in sys.path:
+    sys.path.insert(0, _sp)
 os.chdir(ROOT)
 DATA = os.path.join(os.environ.get("APPDATA") or os.path.expanduser("~"), "PriceHub")
 os.makedirs(os.path.join(DATA, "logs"), exist_ok=True)
