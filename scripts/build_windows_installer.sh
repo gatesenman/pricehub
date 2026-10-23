@@ -92,8 +92,9 @@ else
   echo "WARN: rcedit failed; using untouched pythonw copy as PriceHub.exe" >&2
   cp -f "$ST/python/pythonw.exe" "$ST/python/PriceHub.exe"
 fi
-# Sanity: branded exe must still be embed 3.11 and see sqlglot
-"$ST/python/python.exe" -c "import sys,sqlglot; assert sys.version_info[:2]==(3,11); print('embed ok', sys.version.split()[0], 'sqlglot', sqlglot.__version__)"
+# Sanity (Linux cannot exec the Windows embed binary): check layout + sqlglot wheel present
+test -f "$ST/python/PriceHub.exe" && test -f "$ST/python/python311._pth" && test -d "$ST/python/Lib/site-packages/sqlglot" \
+  && test -f "$ST/PriceHub.ico" && echo "embed layout ok (PriceHub.exe + sqlglot + ico)"
 VER=1.13.$(git rev-list --count HEAD)
 makensis -V2 -DVERSION="$VER" -DSTAGE="$(realpath "$ST")" -DOUTFILE="$(realpath dist)/PriceHub-Setup.exe" windows/installer/PriceHub.nsi
 ls -la dist/PriceHub-Setup.exe
