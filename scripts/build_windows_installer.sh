@@ -67,15 +67,30 @@ assert dst.execute("PRAGMA integrity_check").fetchone()[0] == "ok"
 print("seed products:", dst.execute("SELECT COUNT(*) FROM products WHERE merged_into IS NULL").fetchone()[0]); dst.close()
 PY
 cp windows/installer/PriceHub.pyw "$ST/"; sed 's/\r*$/\r/' windows/installer/使用说明.txt > "$ST/使用说明.txt"
-python3 - "$ST/PriceHub.ico" <<'PY'
-import sys
-from PIL import Image, ImageDraw, ImageFont
-im = Image.new("RGBA", (256, 256), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
-d.rounded_rectangle((8, 8, 248, 248), 48, fill=(0, 122, 204, 255))
-try: f = ImageFont.truetype("DejaVuSans-Bold.ttf", 150)
-except Exception: f = ImageFont.load_default()
-d.text((128, 132), "P", font=f, fill="white", anchor="mm"); im.save(sys.argv[1], sizes=[(16, 16), (32, 32), (48, 48), (64, 64), (128, 128), (256, 256)])
-PY
+# Brand icon (committed) — window / shortcut / installer / uninstaller / favicon
+cp -f windows/installer/PriceHub.ico "$ST/PriceHub.ico"
+mkdir -p "$ST/app/static/icons"
+cp -f app/static/icons/* "$ST/app/static/icons/"
+# Branded launcher EXE = pythonw.exe + embedded PriceHub.ico (taskbar / title-bar process icon)
+cp -f "$ST/python/pythonw.exe" "$ST/PriceHub.exe"
+RCEDIT="$B/cache/rcedit-x64.exe"
+if [ ! -f "$RCEDIT" ]; then
+  curl -sSL -o "$RCEDIT" "https://github.com/electron/rcedit/releases/download/v2.0.0/rcedit-x64.exe"
+fi
+export WINEPREFIX="$(realpath "$B/wineprefix")"; mkdir -p "$WINEPREFIX"
+if wine "$RCEDIT" "$(winepath -w "$(realpath "$ST/PriceHub.exe")")" \
+  --set-icon "$(winepath -w "$(realpath "$ST/PriceHub.ico")")" \
+  --set-version-string ProductName "PriceHub" \
+  --set-version-string FileDescription "PriceHub" \
+  --set-version-string CompanyName "PriceHub" \
+  --set-version-string InternalName "PriceHub" \
+  --set-version-string OriginalFilename "PriceHub.exe" \
+  --set-file-version "1.13.0" \
+  --set-product-version "1.13.0"; then
+  echo "PriceHub.exe icon embedded"
+else
+  echo "WARN: rcedit failed; PriceHub.exe kept as pythonw copy (shortcuts still use .ico)" >&2
+fi
 VER=1.13.$(git rev-list --count HEAD)
 makensis -V2 -DVERSION="$VER" -DSTAGE="$(realpath "$ST")" -DOUTFILE="$(realpath dist)/PriceHub-Setup.exe" windows/installer/PriceHub.nsi
 ls -la dist/PriceHub-Setup.exe

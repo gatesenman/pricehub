@@ -1,6 +1,7 @@
-"""PriceHub 桌面启动器（安装版，pythonw 无控制台）。
+"""PriceHub 桌面启动器（安装版，pythonw / PriceHub.exe 无控制台）。
 - 用户数据在 %APPDATA%\\PriceHub（升级/重装不丢）：首次运行把安装目录里的 seed\\pricehub.db 复制过去；
 - 在 127.0.0.1:8800 启动服务（SQLite），就绪后优先用 pywebview 打开独立桌面窗口；
+- 窗口 / 任务栏使用安装目录里的 PriceHub.ico；
 - 仅当 pywebview 真正失败时才回退到系统浏览器，并写入日志说明原因；
 - 已在运行时再开一个桌面窗口（或浏览器）；参数 --stop 停止后台服务。
 日志：%APPDATA%\\PriceHub\\logs\\pricehub.log"""
@@ -20,6 +21,26 @@ PORT = int(os.environ.get("PRICEHUB_PORT", "8800"))
 URL = f"http://{HOST}:{PORT}/"
 PIDF = os.path.join(DATA, "pricehub.pid")
 WINDOW_TITLE = "PriceHub"
+APP_ID = "PriceHub.Desktop.1"
+
+
+def icon_path() -> str | None:
+    for p in (
+        os.path.join(ROOT, "PriceHub.ico"),
+        os.path.join(ROOT, "app", "static", "icons", "pricehub.ico"),
+    ):
+        if os.path.isfile(p):
+            return p
+    return None
+
+
+def set_app_user_model_id() -> None:
+    """让任务栏把本进程当成 PriceHub，而不是 pythonw。"""
+    try:
+        import ctypes
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(APP_ID)
+    except Exception as e:
+        log("SetCurrentProcessExplicitAppUserModelID failed", e)
 
 
 def log(*a):
@@ -67,12 +88,13 @@ def open_desktop_window(block: bool) -> bool:
         return False
     try:
         import webview  # bundled in installer
-        log("opening pywebview window", WINDOW_TITLE, URL)
-        # WebView2 用户数据放到 APPDATA，避免写安装目录
+        ico = icon_path()
+        log("opening pywebview window", WINDOW_TITLE, URL, "icon", ico)
         os.environ.setdefault(
             "WEBVIEW2_USER_DATA_FOLDER",
             os.path.join(DATA, "webview2"),
         )
+        set_app_user_model_id()
         webview.create_window(
             WINDOW_TITLE,
             URL,
@@ -80,8 +102,11 @@ def open_desktop_window(block: bool) -> bool:
             height=900,
             min_size=(1024, 640),
         )
-        # gui=None → Windows 默认 EdgeChromium(WebView2)
-        webview.start()
+        # pywebview 6：窗口图标通过 start(icon=...) 注入，Windows winforms 会读 _state['icon']
+        if ico:
+            webview.start(icon=ico)
+        else:
+            webview.start()
         log("pywebview window closed")
         return True
     except Exception as e:
@@ -95,7 +120,6 @@ def open_desktop_window(block: bool) -> bool:
             msg("无法打开界面。请手动访问 " + URL + "\n详情见日志。")
             return False
         if block:
-            # 保持进程，直到用户结束（无窗口可关时）
             try:
                 while True:
                     time.sleep(3600)
@@ -156,18 +180,17 @@ def run_server_and_window() -> None:
             os.remove(PIDF)
         except Exception:
             pass
-        # 给 uvicorn 一点时间退出
         th.join(timeout=5)
 
 
 def main() -> None:
+    set_app_user_model_id()
     if "--stop" in sys.argv:
         stop()
         return
     if busy():
         if ready():
             log("already running, opening UI only", URL)
-            # 已有服务：再开一个桌面窗口（失败则浏览器）；不阻塞服务进程
             open_desktop_window(block=False)
             return
         msg(f"端口 {PORT} 被其他程序占用，PriceHub 无法启动。")
