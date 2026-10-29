@@ -14,9 +14,20 @@ def wait(u):
 @pytest.fixture(scope="module")
 def page():
     env = dict(os.environ, PRICEHUB_DB=tempfile.mktemp(suffix=".db")); env.pop("DEEPSEEK_API_KEY", None)
+    env.pop("PRICEHUB_NO_ST", None)  # 语义搜索 e2e 需要多语言模型
     ps = [subprocess.Popen([PY, "-m", "uvicorn", "tests.mock_private_api:app", "--port", "8911"], cwd=ROOT),
           subprocess.Popen([PY, "-m", "uvicorn", "app.main:app", "--port", "8912"], cwd=ROOT, env=env)]
     wait(MOCK + "/docs"); wait(API + "/api/health")
+    # v14：模型后台预热；等语义引擎真正可用（不要把「加载中」误当成就绪）
+    for _ in range(180):
+        try:
+            te = httpx.get(API + "/api/health", timeout=2).json().get("text_engine") or ""
+            if "sentence-transformers" in te and "按需" not in te and "加载中" not in te: break
+            if "tfidf" in te and "按需" not in te and "加载中" not in te:
+                # 预热失败才落到 tfidf；再给一点时间后接受
+                time.sleep(2); break
+        except Exception: pass
+        time.sleep(0.5)
     c = httpx.Client(base_url=API, timeout=60)
     for n, t, cfg in [("淘宝", "mock", {"platform": "taobao.com", "seed": 1}), ("京东", "mock", {"platform": "jd.com", "bias": 1.08, "seed": 2}),
                       ("CSV样例", "csv", {"path": ROOT + "/data/sample_products.csv"})]:

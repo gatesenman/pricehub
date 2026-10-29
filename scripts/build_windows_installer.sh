@@ -85,8 +85,8 @@ if wine "$RCEDIT" "$(winepath -w "$(realpath "$ST/python/PriceHub.exe")")" \
   --set-version-string CompanyName "PriceHub" \
   --set-version-string InternalName "PriceHub" \
   --set-version-string OriginalFilename "PriceHub.exe" \
-  --set-file-version "1.13.0" \
-  --set-product-version "1.13.0"; then
+  --set-file-version "1.14.0" \
+  --set-product-version "1.14.0"; then
   echo "python/PriceHub.exe icon embedded"
 else
   echo "WARN: rcedit failed; using untouched pythonw copy as PriceHub.exe" >&2
@@ -95,7 +95,7 @@ fi
 # Sanity (Linux cannot exec the Windows embed binary): check layout + sqlglot wheel present
 test -f "$ST/python/PriceHub.exe" && test -f "$ST/python/python311._pth" && test -d "$ST/python/Lib/site-packages/sqlglot" \
   && test -f "$ST/PriceHub.ico" && echo "embed layout ok (PriceHub.exe + sqlglot + ico)"
-VER=1.13.$(git rev-list --count HEAD)
+VER=1.14.$(git rev-list --count HEAD)
 makensis -V2 -DVERSION="$VER" -DSTAGE="$(realpath "$ST")" -DOUTFILE="$(realpath dist)/PriceHub-Setup.exe" windows/installer/PriceHub.nsi
 ls -la dist/PriceHub-Setup.exe
 # 源码包

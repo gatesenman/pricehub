@@ -8,14 +8,19 @@ import datetime, math, logging
 import numpy as np
 log = logging.getLogger("pricehub.forecast")
 HAVE_PROPHET = HAVE_SM = False
+STL = ARIMA = None
 try:
     from prophet import Prophet; HAVE_PROPHET = True
 except Exception as e: log.info("prophet unavailable", extra={"error": str(e)})
 try:
-    from statsmodels.tsa.seasonal import STL
-    from statsmodels.tsa.arima.model import ARIMA
+    from statsmodels.tsa.seasonal import STL as _STL
+    STL = _STL
     HAVE_SM = True
-except Exception as e: log.info("statsmodels unavailable", extra={"error": str(e)})
+except Exception as e: log.info("statsmodels STL unavailable", extra={"error": str(e)})
+try:
+    from statsmodels.tsa.arima.model import ARIMA as _ARIMA
+    ARIMA = _ARIMA
+except Exception as e: log.info("statsmodels ARIMA unavailable (STL 仍可用)", extra={"error": str(e)})
 
 def _series(prices):
     """prices: [{price, ts?}, ...] → (y float64, dates date|None)"""
@@ -81,7 +86,10 @@ def _stl_arima(y, horizon):
     seasonal_last = float(stl.seasonal[-period:].mean()) if period else 0.0
     resid = stl.resid
     try:
-        fit = ARIMA(stl.trend[~np.isnan(stl.trend)], order=(1, 1, 1)).fit()
+        _AR = ARIMA
+        if _AR is None:
+            from statsmodels.tsa.arima.model import ARIMA as _AR
+        fit = _AR(stl.trend[~np.isnan(stl.trend)], order=(1, 1, 1)).fit()
         trend_fc = fit.forecast(horizon)
     except Exception:
         x = np.arange(len(y)); k, b = np.polyfit(x, y, 1)

@@ -4,7 +4,7 @@ SetCompressor /SOLID lzma
 SetCompressorDictSize 64
 !include "MUI2.nsh"
 !ifndef VERSION
-  !define VERSION "1.13.0"
+  !define VERSION "1.14.0"
 !endif
 !ifndef STAGE
   !define STAGE "stage"

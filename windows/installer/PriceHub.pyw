@@ -1,6 +1,7 @@
 """PriceHub 桌面启动器（安装版，pythonw / PriceHub.exe 无控制台）。
+v14：窗口先显示启动闪屏，服务在后台起来后再跳到工作台，缩短体感冷启动。
 - 用户数据在 %APPDATA%\\PriceHub（升级/重装不丢）：首次运行把安装目录里的 seed\\pricehub.db 复制过去；
-- 在 127.0.0.1:8800 启动服务（SQLite），就绪后优先用 pywebview 打开独立桌面窗口；
+- 在 127.0.0.1:8800 启动服务（SQLite），优先用 pywebview 独立桌面窗口；
 - 窗口 / 任务栏使用安装目录里的 PriceHub.ico；
 - 仅当 pywebview 真正失败时才回退到系统浏览器，并写入日志说明原因；
 - 已在运行时再开一个桌面窗口（或浏览器）；参数 --stop 停止后台服务。
@@ -9,11 +10,9 @@ from __future__ import annotations
 import os, sys, time, json, shutil, socket, threading, traceback, urllib.request, webbrowser
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-# Isolate from any system / version-fox Python on PATH
 for _k in ("PYTHONPATH", "PYTHONHOME", "PYTHONSTARTUP"):
     os.environ.pop(_k, None)
 sys.path.insert(0, ROOT)
-# Prefer install-dir packages if present (embed layout: ROOT/python/Lib/site-packages)
 _sp = os.path.join(ROOT, "python", "Lib", "site-packages")
 if os.path.isdir(_sp) and _sp not in sys.path:
     sys.path.insert(0, _sp)
@@ -30,6 +29,23 @@ PIDF = os.path.join(DATA, "pricehub.pid")
 WINDOW_TITLE = "PriceHub"
 APP_ID = "PriceHub.Desktop.1"
 
+# Windows 精简包默认不加载大模型，进一步加快冷启动
+os.environ.setdefault("PRICEHUB_NO_ST", "1")
+os.environ.setdefault("PRICEHUB_NO_CLIP", "1")
+
+BOOT_HTML = """<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>PriceHub</title>
+<style>html,body{margin:0;height:100%;background:#1e1e1e;color:#d4d4d4;font:13px/1.4 Segoe UI,system-ui,sans-serif}
+.wrap{height:100%;display:grid;place-items:center}.card{text-align:center;padding:32px 40px;border-radius:12px;background:#252526;border:1px solid #3c3c3c;box-shadow:0 12px 40px #0008;min-width:260px}
+.mark{width:64px;height:64px;margin:0 auto 12px;border-radius:14px;background:linear-gradient(145deg,#0e7ad1,#1f8ad2);display:grid;place-items:center}
+h1{margin:0 0 6px;font-size:18px;color:#3794ff}p{margin:0;color:#8b8b8b}
+.bar{width:160px;height:3px;border-radius:2px;background:#2d2d30;overflow:hidden;margin:14px auto 0}
+.bar>i{display:block;height:100%;width:40%;background:#0e7ad1;animation:b 1.1s ease-in-out infinite}
+@keyframes b{0%{transform:translateX(-100%)}100%{transform:translateX(300%)}}</style></head>
+<body><div class="wrap"><div class="card"><div class="mark"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></div>
+<h1>PriceHub</h1><p id="m">正在启动服务…</p><div class="bar"><i></i></div></div></div>
+<script>let n=0,a=['正在启动服务…','加载数据引擎…','准备桌面窗口…','即将进入工作台…'];setInterval(()=>{n=(n+1)%a.length;document.getElementById('m').textContent=a[n]},1200)</script>
+</body></html>"""
+
 
 def icon_path() -> str | None:
     for p in (
@@ -42,7 +58,6 @@ def icon_path() -> str | None:
 
 
 def set_app_user_model_id() -> None:
-    """让任务栏把本进程当成 PriceHub，而不是 pythonw。"""
     try:
         import ctypes
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(APP_ID)
@@ -62,7 +77,7 @@ def msg(text: str) -> None:
         log(text)
 
 
-def ready(t: float = 1.0) -> bool:
+def ready(t: float = 0.4) -> bool:
     try:
         with urllib.request.urlopen(URL + "readyz", timeout=t) as r:
             return json.loads(r.read().decode()).get("status") == "ready"
@@ -89,27 +104,41 @@ def stop() -> None:
         log("stop failed", e)
 
 
-def open_desktop_window(block: bool) -> bool:
-    """优先 pywebview 独立窗口；失败则回退浏览器并记录原因。成功返回 True。"""
+def open_desktop_window(block: bool, start_url: str | None = None, html: str | None = None,
+                        navigate_when_ready: bool = False) -> bool:
     if os.environ.get("PRICEHUB_NO_BROWSER"):
         return False
     try:
-        import webview  # bundled in installer
+        import webview
         ico = icon_path()
-        log("opening pywebview window", WINDOW_TITLE, URL, "icon", ico)
-        os.environ.setdefault(
-            "WEBVIEW2_USER_DATA_FOLDER",
-            os.path.join(DATA, "webview2"),
-        )
+        log("opening pywebview window", WINDOW_TITLE, start_url or "(splash)", "icon", ico)
+        os.environ.setdefault("WEBVIEW2_USER_DATA_FOLDER", os.path.join(DATA, "webview2"))
         set_app_user_model_id()
-        webview.create_window(
-            WINDOW_TITLE,
-            URL,
-            width=1440,
-            height=900,
-            min_size=(1024, 640),
-        )
-        # pywebview 6：窗口图标通过 start(icon=...) 注入，Windows winforms 会读 _state['icon']
+        kw = dict(title=WINDOW_TITLE, width=1440, height=900, min_size=(1024, 640))
+        if html is not None:
+            window = webview.create_window(html=html, **kw)
+        else:
+            window = webview.create_window(url=start_url or URL, **kw)
+
+        def _nav():
+            t0 = time.time()
+            while not ready():
+                if time.time() - t0 > 180:
+                    log("ready timeout while showing splash")
+                    try:
+                        window.evaluate_js("document.getElementById('m').textContent='启动超时，请查看日志'")
+                    except Exception:
+                        pass
+                    return
+                time.sleep(0.15)
+            log("ready, navigating to", URL)
+            try:
+                window.load_url(URL)
+            except Exception as e:
+                log("load_url failed", e)
+
+        if navigate_when_ready:
+            threading.Thread(target=_nav, daemon=True).start()
         if ico:
             webview.start(icon=ico)
         else:
@@ -156,31 +185,15 @@ def run_server_and_window() -> None:
     import uvicorn
 
     srv = uvicorn.Server(
-        uvicorn.Config(
-            "app.main:app",
-            host=HOST,
-            port=PORT,
-            log_level="warning",
-            log_config=None,
-        )
+        uvicorn.Config("app.main:app", host=HOST, port=PORT, log_level="warning", log_config=None)
     )
     th = threading.Thread(target=srv.run, daemon=True)
     th.start()
     log("starting PriceHub", sys.version, "db", db)
 
-    t0 = time.time()
-    while not ready():
-        if not th.is_alive():
-            msg("PriceHub 启动失败，请查看日志：" + os.path.join(DATA, "logs", "pricehub.log"))
-            return
-        if time.time() - t0 > 180:
-            msg("PriceHub 启动超时，请查看日志：" + os.path.join(DATA, "logs", "pricehub.log"))
-            return
-        time.sleep(0.5)
-
-    log("ready", URL)
+    # 先开闪屏窗口，服务在后台就绪后跳转——体感冷启动明显更快
     try:
-        open_desktop_window(block=True)
+        open_desktop_window(block=True, html=BOOT_HTML, navigate_when_ready=True)
     finally:
         srv.should_exit = True
         try:
@@ -198,7 +211,7 @@ def main() -> None:
     if busy():
         if ready():
             log("already running, opening UI only", URL)
-            open_desktop_window(block=False)
+            open_desktop_window(block=False, start_url=URL)
             return
         msg(f"端口 {PORT} 被其他程序占用，PriceHub 无法启动。")
         return

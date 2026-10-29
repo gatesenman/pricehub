@@ -7,6 +7,7 @@ from . import db, sources, analytics, search, ai_search, confidence as CF, platf
 import threading, asyncio
 HERE = os.path.dirname(__file__); IMG_DIR = os.path.join(HERE, "..", "data", "images"); os.makedirs(IMG_DIR, exist_ok=True)
 app = FastAPI(title="PriceHub 全球交易平台价格全生命周期管理")
+from .core.perf_middleware import install as _install_perf; _install_perf(app)  # v14：gzip + 静态缓存
 db.init()
 app.mount("/static", StaticFiles(directory=os.path.join(HERE, "static")), name="static")
 def load_platforms():
@@ -110,7 +111,9 @@ def upsert(src_id, it):
     return pid
 
 @app.get("/api/health")
-def health(): return {"ok": True, "text_engine": search.ENGINE, "image_engine": search.IMG_ENGINE, "adapters": list(sources.REGISTRY), "platform_catalog": len(PLATFORMS), "confidence_migrated": MIGRATED}
+def health():
+    te, ie = search.engine_status() if hasattr(search, "engine_status") else (search.ENGINE, search.IMG_ENGINE)
+    return {"ok": True, "text_engine": te, "image_engine": ie, "adapters": list(sources.REGISTRY), "platform_catalog": len(PLATFORMS), "confidence_migrated": MIGRATED}
 @app.get("/api/adapters")
 def adapters(): return {k: (v.__doc__ or "").strip() for k, v in sources.REGISTRY.items()}
 PF_COLS = "id,slug,name,country,region,type,scope,domain,url,lang,currency,note,strategy,search_url,status,status_detail,http_code,latency_ms,checked_at,enabled,source_id"
@@ -345,9 +348,20 @@ def providers(): return {k: {"env": v["env"], "configured": bool(os.environ.get(
 @app.get("/")
 def index(): return FileResponse(os.path.join(HERE, "static", "index.html"))
 sched = BackgroundScheduler()
+def _warm_search_models():
+    """v14：/readyz 不再被模型拖住；后台预热 ST/CLIP，首搜不必干等。"""
+    try:
+        if hasattr(search, "_ensure_st"):
+            search._ensure_st()
+        if hasattr(search, "_ensure_clip"):
+            search._ensure_clip()
+    except Exception as e:
+        print("warm search models:", e)
 @app.on_event("startup")
 def _start():
     sched.add_job(fetch_all, "interval", kwargs={"wait": False}, minutes=int(os.environ.get("PRICEHUB_MONITOR_MIN", "60")), id="monitor"); sched.start()
+    if os.environ.get("PRICEHUB_WARM_ST", "1") == "1":
+        threading.Thread(target=_warm_search_models, daemon=True, name="warm-search").start()
 
 from . import v4  # noqa: E402  v4 体验优化：引导、任务队列、一键监控、撤销、建议
 from . import v5  # noqa: E402  v5 全生命周期补全
