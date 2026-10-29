@@ -36,3 +36,11 @@
 - TimescaleDB 仍因软件源缺失跳过。
 - 官方 API 真机联调仍需用户密钥。
 - 图标缓存若仍显示旧图标：注销或重启 explorer。
+
+## 构建产物（2026-10-29 18:42 UTC+8）
+- 提交：`0e07af9`
+- `dist/PriceHub-Setup.exe` 51,111,854 bytes  
+  SHA256 `55418d1bf3733af7d26ddc77fff8c56997f9b2cf7f735e3cd1e957e84c0ddcad`
+- `dist/PriceHub-source.zip` 3,760,182 bytes  
+  SHA256 `8f060fb6da504c275cbea56dbd5f200c80909cbb034bdd331ce237cc1118371f`
+- 目标：`C:\Users\Administrator\Desktop\PriceHub\`（仅上述两文件）
