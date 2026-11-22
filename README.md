@@ -1,4 +1,9 @@
-# PriceHub MVP
+# PriceHub
+
+PriceHub 是一套竞品价格监控与控价系统，支持多平台采集、同款匹配与去重、价格告警、定价与买入建议，可在本地桌面或服务器运行。
+
+监控采集指标时，请自行生成 `PRICEHUB_METRICS_TOKEN`，把令牌写入未纳入版本库的 `deploy/metrics_token`（可复制 `deploy/metrics_token.example` 后改成你自己的值）。
+
 启动: cd /workspace/pricehub && . .venv/bin/activate && uvicorn app.main:app --port 8800  （UI: http://127.0.0.1:8800/ ，API 文档 /docs）
 演示数据: python -m uvicorn tests.mock_private_api:app --port 8901 & python seed_demo.py
 e2e: python -m pytest tests -v -s

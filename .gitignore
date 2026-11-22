@@ -3,11 +3,27 @@ dist/
 build/
 __pycache__/
 *.pyc
-data/*.db
-data/emb_cache.npz
-data/images/
-data/*.log
 .pytest_cache/
+build_win/
+
+# Local databases and caches (do not publish product libraries)
+data/*.db
 data/*.db-shm
 data/*.db-wal
-build_win/
+*.db-shm
+*.db-wal
+data/emb_cache.npz
+data/images/
+
+# Secrets and credentials
+data/.secret
+deploy/metrics_token
+.env
+.env.*
+!.env.example
+*.pem
+
+# Runtime logs (keep any already-tracked snapshots as-is)
+logs/
+*.log
+data/*.log
