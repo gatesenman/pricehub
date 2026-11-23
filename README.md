@@ -1,20 +1,71 @@
 # PriceHub
 
-PriceHub 是一套竞品价格监控与控价系统，支持多平台采集、同款匹配与去重、价格告警、定价与买入建议，可在本地桌面或服务器运行。
+竞品价格监控与控价：多平台采集、同款匹配与去重、价格告警、定价与买入建议；可在本机桌面或服务器运行。
 
-监控采集指标时，请自行生成 `PRICEHUB_METRICS_TOKEN`，把令牌写入未纳入版本库的 `deploy/metrics_token`（可复制 `deploy/metrics_token.example` 后改成你自己的值）。
+## 下载
 
-启动: cd /workspace/pricehub && . .venv/bin/activate && uvicorn app.main:app --port 8800  （UI: http://127.0.0.1:8800/ ，API 文档 /docs）
-演示数据: python -m uvicorn tests.mock_private_api:app --port 8901 & python seed_demo.py
-e2e: python -m pytest tests -v -s
-AI 搜索: export DEEPSEEK_API_KEY=...（另支持 MOONSHOT_API_KEY / DASHSCOPE_API_KEY / PERPLEXITY_API_KEY / OPENAI_API_KEY，可用 <PROVIDER>_BASE_URL 覆盖地址）
-扩展数据源: 在 app/sources.py 继承 DataSource 并 @register，或直接 POST /api/sources 用 rest/csv/webpage 配置接入。
-定时监控: PRICEHUB_MONITOR_MIN（默认 60 分钟），价格变动≥5% 写入 /api/alerts。
+当前 GitHub 上**没有**已发布的 Windows / macOS / Linux 安装包（无 Release）。README 旧文提到本机 `dist/PriceHub` / `PriceHub-linux-x64.tar.gz`，那是本机构建产物，不是 GitHub 发行资产。桌面打包需在目标系统执行 `./build_desktop.sh`（PyInstaller **不能**交叉编译）。本轮因磁盘不足未重新打包上传。
 
-## 桌面窗口（pywebview）
-- 内嵌服务模式：`python desktop.py`（自动起本地服务+窗口）；瘦客户端：`python desktop.py --url http://服务器:8800`
-- Linux 需 Qt：`pip install pywebview PyQt6 PyQt6-WebEngine qtpy`（box 已装好），Windows 用系统 WebView2(EdgeChromium)，macOS 用 WKWebView，无需额外 GUI 依赖。
-- 打包：在目标系统执行 `pip install pywebview pyinstaller && ./build_desktop.sh`（Windows 用同样的 pyinstaller 命令，产出 dist/PriceHub/PriceHub.exe；macOS 产出 dist/PriceHub.app，可加 --osx-bundle-identifier 并 codesign）。PyInstaller 不能交叉编译。
-- box 上已产出 Linux 包：dist/PriceHub-linux-x64.tar.gz（瘦客户端，默认连 PRICEHUB_URL=http://127.0.0.1:8800）。
-## 快捷键
-Ctrl+K 命令面板 / Ctrl+F 查找 / Ctrl+N 新建数据源 / Ctrl+R 全部抓取 / Ctrl+E 导出CSV / Ctrl+W 关闭标签 / Ctrl+Tab 切换标签 / Ctrl+B 侧栏 / Ctrl+Alt+B 属性面板 / Ctrl+Shift+T 主题 / F5 刷新
+## 界面截图
+
+以下为仓库 `screenshots/` 中已有的真实产品界面，不是生成图。
+
+![仪表盘](screenshots/01-dashboard.png)
+
+*仪表盘 / Dashboard*
+
+![产品列表](screenshots/02-products.png)
+
+*产品列表 / Products*
+
+![产品详情](screenshots/03-product-detail.png)
+
+*产品详情 / Product detail*
+
+更多见 `screenshots/`（搜索、数据源、告警、移动端布局等）。
+
+## 从源码运行
+
+```bash
+# 示例（本机路径按实际调整）
+python -m venv .venv
+. .venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --port 8800
+# UI: http://127.0.0.1:8800/   API docs: /docs
+```
+
+桌面窗口（pywebview）：`python desktop.py`（自动起本地服务+窗口），或 `python desktop.py --url http://服务器:8800`。
+
+监控采集指标时，请自行生成 `PRICEHUB_METRICS_TOKEN`，写入未纳入版本库的配置文件（可参考仓库中的 example）。**不要把令牌、密钥写进 README、日志或 PR。**
+
+## 限制
+
+- 无已发布安装包；Windows 需本机打包。
+- 依赖外部数据源与可选 AI Key；未配置时相关能力不可用。
+- 仓库根目录 LICENSE 情况以仓库实际文件为准；本 PR 不新增 LICENSE。
+
+---
+
+## English
+
+**PriceHub** monitors competitor prices: multi-source crawl, matching/dedup, alerts, and pricing suggestions. Run as a local server or desktop (pywebview) shell.
+
+### Download
+
+No published installer on GitHub Releases. Desktop builds use PyInstaller on the target OS (`./build_desktop.sh`); they cannot be cross-compiled. This pass did not package or upload artifacts (disk).
+
+### Screenshots
+
+The images above are existing real UI captures under `screenshots/`. They are not generated artwork.
+
+### Run from source
+
+```bash
+python -m venv .venv
+. .venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --port 8800
+```
+
+Do not commit metrics tokens or API keys.
