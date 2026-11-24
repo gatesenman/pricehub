@@ -313,20 +313,41 @@ def _peers(pid):
     p = db.q("SELECT * FROM products WHERE id=?", (pid,), one=True)
     if not p: raise HTTPException(404, "商品不存在")
     peers = []
-    for r in db.q("SELECT id,platform,title,seller FROM products WHERE group_key=?", (p["group_key"],)):
+    for r in db.q("SELECT id,platform,title,seller,currency FROM products WHERE group_key=?", (p["group_key"],)):
         lr = db.q("SELECT * FROM prices WHERE product_id=? ORDER BY ts DESC, id DESC LIMIT 1", (r["id"],), one=True)
         r["price"] = lr and lr["price"]; r["conf"] = lr and CF.fresh(_conf_of(lr), lr["ts"]); peers.append(r)
     return p, peers
 @app.get("/api/products/{pid}/compare")
 def compare(pid: int):
-    p, peers = _peers(pid); peers = sorted([x for x in peers if x["price"] is not None], key=lambda x: x["price"])
-    return {"group_key": p["group_key"], "offers": peers, "cheapest": peers[0] if peers else None, "spread": round(peers[-1]["price"] - peers[0]["price"], 2) if peers else 0}
+    from app.domains.normalize.service import to_cny
+    p, peers = _peers(pid)
+    unavailable=[]; offers=[]
+    for r in peers:
+        if r["price"] is None: continue
+        r["comparison_price"]=to_cny(r["price"],r.get("currency"))
+        r["comparison_currency"]="CNY"
+        (offers if r["comparison_price"] is not None else unavailable).append(r)
+    offers.sort(key=lambda r:r["comparison_price"])
+    return {"group_key":p["group_key"],"offers":offers,"unconverted":unavailable,"currency":"CNY",
+            "cheapest":offers[0] if offers else None,
+            "spread":round(offers[-1]["comparison_price"]-offers[0]["comparison_price"],2) if offers else 0,
+            "rate_note":"使用配置的参考汇率，非实时成交汇率"}
 @app.get("/api/products/{pid}/pricing")
 def pricing(pid: int, markup: float = 0.2, cost: float | None = None):
-    p, peers = _peers(pid)
-    comp = [x for x in peers if x["id"] != pid and x["price"]]
-    r = analytics.pricing(cost or p["cost"], [x["price"] for x in comp], markup)
-    r["conf"] = CF.pricing_conf(cost or p["cost"], [x["conf"]["confidence"] for x in comp]); return r
+    from app.domains.normalize.service import fx, to_cny
+    p,peers=_peers(pid)
+    cur=p.get("currency") or "CNY"; rate=fx().get(cur.upper())
+    comp=[]; confs=[]
+    for r in peers:
+        if r["id"]==pid or r["price"] is None: continue
+        cny=to_cny(r["price"],r.get("currency"))
+        if cny is not None and rate:
+            comp.append(cny/rate)
+            confs.append((r.get("conf") or {}).get("confidence",0))
+    chosen=cost if cost is not None else p.get("cost")
+    result=analytics.pricing(chosen,comp,markup)
+    result.update(conf=CF.pricing_conf(chosen,confs),currency=cur,rate_note="使用配置的参考汇率")
+    return result
 @app.get("/api/compare/deep")
 def deep_compare(ids: str):
     """深度对比：ids=1,2,3（2-8 个）。逐项对比价格/统计/预测/平台/卖家/类目/属性，并标出差异与最优/最差。"""
@@ -353,8 +374,10 @@ def deep_compare(ids: str):
     nums = {"last_price": [it["product"].get("last_price") for it in items], "min": [it["stats"].get("min") for it in items], "avg": [it["stats"].get("avg") for it in items],
             "max": [it["stats"].get("max") for it in items], "change_pct": [it["stats"].get("change_pct") for it in items],
             "forecast_7": [(it["forecast"].get("linear_regression") or [None])[-1] for it in items], "confidence": [(it["product"].get("last_conf") or {}).get("confidence") for it in items]}
-    rank = {k: dict(zip(("best", "worst"), best(v, low=(k != "confidence")))) for k, v in nums.items()}
-    return {"items": items, "fields": fields, "diff": diff, "attr_keys": keys, "attr_diff": attr_diff, "rank": rank,
+    currencies={it["product"].get("currency") or "CNY" for it in items}
+    mixed=len(currencies)>1
+    rank = {k: dict(zip(("best", "worst"), (None,None) if mixed and k in ("last_price","min","avg","max","forecast_7") else best(v, low=(k != "confidence")))) for k, v in nums.items()}
+    return {"items": items, "currency_warning": "不同币种的原价不参与最优排名" if mixed else None, "fields": fields, "diff": diff, "attr_keys": keys, "attr_diff": attr_diff, "rank": rank,
             "same_group": len({it["product"]["group_key"] for it in items}) == 1}
 @app.get("/api/alerts")
 def alerts(): return db.q("SELECT a.*, p.title, p.platform FROM alerts a LEFT JOIN products p ON p.id=a.product_id ORDER BY a.id DESC LIMIT 200")

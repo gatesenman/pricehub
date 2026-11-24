@@ -32,7 +32,13 @@ def set_fx(body: dict = Body(...)):
     cur = get_setting("fx", {}) or {}
     for k, v in (body.get("rates") or {}).items():
         if v in (None, ""): cur.pop(k.upper(), None)
-        else: cur[k.upper()] = float(v)
+        else:
+            from app.core.price_input import amount
+            try: rate=amount(v,"汇率")
+            except ValueError as e: raise HTTPException(400,str(e)) from e
+            if rate<=0: raise HTTPException(400,"汇率必须大于 0")
+            if k.upper()=="CNY" and rate!=1: raise HTTPException(400,"人民币基准汇率必须为 1")
+            cur[k.upper()]=rate
     set_setting("fx", cur); return get_fx()
 EDITABLE = ("shipping", "tax_rate", "coupon", "map_price", "target_price", "cost", "gtin", "model", "category", "brand")
 def set_costs(pid: int, body: dict = Body(...)):
