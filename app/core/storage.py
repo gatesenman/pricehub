@@ -218,36 +218,47 @@ def _pg_exec(sql, args, fetch):
 _TX = threading.local()
 @contextlib.contextmanager
 def transaction():
-    """Atomic multi-statement unit; nested calls use savepoints, no schema migration.
-    BEGIN IMMEDIATE serializes SQLite read-modify-write across processes too.
-    """
+    """Atomic unit with savepoints and after-commit side effects."""
+    callbacks=[]
     with _lock:
         active=getattr(_TX,"connection",None)
         if active is not None:
             level=getattr(_TX,"level",0)+1; _TX.level=level
-            sp="ph_sp_"+str(level)
-            active.execute("SAVEPOINT "+sp)
+            sp="ph_sp_"+str(level); active.execute("SAVEPOINT "+sp)
+            mark=len(_TX.callbacks)
             try:
                 yield
                 active.execute("RELEASE SAVEPOINT "+sp)
             except BaseException:
                 active.execute("ROLLBACK TO SAVEPOINT "+sp)
                 active.execute("RELEASE SAVEPOINT "+sp)
+                del _TX.callbacks[mark:]
                 raise
             finally: _TX.level=level-1
             return
         c=pg_conn() if BACKEND=="postgresql" else conn()
         try:
             if BACKEND=="sqlite": c.execute("BEGIN IMMEDIATE")
-            _TX.connection=c
+            _TX.connection=c; _TX.callbacks=[]
             yield
             c.commit(); VER[0]+=1
+            callbacks=list(_TX.callbacks)
         except BaseException:
             c.rollback(); VER[0]+=1
             raise
         finally:
-            _TX.connection=None
+            _TX.connection=None; _TX.callbacks=[]
             if BACKEND=="sqlite": c.close()
+    # No database locks held while dispatching best-effort post-commit effects.
+    for callback in callbacks:
+        try: callback()
+        except Exception:
+            import logging; logging.getLogger("pricehub.storage").exception("after-commit callback failed")
+
+def after_commit(fn):
+    if getattr(_TX,"connection",None) is not None: _TX.callbacks.append(fn)
+    else: fn()
+
 
 def atomic(fn):
     @functools.wraps(fn)

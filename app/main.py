@@ -47,13 +47,14 @@ def _group_latest(gk, exclude_pid):
 from .core.events import bus
 HOOKS = []   # 兼容 v5 的回调列表；v6 起统一走事件总线，HOOKS 作为总线订阅者被调用
 TOPIC = {"price": "price.recorded", "stock": "stock.changed"}
-def _fire(event, **kw): bus.publish(TOPIC.get(event, event), **kw)
+def _fire(event, **kw): db.after_commit(lambda: bus.publish(TOPIC.get(event, event), **kw))
 def _legacy_hooks(topic, **kw):
     ev = {v: k for k, v in TOPIC.items()}.get(topic)
     for h in HOOKS:
         try: h(ev, **kw)
         except Exception as e: __import__("logging").getLogger("pricehub").warning("hook fail", extra={"event": ev, "error": str(e)})
 bus.subscribe("price.recorded", _legacy_hooks, "alerting.rules"); bus.subscribe("stock.changed", _legacy_hooks, "alerting.rules")
+@db.atomic
 def record_price(pid, price, method, ts=None, in_stock=None):
     from app.core.price_input import amount, timestamp
     try: price,ts=amount(price),timestamp(ts)
@@ -86,6 +87,7 @@ def migrate_confidence():
     return n
 MIGRATED = migrate_confidence()
 
+@db.atomic
 def upsert(src_id, it):
     from app.core.price_input import amount, timestamp
     try:
@@ -97,7 +99,12 @@ def upsert(src_id, it):
     attrs = json.dumps(it.get("attrs") or {}, ensure_ascii=False)
     if ex:
         pid = ex["id"]
-        if it.get("seller") or it.get("attrs"): db.ex("UPDATE products SET seller=COALESCE(?,seller), attrs=? WHERE id=?", (it.get("seller"), attrs, pid))
+        # Only supplied metadata is changed; a seller-only refresh must not erase attrs.
+        for field in ("title","category","chain","seller","brand","url","currency"):
+            if it.get(field) not in (None, ""):
+                db.ex(f"UPDATE products SET {field}=? WHERE id=?",(it[field],pid))
+        if "attrs" in it and it["attrs"] is not None:
+            db.ex("UPDATE products SET attrs=? WHERE id=?",(attrs,pid))
     else:
         from app.domains.team import usage as _U
         try: _U.check("skus")
@@ -122,16 +129,18 @@ def upsert(src_id, it):
         record_price(pid, it["price"], it.get("method") or "manual", ts=it.get("ts"), in_stock=stock)
         if last and last["price"] and abs(it["price"] - last["price"]) / last["price"] >= 0.05:
             db.ex("INSERT INTO alerts(product_id,msg) VALUES(?,?)", (pid, f"价格变动 {last['price']} -> {it['price']}"))
-    try:
-        from app.domains.search import semantic as _sem
-        from app.domains.dedup import service as _dedup
-        if ex and it.get("title") is not None and it.get("title") != ex.get("title"):
-            _sem.on_products_changed(updated=[pid]); _dedup.invalidate_index()
-        elif not ex:
-            # 新增：搜索索引增量 add；去重索引留给 detect() 在内存缓存上增量，不主动清盘
-            _sem.on_products_changed(added=[{"id": pid, "title": it.get("title"), "category": it.get("category"), "brand": it.get("brand")}])
-    except Exception as e:
-        print("index update after upsert:", e)
+    def _update_indexes():
+        try:
+            from app.domains.search import semantic as _sem
+            from app.domains.dedup import service as _dedup
+            if ex and it.get("title") is not None and it.get("title") != ex.get("title"):
+                _sem.on_products_changed(updated=[pid]); _dedup.invalidate_index()
+            elif not ex:
+                # 新增：搜索索引增量 add；去重索引留给 detect() 在内存缓存上增量，不主动清盘
+                _sem.on_products_changed(added=[{"id": pid, "title": it.get("title"), "category": it.get("category"), "brand": it.get("brand")}])
+        except Exception as e:
+            print("index update after upsert:", e)
+    db.after_commit(_update_indexes)
     return pid
 
 @app.get("/api/health")

@@ -38,3 +38,8 @@ v15 多文件分别 replace 允许读到不同代的 ids/index；现改为单个
 原比较接口直接按不同币种的数值排序。现按配置参考汇率统一 CNY 比价/价差；未知币种显式列为 unconverted，不参与最便宜；定价竞品换到目标币种。深度对比混合币种取消原价最优标记并提示；汇率拒绝零/负/非有限值及变更 CNY 基准。
 验证：test_v24_currency + test_v17_stability：5 passed；100 CNY 与 20 USD（配置 7.0）正确排序、未知币种排除、坏汇率不落库；UI 仅静态断言，未声称看过页面。
 下一轮：并发采集 upsert 与提交后事件
+
+## v25 采集写入并发与提交后副作用
+同 external_id 并发读后插存在竞态，且 seller-only 更新会清空 attrs。upsert/record_price 使用事务，SQLite BEGIN IMMEDIATE 覆盖主商品/规格/价格；仅更新提供的元数据。新增 after_commit：事务失败不发价格事件、不发布半成品索引，savepoint 回滚丢弃对应回调。
+验证：test_v25_collect_atomic + test_v22_transactions + test_v23_price_history：12 passed；6 线程 12 次同 SKU 写入仅 1 商品和 12 历史；坏规格导致全部回滚且事件计数 0。
+下一轮：调度线程存活与上下文隔离
