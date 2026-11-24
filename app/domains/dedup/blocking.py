@@ -3,11 +3,11 @@
 候选对 = 以下几路的并集（每路都只产生"可能同款"的对，再交给 service.score_pair 精确打分）：
 1. 条码键：GTIN/EAN/UPC/JAN、ASIN 相同；
 2. 品牌+型号键（brand|model）、品牌+系列键（brand|series）；
-3. 标题字符 3-gram 的 MinHash/LSH（默认 32 个哈希 = 8 band × 4 row，Jaccard≈0.6 起高概率碰撞）；
+3. 标题字符 3-gram 的 MinHash/LSH（默认 48 个哈希 = 8 band × 6 row，比 v13 的 8×4 更紧，超大块再按附加哈希分层后再做滑动窗口）；
 4. 向量近邻（ANN）：每个商品取语义 top-k（默认 30，且相似度 ≥0.45）。n ≤ exact_max 时 FAISS IndexFlatIP 精确 top-k，
    更大时 FAISS HNSW 近似 top-k；无多语言模型时为稀疏 TF-IDF 分块乘法（精确）。
    注：不用"≥0.45 范围检索"，因为多语言模型下同领域标题相似度普遍 ≥0.45，范围检索在 10k 合成数据上退化为 4440 万对（≈全比较）。
-超大块（例如一个品牌+型号下上千个商品）按 max_block 截断为"排序后滑动窗口"，避免块内 m² 爆炸。
+超大块（例如一个品牌+型号下上千个商品）先按附加哈希最多拆 3 层（仅 LSH；条码/品牌型号键保持高召回，不拆），仍超限则按拆分键排序后滑动窗口，避免块内 m² 爆炸。
 增量：BlockIndex 支持 add() 新商品，并只查询新商品的候选（新采集检测从 O(n²) 降到 O(新×块大小 + 新×k)）。
 """
 import zlib, numpy as np
@@ -18,7 +18,7 @@ def shingles(s, k=3):
     if len(s) <= k: return {s} if s else set()
     return {s[i:i + k] for i in range(len(s) - k + 1)}
 class MinHasher:
-    def __init__(self, num=32, bands=8, seed=7):
+    def __init__(self, num=48, bands=8, seed=7):
         r = np.random.RandomState(seed); self.num, self.bands, self.rows = num, bands, num // bands
         self.a = r.randint(1, 2**31 - 1, size=num, dtype=np.int64); self.b = r.randint(0, 2**31 - 1, size=num, dtype=np.int64)
     def sig(self, text):
@@ -35,16 +35,40 @@ def keys_of(f):
     if f.get("model"): ks.append(f"bm:{b}|{f['model']}")
     if f.get("series"): ks.append(f"bs:{b}|{f['series']}")
     return ks
-def _bucket_codes(members, max_block, n, stats):
-    """块内两两对，编码为 i*n+j（i<j）的 int64 数组；超大块改为排序后滑动窗口。"""
+def _window_codes(m, max_block, n):
+    """m 已按亲近度排好。窗口宽度 w=max(2, max_block//4)。"""
+    w = max(2, max_block // 4)
+    x = np.repeat(np.arange(len(m)), w - 1); y = x + np.tile(np.arange(1, w), len(m)); keep = y < len(m); x, y = x[keep], y[keep]
+    return m[x] * n + m[y]
+
+def _bucket_codes(members, max_block, n, stats, split_keys=None, depth=0):
+    """块内两两对，编码为 i*n+j（i<j）的 int64 数组。
+    超大块：若提供 split_keys（LSH），按哈希分层再递归；仍超限或无法再分则按该键排序后滑动窗口。
+    不提供 split_keys 时（条码/品牌型号键）只做窗口，以免拆散高置信块。"""
     m = np.unique(np.asarray(members, dtype=np.int64))
     if len(m) < 2: return None
     if len(m) <= max_block:
         x, y = np.triu_indices(len(m), 1)
-    else:
-        stats["oversize_blocks"] = stats.get("oversize_blocks", 0) + 1; w = max(2, max_block // 4)
-        x = np.repeat(np.arange(len(m)), w - 1); y = x + np.tile(np.arange(1, w), len(m)); keep = y < len(m); x, y = x[keep], y[keep]
-    return m[x] * n + m[y]
+        return m[x] * n + m[y]
+    stats["oversize_blocks"] = stats.get("oversize_blocks", 0) + 1
+    if split_keys is not None and depth < 3:
+        keys = np.asarray(split_keys, dtype=np.uint64)[m]
+        # 每层用不同的 16 位切片，尽量把大桶切开
+        shift = 48 - 16 * depth
+        part = (keys >> shift) & 0xFFFF
+        # 若这一层完全没切开，继续更深一层或窗口
+        if int(np.unique(part).size) > 1:
+            stats["oversize_split"] = stats.get("oversize_split", 0) + 1
+            chunks = []
+            for v in np.unique(part):
+                c = _bucket_codes(m[part == v], max_block, n, stats, split_keys=split_keys, depth=depth + 1)
+                if c is not None and len(c): chunks.append(c)
+            return _uniq(chunks) if chunks else None
+    # 按拆分键（或下标）排序，让更相近的标题落在窗口里
+    if split_keys is not None:
+        m = m[np.argsort(np.asarray(split_keys, dtype=np.uint64)[m], kind="mergesort")]
+    stats["oversize_windows"] = stats.get("oversize_windows", 0) + 1
+    return _window_codes(m, max_block, n)
 def _uniq(chunks):
     """排序去重（原地排序，比 np.unique 的哈希路径省内存）。"""
     if not chunks: return np.zeros(0, np.int64)
@@ -58,9 +82,11 @@ class BlockIndex:
         self.exact_max, self.k, self.sim_floor, self.max_block = exact_max, k, sim_floor, max_block
         self.use_lsh, self.use_ann, self.use_keys, self.hnsw_m = use_lsh, use_ann, use_keys, hnsw_m
         self.mh = MinHasher(); self.key_b = defaultdict(list); self.lsh_b = defaultdict(list); self.n = 0; self.vec = None; self.ann = None
+        self.split_keys = np.zeros(0, dtype=np.uint64)  # 每条商品一个 64-bit，供 LSH 超大块分层
     # ---- 构建 / 增量添加 ----
     def add(self, feats, vec=None):
         base = self.n
+        sk = np.zeros(len(feats), dtype=np.uint64)
         for off, f in enumerate(feats):
             i = base + off
             if self.use_keys:
@@ -69,6 +95,9 @@ class BlockIndex:
                 s = self.mh.sig(f.get("norm"))
                 if s is not None:
                     for bk in self.mh.band_keys(s): self.lsh_b[bk].append(i)
+                    # 把签名折成 64-bit：前 2 与后 2 个哈希，用于超大块再切分
+                    sk[off] = (np.uint64(np.uint32(s[0])) << 32) | np.uint64(np.uint32(s[min(len(s) - 1, 3)]))
+        self.split_keys = np.concatenate([self.split_keys, sk]) if len(self.split_keys) else sk
         self.n += len(feats)
         if vec is not None and self.use_ann: self._add_vec(vec)
         return list(range(base, self.n))
@@ -90,18 +119,22 @@ class BlockIndex:
         用紧凑整数编码而不是 Python 元组集合：1M 商品、数千万候选对时内存从十几 GB 降到几百 MB。"""
         n = self.n; stats = {}; fmask = None
         if focus is not None: fmask = np.zeros(n, bool); fmask[np.asarray(list(focus), dtype=np.int64)] = True
-        def run(buckets):
+        def run(buckets, tighten=False):
             ch = []
+            mb = self.max_block
+            if tighten:
+                mb = max(20, min(mb, max(20, mb // 2)))  # LSH 超大块更早切入分层/窗口
+            sk = self.split_keys if (tighten and len(self.split_keys) == n) else None
             for mem in buckets:
                 if len(mem) < 2 or (fmask is not None and not fmask[mem].any()): continue
-                c = _bucket_codes(mem, self.max_block, n, stats)
+                c = _bucket_codes(mem, mb, n, stats, split_keys=sk)
                 if c is None: continue
                 if fmask is not None: c = c[fmask[c // n] | fmask[c % n]]
-                ch.append(c)
+                if len(c): ch.append(c)
             return _uniq(ch)
         parts = []
-        if self.use_keys: k = run(self.key_b.values()); stats["keys"] = int(len(k)); parts.append(k)
-        if self.use_lsh: l = run(self.lsh_b.values()); stats["lsh"] = int(len(l)); parts.append(l)
+        if self.use_keys: k = run(self.key_b.values(), tighten=False); stats["keys"] = int(len(k)); parts.append(k)
+        if self.use_lsh: l = run(self.lsh_b.values(), tighten=True); stats["lsh"] = int(len(l)); parts.append(l)
         if self.use_ann and self.vec is not None:
             a = self._ann_codes(None if focus is None else np.flatnonzero(fmask)); stats["ann"] = int(len(a)); parts.append(a)
         allc = _uniq(parts); stats["total"] = int(len(allc)); return allc, stats

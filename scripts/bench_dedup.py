@@ -1,5 +1,6 @@
 """v13 去重分块基准：合成 N 个商品（同款簇 + 难负例），对比分块候选与全比较。
-用法：python scripts/bench_dedup.py 10000 [--recall] [--st]   输出一行 JSON 到 stdout（并追加到 docs/bench_dedup_v13.jsonl）。
+用法：python scripts/bench_dedup.py 10000 [--recall] [--st] [--workers N]   输出一行 JSON 到 stdout（并追加到 docs/bench_dedup_v16.jsonl）。
+v16：打分走分块预筛 + 可选多进程；100 万规模不再因 Python 元组集合而跳过打分。
 向量：默认用"字符 3-gram 哈希 → 64 维随机投影"的轻量向量（1M 规模时多语言模型编码太慢）；--st 用真实多语言模型（仅建议 ≤10k）。
 """
 import sys, os, time, json, random, resource, zlib
@@ -41,8 +42,40 @@ def hash_vec(F, dim=64, seed=3):
         s = (f["norm"] or "").replace(" ", ""); g = [zlib.crc32(s[k:k + 3].encode()) & (D - 1) for k in range(max(1, len(s) - 2))]
         V[i] = R[g].sum(0)
     V /= np.linalg.norm(V, axis=1, keepdims=True) + 1e-9; return V
+
+def _workers_arg():
+    if "--workers" in sys.argv:
+        return int(sys.argv[sys.argv.index("--workers") + 1])
+    env = os.environ.get("PRICEHUB_SCORE_WORKERS")
+    return int(env) if env and env.isdigit() else None
+
+def truth_codes(gt, n):
+    from collections import defaultdict
+    cl = defaultdict(list)
+    for i, c in enumerate(gt): cl[c].append(i)
+    out = []
+    for m in cl.values():
+        m.sort()
+        for a in range(len(m)):
+            for b in range(a + 1, len(m)):
+                out.append(m[a] * n + m[b])
+    return np.asarray(out, dtype=np.int64)
+
+def recall_of(codes, want):
+    if len(want) == 0: return 1.0
+    if len(codes) == 0: return 0.0
+    idx = np.searchsorted(codes, want)
+    idx = np.minimum(idx, len(codes) - 1)
+    return float((codes[idx] == want).mean())
+
+def _append(res):
+    line = json.dumps(res, ensure_ascii=False)
+    print(line)
+    docs = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "docs")
+    open(os.path.join(docs, "bench_dedup_v16.jsonl"), "a").write(line + "\n")
+
 def main():
-    n = int(sys.argv[1]); recall = "--recall" in sys.argv; st = "--st" in sys.argv
+    n = int(sys.argv[1]); recall = "--recall" in sys.argv; st = "--st" in sys.argv; workers = _workers_arg()
     t = time.time(); ps, gt = gen(n); F = [extract(p) for p in ps]; t_feat = time.time() - t
     t = time.time()
     if st:
@@ -51,25 +84,26 @@ def main():
     t_vec = time.time() - t
     t = time.time(); ix = BlockIndex(exact_max=20000, k=30); ix.add(F, V); t_build = time.time() - t
     t = time.time(); codes, stt = ix.candidate_codes(); t_cand = time.time() - t
-    cand = set(zip((codes // n).tolist(), (codes % n).tolist())) if n <= 200000 else None
     thr = 0.70; res = {"n": n, "vectors": vname, "ann": "精确 top-k=30" if n <= 20000 else "HNSW k=30", "all_pairs": n * (n - 1) // 2, "candidate_pairs": int(len(codes)),
            "reduction": round(1 - len(codes) / (n * (n - 1) / 2), 6), "by_source": {k: v for k, v in stt.items() if not k.endswith("_new")},
            "t_features_s": round(t_feat, 1), "t_vectors_s": round(t_vec, 1), "t_index_s": round(t_build, 1), "t_candidates_s": round(t_cand, 1)}
-    def score(i, j):
-        s = float(V[i] @ V[j])
-        if s < 0.45 and not (F[i]["ids"] and F[j]["ids"]): return 0
-        return S.score_pair(ps[i], ps[j], F[i], F[j], s, "x")[0]
-    if n <= 200000:
-        from collections import defaultdict
-        t = time.time(); hit = {p for p in cand if score(*p) >= thr}; res["t_score_s"] = round(time.time() - t, 1); res["suggestions"] = len(hit)
-        gtp = set(); cl = defaultdict(list)
-        for i, c in enumerate(gt): cl[c].append(i)
-        for m in cl.values():
-            for a in range(len(m)):
-                for b in range(a + 1, len(m)): gtp.add((m[a], m[b]))
-        res["truth_pairs"] = len(gtp); res["truth_recall_candidates"] = round(len(gtp & cand) / max(1, len(gtp)), 4)
-        res["truth_recall_suggestions"] = round(len(gtp & hit) / max(1, len(gtp)), 4); res["precision_suggestions"] = round(len(gtp & hit) / max(1, len(hit)), 4)
+    from app.domains.dedup.parallel import score_candidate_codes, default_workers
+    w = workers if workers is not None else default_workers(int(len(codes)))
+    res["score_workers"] = w
+    t = time.time()
+    hits = score_candidate_codes(codes, n, ps, F, vec=V, engine="x", threshold=thr, workers=w)
+    res["t_score_s"] = round(time.time() - t, 1); res["suggestions"] = len(hits)
+    want = truth_codes(gt, n)
+    res["truth_pairs"] = int(len(want))
+    res["truth_recall_candidates"] = round(recall_of(codes, want), 4)
+    hit_codes = np.sort(np.asarray([i * n + j if i < j else j * n + i for i, j, *_ in hits], dtype=np.int64)) if hits else np.zeros(0, np.int64)
+    res["truth_recall_suggestions"] = round(recall_of(hit_codes, want), 4)
+    res["precision_suggestions"] = round(float(np.intersect1d(hit_codes, want).size / max(1, len(hit_codes))), 4)
     if recall:   # 全比较对照：所有对中（语义 ≥0.45 或都有条码）再打分 ≥ thr —— 与 v12 行为一致
+        def score(i, j):
+            s = float(V[i] @ V[j])
+            if s < 0.45 and not (F[i]["ids"] and F[j]["ids"]): return 0
+            return S.score_pair(ps[i], ps[j], F[i], F[j], s, "x")[0]
         t = time.time(); full = set(); hasid = np.array([bool(f["ids"]) for f in F])
         for a in range(0, n, 1000):
             M = V[a:a + 1000] @ V.T
@@ -78,18 +112,21 @@ def main():
                 for j in js[js > i]:
                     if score(i, int(j)) >= thr: full.add((i, int(j)))
         res["t_all_pairs_s"] = round(time.time() - t, 1); res["all_pairs_suggestions"] = len(full)
+        hit = {(i, j) for i, j, *_ in hits}
         res["recall_vs_all_pairs"] = round(len(full & hit) / max(1, len(full)), 4)
         ix2 = BlockIndex(exact_max=0, k=30); ix2.add(F, V); c2, _ = ix2.candidate_pairs(); h2 = {p for p in c2 if score(*p) >= thr}
         res["hnsw_candidate_pairs"] = len(c2); res["hnsw_recall_vs_all_pairs"] = round(len(full & h2) / max(1, len(full)), 4)
         ix3 = BlockIndex(exact_max=0, k=30, use_ann=False); ix3.add(F, None); c3, _ = ix3.candidate_pairs(); h3 = {p for p in c3 if score(*p) >= thr}
         res["keys_lsh_only_recall_vs_all_pairs"] = round(len(full & h3) / max(1, len(full)), 4)
     res["peak_rss_mb"] = round(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024)
-    print(json.dumps(res, ensure_ascii=False)); open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "docs", "bench_dedup_v13.jsonl"), "a").write(json.dumps(res, ensure_ascii=False) + "\n")
+    _append(res)
 def incr():
     n = int(sys.argv[2]); m = int(sys.argv[3]); ps, gt = gen(n + m); F = [extract(p) for p in ps]; V = hash_vec(F)
     t = time.time(); ix = BlockIndex(exact_max=20000, k=30); ix.add(F[:n], V[:n]); t_build = time.time() - t
     t = time.time(); new = ix.add(F[n:], V[n:]); c, stt = ix.candidate_codes(new); t_q = time.time() - t
     res = {"mode": "incremental", "existing": n, "new": m, "t_build_existing_s": round(t_build, 1), "t_add_and_query_new_s": round(t_q, 2), "candidate_pairs_new": int(len(c)),
-           "all_pairs_new": m * n + m * (m - 1) // 2}
-    print(json.dumps(res, ensure_ascii=False)); open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "docs", "bench_dedup_v13.jsonl"), "a").write(json.dumps(res, ensure_ascii=False) + "\n")
+           "all_pairs_new": m * n + m * (m - 1) // 2,
+           "by_source": {k: v for k, v in stt.items() if not k.endswith("_new")}}
+    res["peak_rss_mb"] = round(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024)
+    _append(res)
 incr() if sys.argv[1] == "incr" else main()

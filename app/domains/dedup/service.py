@@ -160,29 +160,19 @@ def detect(new_ids=None, record=True):
     decided = {(r["a_id"], r["b_id"]): r["status"] for r in db.q("SELECT a_id,b_id,status FROM dedup_candidates")}
     focus = [idx[i] for i in (new_ids or []) if i in idx] if new_ids else None
     t0 = time.time()
-    if (st.get("blocking") or {}).get("enabled", True):
-        bix, eng, incr = _block_index(ps, F, new_ids); cand, bstats = bix.candidate_pairs(focus)
-        pairs = sorted(cand); simf = bix.sim; mode = "blocking"
-    else:   # v12 全比较（保留作对照）
-        S, eng = _text_sim(ps); incr = False; bstats = {}; simf = lambda i, j: float(S[i, j]); mode = "all_pairs"
-        pairs = ((i, j) for i in (focus if focus is not None else range(len(ps))) for j in range(len(ps)) if (focus is not None and i != j) or (focus is None and j > i))
     n = len(ps); all_pairs = n * (n - 1) // 2 if focus is None else len(focus) * (n - 1) - len(focus) * (len(focus) - 1) // 2
     found, seen, n_pairs, auto = 0, set(), 0, 0
-    for i, j in pairs:
+    def _accept(i, j, sc, why, sig):
+        nonlocal found, auto
         a, b = ps[i], ps[j]
         if a["id"] > b["id"]: a, b, i, j = b, a, j, i
-        if (a["id"], b["id"]) in seen: continue
-        seen.add((a["id"], b["id"])); n_pairs += 1
-        # 预筛：语义很低且无条码时跳过
-        sij = simf(i, j)
-        if sij < 0.45 and not (F[i]["ids"] and F[j]["ids"]): continue
-        sc, why, sig = score_pair(a, b, F[i], F[j], sij, eng)
-        if sc < thr: continue
+        if (a["id"], b["id"]) in seen: return
+        seen.add((a["id"], b["id"]))
         scope = "same_platform" if a["platform"] == b["platform"] else "cross_platform"
         if scope == "same_platform": why.insert(0, f"同一平台（{a['platform']}）的不同商品页")
         else: why.insert(0, f"跨平台：{a['platform']} / {b['platform']}")
-        if (a["id"], b["id"]) in decided and decided[(a["id"], b["id"])] != "pending": continue   # 已经人工处理过的不再打扰
-        if not record: found += 1; continue
+        if (a["id"], b["id"]) in decided and decided[(a["id"], b["id"])] != "pending": return
+        if not record: found += 1; return
         db.ex("INSERT INTO dedup_candidates(a_id,b_id,score,scope,reasons,signals,status) VALUES(?,?,?,?,?,?,'pending') "
               "ON CONFLICT(workspace_id,a_id,b_id) DO UPDATE SET score=excluded.score, reasons=excluded.reasons, signals=excluded.signals, scope=excluded.scope",
               (a["id"], b["id"], sc, scope, json.dumps(why, ensure_ascii=False), json.dumps(sig, ensure_ascii=False)))
@@ -192,6 +182,27 @@ def detect(new_ids=None, record=True):
             c = db.q("SELECT id FROM dedup_candidates WHERE a_id=? AND b_id=?", (a["id"], b["id"]), one=True)
             try: merge(c["id"], mode="auto"); auto += 1
             except HTTPException: pass
+    if (st.get("blocking") or {}).get("enabled", True):
+        from .parallel import score_candidate_codes
+        import scipy.sparse as sp
+        bix, eng, incr = _block_index(ps, F, new_ids); codes, bstats = bix.candidate_codes(focus)
+        simf = bix.sim; mode = "blocking"; n_pairs = int(len(codes))
+        vec = None if (bix.vec is not None and sp.issparse(bix.vec)) else bix.vec
+        for i, j, sc, why, sig in score_candidate_codes(codes, n, ps, F, vec=vec, simf=simf, engine=eng, threshold=thr):
+            _accept(i, j, sc, why, sig)
+    else:   # v12 全比较（保留作对照）
+        S, eng = _text_sim(ps); incr = False; bstats = {}; simf = lambda i, j: float(S[i, j]); mode = "all_pairs"
+        pairs = ((i, j) for i in (focus if focus is not None else range(len(ps))) for j in range(len(ps)) if (focus is not None and i != j) or (focus is None and j > i))
+        for i, j in pairs:
+            a, b = ps[i], ps[j]
+            if a["id"] > b["id"]: a, b, i, j = b, a, j, i
+            if (a["id"], b["id"]) in seen: continue
+            n_pairs += 1
+            sij = simf(i, j)
+            if sij < 0.45 and not (F[i]["ids"] and F[j]["ids"]): continue
+            sc, why, sig = score_pair(a, b, F[i], F[j], sij, eng)
+            if sc < thr: continue
+            _accept(i, j, sc, why, sig)
     return {"pairs": n_pairs, "candidates": found, "auto_merged": auto, "engine": eng, "mode": mode, "all_pairs": all_pairs,
             "incremental": incr, "blocking": bstats, "seconds": round(time.time() - t0, 3)}
 
