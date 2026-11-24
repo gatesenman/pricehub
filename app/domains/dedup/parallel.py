@@ -3,10 +3,25 @@
 多进程只用 fork（子进程 COW 只读父进程的商品/向量，不把 100 万条记录 pickle 出去）。
 fork 不可用或失败时自动回退单进程。服务进程里若已有多线程，fork 可能不安全，可用 PRICEHUB_SCORE_WORKERS=1 关闭。
 """
-import os
+import os, threading, logging
 import numpy as np
 
 _STATE = {}
+_POOL_LOCK = threading.Lock()
+log = logging.getLogger("pricehub.dedup.score")
+
+def parallel_backend(workers, sims):
+    """fork is allowed only in a single-threaded CLI, never an ASGI worker thread.
+    Windows/spawn and sparse/callback scoring use the same sequential scorer.
+    """
+    if workers <= 1: return "sequential"
+    if sims is None: return "sequential:callback"
+    import multiprocessing as mp
+    if "fork" not in mp.get_all_start_methods(): return "sequential:no-fork"
+    if threading.current_thread() is not threading.main_thread() or threading.active_count() != 1:
+        return "sequential:threaded-process"
+    return "fork"
+
 
 
 def default_workers(n_codes=0):
@@ -102,23 +117,22 @@ def score_candidate_codes(codes, n, ps, F, *, vec=None, simf=None, engine="向�
             found.extend(run_one(codes[sl], None if sims is None else sims[sl]))
         return found
 
-    if workers <= 1 or len(codes) < 20000:
+    backend=parallel_backend(workers,sims)
+    if len(codes) < 20000 or backend != "fork":
         return run_all_seq()
-
+    # One pool owns shared state at a time; lock is acquired non-blocking before fork.
+    if not _POOL_LOCK.acquire(blocking=False): return run_all_seq()
     try:
         import multiprocessing as mp
-        if "fork" not in mp.get_all_start_methods():
-            return run_all_seq()
         _STATE.update(ps=ps, F=F, engine=engine, thr=float(threshold), n=int(n))
-        chunks = []
-        for st in range(0, len(codes), chunk):
-            sl = slice(st, st + chunk)
-            chunks.append((codes[sl], None if sims is None else sims[sl]))
-        ctx = mp.get_context("fork")
-        found = []
-        with ctx.Pool(processes=workers) as pool:
-            for part in pool.imap_unordered(_worker_score, chunks, chunksize=1):
-                found.extend(part)
+        chunks = ((codes[st:st+chunk], sims[st:st+chunk]) for st in range(0,len(codes),chunk))
+        found=[]
+        with mp.get_context("fork").Pool(processes=workers) as pool:
+            for part in pool.imap(_worker_score,chunks,chunksize=1): found.extend(part)
         return found
-    except Exception:
+    except Exception as e:
+        log.warning("parallel scoring failed; sequential fallback: %s",type(e).__name__)
         return run_all_seq()
+    finally:
+        _STATE.clear()
+        _POOL_LOCK.release()

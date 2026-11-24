@@ -18,3 +18,8 @@ v15 多文件分别 replace 允许读到不同代的 ids/index；现改为单个
 语义搜索共用可变 _INDEX，另一请求可能在检索前替换商品顺序。使用可重入锁覆盖索引构建/检索/失效，确保结果位置对应同一商品快照；embedding 文件绑定模型+归一化版本并原子替换。旧无模型元数据缓存自动忽略。
 验证：test_v20_search_consistency + test_v15_faiss_persist：12 passed；并发 40 次交替顺序查询均返回正确 id，模型切换拒绝旧 embedding。
 下一轮：跨平台安全并行和稀疏评分
+
+## v21 Windows 回退与服务进程安全评分
+审计发现稀疏/回调相似度在 fork worker 中被当作 0，且 ASGI 工作线程 fork 存在继承锁死锁风险。仅单线程 CLI 的 dense 评分允许 fork；Windows/spawn、稀疏、服务多线程统一正确串行回退；清理池共享状态、顺序收集结果，失败有日志。
+验证：test_v21_portable_scores + test_v16_dedup_scale：8 passed；模拟仅 spawn、线程内禁 fork、20301 对稀疏回调与串行一致。未在 Windows 真机执行，未重新声称 1M 性能。
+下一轮：合并与撤销的事务原子性
