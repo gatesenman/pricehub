@@ -38,7 +38,9 @@ def _save_image(url_or_path, pid):
 def _safe_attrs(raw):
     """商品 attrs 损坏时不让整个列表/详情 500。"""
     if isinstance(raw, dict): return raw
-    try: return json.loads(raw or "{}")
+    try:
+        value=json.loads(raw or "{}")
+        return value if isinstance(value,dict) else {}
     except Exception: return {}
 def _conf_of(r):
     return {"confidence": r.get("confidence"), "level": r.get("conf_level"), "basis": json.loads(r.get("conf_basis") or "[]"), "method": r.get("method")}
@@ -111,7 +113,8 @@ def upsert(src_id, it):
         except _U.QuotaExceeded as e: raise HTTPException(429, str(e))
         pid = db.ex("INSERT INTO products(source_id,platform,external_id,title,category,chain,brand,url,currency,cost,group_key,seller,attrs) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",
                     (src_id, plat, it["external_id"], it.get("title"), it.get("category"), it.get("chain"), it.get("brand"), it.get("url"), it.get("currency") or "CNY", it.get("cost"), gk, it.get("seller"), attrs))
-    if it.get("image_url") and not (ex and ex.get("phash")): _save_image(it["image_url"], pid)
+    if it.get("image_url") and not (ex and ex.get("phash")):
+        db.after_commit(lambda: _save_image(it["image_url"], pid))
     for k in ("gtin", "model", "shipping", "rendered"):
         if it.get(k) is not None: db.ex(f"UPDATE products SET {k}=? WHERE id=?", (it[k], pid))
     if it.get("brand") and not (ex and ex.get("brand")): db.ex("UPDATE products SET brand=? WHERE id=?", (it["brand"], pid))

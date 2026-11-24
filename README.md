@@ -26,3 +26,14 @@ AI 搜索: export DEEPSEEK_API_KEY=...（另支持 MOONSHOT_API_KEY / DASHSCOPE_
 - box 上已产出 Linux 包：dist/PriceHub-linux-x64.tar.gz（瘦客户端，默认连 PRICEHUB_URL=http://127.0.0.1:8800）。
 ## 快捷键
 Ctrl+K 命令面板 / Ctrl+F 查找 / Ctrl+N 新建数据源 / Ctrl+R 全部抓取 / Ctrl+E 导出CSV / Ctrl+W 关闭标签 / Ctrl+Tab 切换标签 / Ctrl+B 侧栏 / Ctrl+Alt+B 属性面板 / Ctrl+Shift+T 主题 / F5 刷新
+
+## v18–v27 可靠性更新
+
+- 工作区缓存/去重数据及索引分别隔离；FAISS/numpy 快照升级 `pricehub-faiss-v2`，单文件原子发布并检查校验和，旧缓存自动重建。
+- 价格必须为有限非负数；显式时区时间归一到 UTC；历史回填不覆盖按事件时间计算的现价。
+- 比价按配置参考汇率统一 CNY 排序（非实时汇率），未知币种单列；定价竞品换成目标商品币种。
+- 采集 upsert、合并/撤销使用事务；撤销绑定工作区和 10 分钟有效期，不覆盖被复用 id 的新数据。
+- 去重 fork 并行仅用于安全的单线程 dense CLI；Windows、服务多线程、稀疏回调均正确串行回退。
+- 测试图片/证据可用 `PRICEHUB_IMAGE_DIR`、`PRICEHUB_EVIDENCE_DIR` 隔离；正常默认路径保持不变。
+
+验证范围与未通过项详见 [十轮状态记录](docs/ITERATION_v18_v27_STATUS.md)。目前不是全量依赖测试全绿，也未做 Windows 真机或 PG 服务验证。

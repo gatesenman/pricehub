@@ -37,3 +37,18 @@ with db.transaction():
     assert not calls
 assert calls==['outer']
 ''')
+
+
+def test_image_io_runs_outside_write_transaction():
+    probe('''
+from app import main as M,db
+called=[]
+def image(url,pid):
+    assert getattr(db._TX,'connection',None) is None
+    assert db.q('SELECT id FROM products WHERE id=?',(pid,),one=True)
+    called.append(pid)
+M._save_image=image
+pid=M.upsert(None,{'title':'image','platform':'local','external_id':'img','image_url':'mock://image'})
+assert called==[pid]
+assert M._safe_attrs('[]')=={} and M._safe_attrs('123')=={}
+''')

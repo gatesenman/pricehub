@@ -39,7 +39,7 @@ def _window_codes(m, max_block, n):
     """m 已按亲近度排好。窗口宽度 w=max(2, max_block//4)。"""
     w = max(2, max_block // 4)
     x = np.repeat(np.arange(len(m)), w - 1); y = x + np.tile(np.arange(1, w), len(m)); keep = y < len(m); x, y = x[keep], y[keep]
-    return m[x] * n + m[y]
+    return np.minimum(m[x], m[y]) * n + np.maximum(m[x], m[y])
 
 def _bucket_codes(members, max_block, n, stats, split_keys=None, depth=0):
     """块内两两对，编码为 i*n+j（i<j）的 int64 数组。

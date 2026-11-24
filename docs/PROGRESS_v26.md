@@ -6,7 +6,7 @@
 未知异常/路由异常会直接杀死工作线程；并发 start 也可能多启线程。现启动过程持条件锁，所有任务捕获未归类异常并终结/写死信，后续任务继续；每个 Job 保存独立 contextvars 工作区；令牌桶速率拒绝零/负/非有限值，stop 可等待线程退出。
 
 ## 验证
-test_v26_scheduler + test_v6_platform + test_v11_routing：结果见 iteration-results/v26.txt；新 7 项通过（异常后线程存活、32 并发任务工作区一致、限速非法值）。
+test_v26_scheduler + test_v6_platform + test_v11_routing：18 passed、4 skipped（6.42s）；新 7 项通过（异常后线程存活、32 并发任务工作区一致、限速非法值）。
 
 ## 边界
 仅临时数据库和目录；未运行真实外发、未改生产数据；不代表真实业务数据覆盖。

@@ -99,3 +99,11 @@ def test_parallel_scores_match_sequential():
     kseq = {(i, j): round(sc, 4) for i, j, sc, *_ in seq}
     kpar = {(i, j): round(sc, 4) for i, j, sc, *_ in par}
     assert kseq == kpar and len(kseq) > 0
+
+
+def test_window_codes_canonical_even_when_split_order_is_reversed():
+    from app.domains.dedup.blocking import _window_codes
+    m=np.array([9,1,8,2,7,3,6,4,5,0],dtype=np.int64)
+    c=_window_codes(m,20,10)
+    assert np.all(c//10 < c%10)
+    assert len(np.unique(c))==len(c)
