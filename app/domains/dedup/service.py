@@ -233,6 +233,7 @@ def _pick_canonical(a, b):
     na = (db.q("SELECT COUNT(*) n FROM prices WHERE product_id=?", (a,), one=True) or {}).get("n", 0)
     nb = (db.q("SELECT COUNT(*) n FROM prices WHERE product_id=?", (b,), one=True) or {}).get("n", 0)
     return (a, b) if (na, -a) >= (nb, -b) else (b, a)
+@db.atomic
 def merge(cid: int, canonical_id: int = None, mode="manual", actor="user"):
     c = db.q("SELECT * FROM dedup_candidates WHERE id=?", (cid,), one=True)
     if not c: raise HTTPException(404, "候选不存在")
@@ -240,6 +241,7 @@ def merge(cid: int, canonical_id: int = None, mode="manual", actor="user"):
     if canonical_id and canonical_id not in (c["a_id"], c["b_id"]): raise HTTPException(400, "主商品必须是这一对中的一个")
     keep, drop = (canonical_id, c["b_id"] if canonical_id == c["a_id"] else c["a_id"]) if canonical_id else _pick_canonical(c["a_id"], c["b_id"])
     ps = {p["id"]: p for p in db.q("SELECT id, merged_into, group_key FROM products WHERE id IN (?,?)", (keep, drop))}
+    if keep not in ps or drop not in ps: raise HTTPException(404, "商品不存在")
     if ps.get(keep, {}).get("merged_into") or ps.get(drop, {}).get("merged_into"): raise HTTPException(409, "其中一个商品已被合并到别的商品，请先撤销那次合并")
     moved = [r["id"] for r in db.q("SELECT id FROM prices WHERE product_id=?", (drop,))]
     children = [r["id"] for r in db.q("SELECT id FROM products WHERE merged_into=?", (drop,))]
@@ -255,6 +257,7 @@ def merge(cid: int, canonical_id: int = None, mode="manual", actor="user"):
     db.ex("UPDATE dedup_candidates SET status='superseded', decided_at=datetime('now') WHERE status='pending' AND (a_id=? OR b_id=?)", (drop, drop))
     invalidate_index()
     return {"ok": True, "merge_id": mid, "canonical_id": keep, "merged_id": drop, "moved_prices": len(moved), "message": f"已合并：保留 #{keep}，#{drop} 作为它的商品页，移动 {len(moved)} 条价格记录"}
+@db.atomic
 def unmerge(mid: int):
     m = db.q("SELECT * FROM product_merges WHERE id=?", (mid,), one=True)
     if not m: raise HTTPException(404, "合并记录不存在")

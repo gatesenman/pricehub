@@ -23,3 +23,8 @@ v15 多文件分别 replace 允许读到不同代的 ids/index；现改为单个
 审计发现稀疏/回调相似度在 fork worker 中被当作 0，且 ASGI 工作线程 fork 存在继承锁死锁风险。仅单线程 CLI 的 dense 评分允许 fork；Windows/spawn、稀疏、服务多线程统一正确串行回退；清理池共享状态、顺序收集结果，失败有日志。
 验证：test_v21_portable_scores + test_v16_dedup_scale：8 passed；模拟仅 spawn、线程内禁 fork、20301 对稀疏回调与串行一致。未在 Windows 真机执行，未重新声称 1M 性能。
 下一轮：合并与撤销的事务原子性
+
+## v22 合并及撤销原子事务
+合并逐条 commit，故障会留下已搬价格但没有审计记录。新增线程本地事务/嵌套 savepoint，SQLite BEGIN IMMEDIATE 串行读改写，merge/unmerge 全部同一提交；缺失商品明确 404。没有 schema 迁移，不需要修改生产库或备份迁移。
+验证：test_v22_transactions + test_v12_dedup：7 passed；注入审计写入故障验证价格/商品/审计全部回滚，嵌套回滚和合并撤销往返通过。PostgreSQL 分支未在真实服务器验证。
+下一轮：价格输入与历史时序

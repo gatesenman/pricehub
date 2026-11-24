@@ -1,9 +1,9 @@
 """存储抽象层：同一套 q/ex/ex_many 接口，后端可选 SQLite（单机默认）或 PostgreSQL（PRICEHUB_DB_URL=postgresql://...）。
 业务代码写 SQLite 方言的 SQL，PostgreSQL 后端在执行前做方言翻译（占位符、UPSERT、datetime('now')、LIKE 大小写、自增主键、RETURNING id）。"""
-import sqlite3, os, json, threading, re, hashlib, decimal
+import sqlite3, os, json, threading, re, hashlib, decimal, contextlib, functools
 from . import tenancy
 DB_PATH = os.environ.get("PRICEHUB_DB", os.path.join(os.path.dirname(__import__('app').__file__), "..", "data", "pricehub.db"))
-_lock = threading.Lock()
+_lock = threading.RLock()
 DB_URL = os.environ.get("PRICEHUB_DB_URL", "")
 BACKEND = "postgresql" if DB_URL.startswith(("postgres://", "postgresql://")) else "sqlite"
 VER = [0]   # 写操作版本号，用于接口缓存/向量索引失效
@@ -214,9 +214,75 @@ def _pg_exec(sql, args, fetch):
             c.commit(); return rows, rid, rc
         except Exception:
             c.rollback(); raise
+# Transactions are thread-local, matching SQLite/psycopg connection ownership.
+_TX = threading.local()
+@contextlib.contextmanager
+def transaction():
+    """Atomic multi-statement unit; nested calls use savepoints, no schema migration.
+    BEGIN IMMEDIATE serializes SQLite read-modify-write across processes too.
+    """
+    with _lock:
+        active=getattr(_TX,"connection",None)
+        if active is not None:
+            level=getattr(_TX,"level",0)+1; _TX.level=level
+            sp="ph_sp_"+str(level)
+            active.execute("SAVEPOINT "+sp)
+            try:
+                yield
+                active.execute("RELEASE SAVEPOINT "+sp)
+            except BaseException:
+                active.execute("ROLLBACK TO SAVEPOINT "+sp)
+                active.execute("RELEASE SAVEPOINT "+sp)
+                raise
+            finally: _TX.level=level-1
+            return
+        c=pg_conn() if BACKEND=="postgresql" else conn()
+        try:
+            if BACKEND=="sqlite": c.execute("BEGIN IMMEDIATE")
+            _TX.connection=c
+            yield
+            c.commit(); VER[0]+=1
+        except BaseException:
+            c.rollback(); VER[0]+=1
+            raise
+        finally:
+            _TX.connection=None
+            if BACKEND=="sqlite": c.close()
+
+def atomic(fn):
+    @functools.wraps(fn)
+    def call(*args,**kw):
+        with transaction(): return fn(*args,**kw)
+    return call
+
+def _tx_exec(sql,args,fetch):
+    c=_TX.connection
+    returning=False
+    if BACKEND=="postgresql":
+        sql,returning=translate(sql)
+        cur=c.cursor(); _pg_ws(cur)
+    else:
+        if not tenancy.bypassed(): sql=tenancy.rewrite(sql,tenancy.current())
+        cur=c.cursor()
+    try:
+        cur.execute(sql,tuple(args))
+        rows=[]; rid=getattr(cur,"lastrowid",None)
+        if cur.description:
+            if BACKEND=="postgresql":
+                names=[d.name for d in cur.description]
+                data=cur.fetchall()
+                if returning and not fetch: rid=data[0][0] if data else None
+                else: rows=[{k:_fix(v) for k,v in zip(names,r)} for r in data]
+            else: rows=[dict(r) for r in cur.fetchall()]
+        return rows,rid,cur.rowcount
+    finally: cur.close()
+
 # ---------------- 统一接口 ----------------
 def init(): return _pg_init() if BACKEND == "postgresql" else _sqlite_init()
 def q(sql, args=(), one=False):
+    if getattr(_TX,"connection",None) is not None:
+        rows,_,_=_tx_exec(sql,args,True)
+        return (rows[0] if rows else None) if one else rows
     if BACKEND == "postgresql":
         rows, _, rc = _pg_exec(sql, args, True); rows = rows or []
         if not sql.lstrip().upper().startswith("SELECT"): VER[0] += 1
@@ -227,6 +293,9 @@ def q(sql, args=(), one=False):
         if c.total_changes: VER[0] += 1
         c.commit(); return (rows[0] if rows else None) if one else rows
 def ex(sql, args=()):
+    if getattr(_TX,"connection",None) is not None:
+        _,rid,rc=_tx_exec(sql,args,False)
+        return rid if rid is not None else rc
     if BACKEND == "postgresql":
         _, rid, rc = _pg_exec(sql, args, False); VER[0] += 1
         if rid is None and re.match(r"\s*INSERT", sql, re.I): return 0 if not rc or rc < 0 else rc
@@ -235,6 +304,9 @@ def ex(sql, args=()):
     with _lock, conn() as c:
         cur = c.execute(sql, args); c.commit(); VER[0] += 1; return cur.lastrowid
 def ex_many(sql, rows):
+    if getattr(_TX,"connection",None) is not None:
+        for row in rows: _tx_exec(sql,row,False)
+        return
     if BACKEND == "postgresql":
         m = re.match(r"\s*INSERT\s+INTO\s+(\w+)\s*\(([^)]*)\)\s*VALUES\s*\(\s*\?(\s*,\s*\?)*\s*\)\s*$", sql, re.I)
         if m and len(rows) >= COPY_MIN:   # 纯批量插入走 COPY 协议，比逐条 INSERT 快数倍
