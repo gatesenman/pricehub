@@ -29,3 +29,5 @@ deploy/metrics_token
 logs/
 *.log
 data/*.log
+# Reproducible local iteration outputs
+iteration-results/

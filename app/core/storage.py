@@ -83,7 +83,7 @@ _COUNT = {}
 def count(table, where="1=1", args=(), ttl=30):
     """带缓存的计数：同一条件 ttl 秒内复用；PostgreSQL 无条件计数且表很大时用统计信息估算（返回 (数量, 是否精确)）。"""
     import time as _t
-    key = (table, where, tuple(args)); hit = _COUNT.get(key)
+    key = (tenancy.current(), tenancy.bypassed(), table, where, tuple(args)); hit = _COUNT.get(key)
     if hit and _t.time() - hit[0] < ttl and hit[2] == VER[0] // 1000: return hit[1], hit[3]
     exact = True
     if BACKEND == "postgresql" and where == "1=1":

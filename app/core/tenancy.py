@@ -7,7 +7,7 @@
 import contextvars, contextlib, re, threading
 import sqlglot
 from sqlglot import exp
-TENANT_TABLES = {"sources", "products", "prices", "channels", "rules", "notifications", "map_prices", "evidence", "pricing_rules", "tokens", "audit", "alerts", "dead_letters", "settings"}
+TENANT_TABLES = {"sources", "products", "prices", "channels", "rules", "notifications", "map_prices", "evidence", "pricing_rules", "tokens", "audit", "alerts", "dead_letters", "settings", "dedup_candidates", "product_merges"}
 _WS = contextvars.ContextVar("pricehub_ws", default=1)
 _BYPASS = contextvars.ContextVar("pricehub_ws_bypass", default=False)
 def current(): return _WS.get()

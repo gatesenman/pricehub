@@ -258,7 +258,8 @@ def add_product(body: dict = Body(...)):
     body.setdefault("external_id", hashlib.md5(title.encode()).hexdigest()[:10]); return {"id": upsert(None, body)}
 @app.get("/api/products")
 def products(category: str = "", chain: str = "", platform: str = "", q: str = ""):
-    key = ("products", category, chain, platform, q)
+    from app.core import tenancy
+    key = ("products", tenancy.current(), category, chain, platform, q)
     hit = _CACHE.get(key)
     if hit and hit[0] == db.VER[0]: return hit[1]
     out = _products(category, chain, platform, q); _CACHE[key] = (db.VER[0], out)

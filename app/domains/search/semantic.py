@@ -141,7 +141,7 @@ def search_signature(products, dim=None, model=None):
     ids, docs = _docs_ids(products)
     return make_signature(
         name=SEARCH_INDEX, kind="auto", dim=dim, n=len(products),
-        digest=content_digest(ids, texts=docs),
+        digest=content_digest(ids, texts=["workspace:" + str(__import__("app.core.tenancy", fromlist=["current"]).current())] + docs),
         model=model if model is not None else (ENGINE if _ST is not None else ""),
     )
 

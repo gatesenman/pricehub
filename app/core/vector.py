@@ -70,6 +70,8 @@ def signatures_match(stored, expected):
 
 def index_paths(name, root=None):
     root = root or default_dir()
+    from app.core import tenancy
+    root = os.path.join(root, "ws-" + str(tenancy.current()))
     base = os.path.join(root, name)
     return {"root": root, "base": base, "meta": base + ".meta.json", "index": base + ".index",
             "vecs": base + ".vecs.npy", "ids": base + ".ids.npy"}
