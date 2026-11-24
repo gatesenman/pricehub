@@ -6,12 +6,16 @@
 - 死信：超过最大次数或永久错误写入 dead_letters 表，可在界面/接口重新投递。
 - 任务按 kind 注册处理函数（register_handler），任务本身只带可序列化 payload，便于将来换成 Redis/Celery 等分布式队列。
 """
-import heapq, threading, time, random, itertools, json, logging, collections
+import heapq, threading, time, random, itertools, json, logging, collections, contextvars, math
 log = logging.getLogger("pricehub.scheduler")
 class PermanentError(Exception): pass
 
 class TokenBucket:
-    def __init__(self, rate, burst): self.rate, self.burst, self.tokens, self.t = float(rate), float(burst), float(burst), time.monotonic()
+    def __init__(self, rate, burst):
+        rate,burst=float(rate),float(burst)
+        if not math.isfinite(rate) or rate<=0 or not math.isfinite(burst) or burst<1:
+            raise ValueError("rate must be positive and burst >= 1")
+        self.rate,self.burst,self.tokens,self.t=rate,burst,burst,time.monotonic()
     def take(self):
         """可立即执行返回 0，否则返回需要等待的秒数（不扣令牌）。"""
         now = time.monotonic(); self.tokens = min(self.burst, self.tokens + (now - self.t) * self.rate); self.t = now
@@ -21,18 +25,25 @@ class Job:
     _ids = itertools.count(1)
     def __init__(self, kind, payload, key, priority, max_attempts):
         self.id = next(Job._ids); self.kind, self.payload, self.key, self.priority, self.max_attempts = kind, payload, key, priority, max_attempts
+        self.context = contextvars.copy_context()
         self.attempts = 0; self.state = "queued"; self.result = None; self.error = None; self.created = time.time(); self.done = threading.Event(); self.history = []
     def view(self): return {"id": self.id, "kind": self.kind, "key": self.key, "priority": self.priority, "attempts": self.attempts, "state": self.state, "error": self.error, "payload": self.payload, "route": getattr(self, "route", None), "route_desc": getattr(self, "route_desc", None)}
 def routing_labels():
     from . import routing; return routing.node_labels()
 class Scheduler:
     def __init__(self, workers=4, rate=1.0, burst=2, base_backoff=2.0, max_backoff=300.0, dead_sink=None, on_result=None):
+        TokenBucket(rate,burst)  # validate before starting any threads
+        if int(workers)<1: raise ValueError("workers must be >= 1")
         self.handlers = {}; self.ready = []; self.delayed = []; self.seq = itertools.count(); self.cv = threading.Condition()
         self.buckets = {}; self.rates = {}; self.default_rate, self.default_burst = rate, burst; self.base_backoff, self.max_backoff = base_backoff, max_backoff
         self.workers_n = workers; self.threads = []; self.running = False; self.dead_sink = dead_sink; self.on_result = on_result
         self.stats_c = collections.Counter(); self.jobs = collections.OrderedDict(); self.active = 0
     def register_handler(self, kind, fn, retry_on=(Exception,), permanent_on=(PermanentError,)): self.handlers[kind] = (fn, retry_on, permanent_on)
-    def set_rate(self, key, rate, burst=None): self.rates[key] = (rate, burst or max(1, rate * 2)); self.buckets.pop(key, None)
+    def set_rate(self, key, rate, burst=None):
+        b=burst if burst is not None else max(1,float(rate)*2)
+        TokenBucket(rate,b)
+        with self.cv:
+            self.rates[key]=(float(rate),float(b)); self.buckets.pop(key,None); self.cv.notify_all()
     def _bucket(self, key):
         if key not in self.buckets: r, b = self.rates.get(key, (self.default_rate, self.default_burst)); self.buckets[key] = TokenBucket(r, b)
         return self.buckets[key]
@@ -45,12 +56,21 @@ class Scheduler:
             heapq.heappush(self.ready, (priority, next(self.seq), j)); self.stats_c["submitted"] += 1; self.cv.notify()
         self.start(); return j
     def start(self):
-        if self.running: return
-        self.running = True
-        for i in range(self.workers_n):
-            t = threading.Thread(target=self._loop, name=f"sched-{i}", daemon=True); t.start(); self.threads.append(t)
-    def stop(self):
-        with self.cv: self.running = False; self.cv.notify_all()
+        with self.cv:
+            if self.running: return
+            self.running=True
+            self.threads=[t for t in self.threads if t.is_alive()]
+            for i in range(max(0,self.workers_n-len(self.threads))):
+                t=threading.Thread(target=self._loop,name=f"sched-{i}",daemon=True)
+                self.threads.append(t); t.start()
+    def stop(self, wait=True, timeout=5):
+        with self.cv:
+            self.running=False; self.cv.notify_all()
+            threads=list(self.threads)
+        if wait:
+            deadline=time.monotonic()+timeout
+            for t in threads:
+                if t is not threading.current_thread(): t.join(max(0,deadline-time.monotonic()))
     def _next(self):
         with self.cv:
             while self.running:
@@ -68,7 +88,17 @@ class Scheduler:
         while True:
             j = self._next()
             if j is None: return
-            try: self._run(j)
+            try: j.context.run(self._run,j)
+            except Exception as e:
+                # Malformed routing or unexpected handler exceptions must not kill a worker.
+                j.state="dead"; j.error=f"{type(e).__name__}: {e}"
+                j.history.append({"attempt":j.attempts,"ok":False,"error":j.error})
+                self.stats_c["dead"]+=1
+                log.exception("unexpected job failure",extra={"job":j.id})
+                if self.dead_sink:
+                    try: j.context.run(self.dead_sink,j)
+                    except Exception: log.exception("dead sink failed")
+                self._emit(j,"dead"); j.done.set()
             finally:
                 with self.cv: self.active -= 1
     def backoff(self, attempt): return min(self.max_backoff, self.base_backoff * (2 ** (attempt - 1))) * random.uniform(0.8, 1.2)

@@ -43,3 +43,8 @@ v15 多文件分别 replace 允许读到不同代的 ids/index；现改为单个
 同 external_id 并发读后插存在竞态，且 seller-only 更新会清空 attrs。upsert/record_price 使用事务，SQLite BEGIN IMMEDIATE 覆盖主商品/规格/价格；仅更新提供的元数据。新增 after_commit：事务失败不发价格事件、不发布半成品索引，savepoint 回滚丢弃对应回调。
 验证：test_v25_collect_atomic + test_v22_transactions + test_v23_price_history：12 passed；6 线程 12 次同 SKU 写入仅 1 商品和 12 历史；坏规格导致全部回滚且事件计数 0。
 下一轮：调度线程存活与上下文隔离
+
+## v26 采集调度存活与上下文隔离
+未知异常/路由异常会直接杀死工作线程；并发 start 也可能多启线程。现启动过程持条件锁，所有任务捕获未归类异常并终结/写死信，后续任务继续；每个 Job 保存独立 contextvars 工作区；令牌桶速率拒绝零/负/非有限值，stop 可等待线程退出。
+验证：test_v26_scheduler + test_v6_platform + test_v11_routing：结果见 iteration-results/v26.txt；新 7 项通过（异常后线程存活、32 并发任务工作区一致、限速非法值）。
+下一轮：批量删除/撤销的数据完整性和工作区授权
