@@ -5,7 +5,10 @@ v14：ST / CLIP 改为首次真正用到时再加载，避免冷启动把模型�
 """
 import os, json, threading, numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
-from app.core.vector import VectorIndex, HAVE_FAISS, FallbackIndex
+from app.core.vector import (
+    VectorIndex, HAVE_FAISS, FallbackIndex,
+    content_digest, make_signature, save_vector_index, load_vector_index, remove_index,
+)
 
 _ST = None
 _CLIP = None
@@ -20,7 +23,8 @@ IMG_ENGINE = "imagehash-phash(回退)"
 VECTOR_ENGINE = "faiss-hnsw(≥5万) / numpy 精确(<5万)" if HAVE_FAISS else "numpy"
 _CACHE = {}
 _QCACHE = {}
-_INDEX = {"key": None, "M": None, "vi": None}
+_INDEX = {"key": None, "M": None, "vi": None, "source": None, "sig": None}
+SEARCH_INDEX = "search"
 EMB_FILE = os.environ.get(
     "PRICEHUB_EMB_CACHE",
     os.path.join(os.path.dirname(__import__("app").__file__), "..", "data", "emb_cache.npz"),
@@ -127,18 +131,121 @@ def doc(p):
     return f"{p['title']} {p.get('category') or ''} {p.get('brand') or ''}"
 
 
+def _docs_ids(products):
+    ids = [int(p["id"]) if p.get("id") is not None else i for i, p in enumerate(products)]
+    docs = [doc(p) for p in products]
+    return ids, docs
+
+
+def search_signature(products, dim=None, model=None):
+    ids, docs = _docs_ids(products)
+    return make_signature(
+        name=SEARCH_INDEX, kind="auto", dim=dim, n=len(products),
+        digest=content_digest(ids, texts=docs),
+        model=model if model is not None else (ENGINE if _ST is not None else ""),
+    )
+
+
+def _active_index():
+    vi = _INDEX.get("vi")
+    if vi is None:
+        return None
+    if isinstance(vi, FallbackIndex):
+        return vi.fallback or vi.primary
+    return vi
+
+
 def index_matrix(products, key=None):
-    """向量索引：商品集合不变时复用同一个归一化矩阵，查询只需一次矩阵乘法。"""
-    key = key if key is not None else hash(tuple(doc(p) for p in products))
-    if _INDEX["key"] != key:
-        M = _emb([doc(p) for p in products])
-        _INDEX.update(key=key, M=M, vi=FallbackIndex(len(M)).build(M))
+    """向量索引：商品集合（id+标题等）不变时复用；优先加载磁盘 FAISS，否则重建并落盘。
+    缓存键用内容签名，不再跟 db.VER 走，避免每次记价格都重建索引。"""
+    if not products:
+        return None
+    sig = search_signature(products)
+    digest = sig["digest"]
+    if _INDEX.get("vi") is not None and _INDEX.get("sig") and _INDEX["sig"].get("digest") == digest:
+        return _INDEX["M"]
+    loaded, reason = load_vector_index(SEARCH_INDEX, expected=sig)
+    if loaded is not None:
+        _INDEX.update(key=key if key is not None else digest, M=loaded.M, vi=loaded, source="disk", sig=sig)
+        return _INDEX["M"]
+    M = _emb([doc(p) for p in products])
+    vi = FallbackIndex(len(M)).build(M)
+    inner = vi.fallback or vi.primary
+    if isinstance(inner, VectorIndex):
+        inner.ids = np.asarray(_docs_ids(products)[0], dtype=np.int64)
+        try:
+            save_vector_index(inner, SEARCH_INDEX, {**sig, "dim": int(M.shape[1]), "model": ENGINE})
+        except Exception as e:
+            print("faiss save failed:", e)
+    _INDEX.update(key=key if key is not None else digest, M=M, vi=vi, source="build:" + reason, sig=sig)
     return _INDEX["M"]
 
 
 def vector_index(products, key=None):
     index_matrix(products, key)
     return _INDEX["vi"]
+
+
+def invalidate_index(remove_disk=True):
+    """商品删除或标题变更后失效内存/磁盘索引，下次搜索或预热再重建。"""
+    _INDEX.update(key=None, M=None, vi=None, source=None, sig=None)
+    if remove_disk:
+        try: remove_index(SEARCH_INDEX)
+        except Exception: pass
+
+
+def on_products_changed(added=None, removed=None, updated=None, products=None):
+    """写入/删除商品时更新索引。删除或改标题：失效（HNSW 不便按 id 删除）。纯新增：能增量则 add 并落盘。"""
+    added = list(added or [])
+    removed = list(removed or [])
+    updated = list(updated or [])
+    if removed or updated:
+        invalidate_index(remove_disk=True)
+        return {"action": "invalidate", "reason": "removed" if removed else "updated"}
+    if not added:
+        return {"action": "noop"}
+    vi = _active_index()
+    if vi is None or not isinstance(vi, VectorIndex) or _ST is None:
+        invalidate_index(remove_disk=True)
+        return {"action": "invalidate", "reason": "no-live-index"}
+    try:
+        docs = [doc(p) if isinstance(p, dict) else str(p) for p in added]
+        ids = [int(p["id"]) if isinstance(p, dict) and p.get("id") is not None else i for i, p in enumerate(added)]
+        E = _emb(docs)
+        vi.add(E, ids)
+        if _INDEX.get("M") is not None:
+            _INDEX["M"] = np.vstack([_INDEX["M"], E])
+        if products is not None:
+            sig = search_signature(products, dim=E.shape[1], model=ENGINE)
+        else:
+            # 尚无完整列表时，用旧签名加新文本，保证磁盘与内存一致；下次完整加载会再校验
+            old = _INDEX.get("sig") or {}
+            sig = dict(old)
+            sig["n"] = int(sig.get("n") or 0) + len(added)
+            sig["digest"] = content_digest(list(vi.ids), texts=None, vectors=vi.M if vi.M is not None else _INDEX.get("M"))
+        _INDEX["sig"] = sig
+        _INDEX["key"] = sig.get("digest")
+        _INDEX["source"] = "add"
+        save_vector_index(vi, SEARCH_INDEX, {**sig, "dim": int(E.shape[1]), "model": ENGINE})
+        return {"action": "add", "n": vi.size()}
+    except Exception as e:
+        invalidate_index(remove_disk=True)
+        return {"action": "invalidate", "reason": str(e)}
+
+
+def warm_persisted_index(products=None):
+    """启动时加载已有索引。签名与当前商品一致才用，否则留给首次搜索再重建。"""
+    if not products:
+        return {"action": "skip", "reason": "no-products"}
+    if _ST is None and not _want_st():
+        return {"action": "skip", "reason": "no-st"}
+    # 若尚未加载模型但磁盘索引只依赖已缓存向量，仍可先试加载（不触发编码）
+    sig = search_signature(products)
+    loaded, reason = load_vector_index(SEARCH_INDEX, expected={k: sig[k] for k in ("format", "name", "n", "digest") if k in sig} | {"kind": "auto"})
+    if loaded is not None:
+        _INDEX.update(key=sig["digest"], M=loaded.M, vi=loaded, source="disk", sig=sig)
+        return {"action": "load", "n": loaded.size(), "engine": loaded.engine, "reason": reason}
+    return {"action": "miss", "reason": reason, "n": len(products)}
 
 
 def semantic(query, products, k=10, min_score=0.0, key=None):

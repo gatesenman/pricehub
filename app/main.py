@@ -108,6 +108,16 @@ def upsert(src_id, it):
         record_price(pid, it["price"], it.get("method") or "manual", in_stock=stock)
         if last and last["price"] and abs(it["price"] - last["price"]) / last["price"] >= 0.05:
             db.ex("INSERT INTO alerts(product_id,msg) VALUES(?,?)", (pid, f"价格变动 {last['price']} -> {it['price']}"))
+    try:
+        from app.domains.search import semantic as _sem
+        from app.domains.dedup import service as _dedup
+        if ex and it.get("title") is not None and it.get("title") != ex.get("title"):
+            _sem.on_products_changed(updated=[pid]); _dedup.invalidate_index()
+        elif not ex:
+            # 新增：搜索索引增量 add；去重索引留给 detect() 在内存缓存上增量，不主动清盘
+            _sem.on_products_changed(added=[{"id": pid, "title": it.get("title"), "category": it.get("category"), "brand": it.get("brand")}])
+    except Exception as e:
+        print("index update after upsert:", e)
     return pid
 
 @app.get("/api/health")
@@ -349,12 +359,17 @@ def providers(): return {k: {"env": v["env"], "configured": bool(os.environ.get(
 def index(): return FileResponse(os.path.join(HERE, "static", "index.html"))
 sched = BackgroundScheduler()
 def _warm_search_models():
-    """v14：/readyz 不再被模型拖住；后台预热 ST/CLIP，首搜不必干等。"""
+    """v14：/readyz 不再被模型拖住；后台预热 ST/CLIP，首搜不必干等。
+    v15：预热后尝试加载已落盘的 FAISS 索引，签名与当前商品一致则跳过重建。"""
     try:
         if hasattr(search, "_ensure_st"):
             search._ensure_st()
         if hasattr(search, "_ensure_clip"):
             search._ensure_clip()
+        if hasattr(search, "warm_persisted_index"):
+            ps = db.q("SELECT id,title,category,brand FROM products WHERE merged_into IS NULL AND parent_id IS NULL")
+            r = search.warm_persisted_index(ps)
+            print("warm faiss index:", r, flush=True)
     except Exception as e:
         print("warm search models:", e)
 @app.on_event("startup")

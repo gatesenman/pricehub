@@ -135,3 +135,30 @@ class BlockIndex:
         if self.vec is None: return 0.0
         if sp.issparse(self.vec): return float(self.vec[i].multiply(self.vec[j]).sum())
         return float(self.vec[i] @ self.vec[j])
+    def save_ann(self, name="dedup", signature=None, root=None):
+        """把 dense 向量和 FAISS ANN 落盘（稀疏 TF-IDF 不落盘，重建成本低）。"""
+        import scipy.sparse as sp
+        from app.core.vector import VectorIndex, save_vector_index
+        if self.vec is None or sp.issparse(self.vec):
+            return None
+        vi = VectorIndex(dim=int(self.vec.shape[1]), kind="hnsw" if self.ann else "numpy")
+        vi.M = np.ascontiguousarray(self.vec, dtype=np.float32)
+        vi.ids = np.arange(self.n, dtype=np.int64)
+        vi.dim = int(self.vec.shape[1])
+        if self.ann:
+            vi.index = self.ann[1]
+        return save_vector_index(vi, name, signature, root=root, store_vectors=True)
+    def load_ann(self, name="dedup", expected=None, root=None):
+        """加载 vec + 可选 HNSW。成功后 self.vec / self.ann 就绪；键与 LSH 桶仍需 add(feats) 重建。"""
+        from app.core.vector import load_vector_index
+        vi, reason = load_vector_index(name, expected=expected, root=root)
+        if vi is None or vi.M is None:
+            return False, reason
+        if self.n and vi.size() != self.n:
+            return False, "mismatch"
+        self.vec = vi.M
+        if vi.index is not None and "hnsw" in vi.engine:
+            self.ann = ("hnsw", vi.index)
+        else:
+            self.ann = None
+        return True, reason

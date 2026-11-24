@@ -204,7 +204,21 @@ def products_bulk(body: dict = Body(...)):
     if action == "delete":
         ps = _rows("SELECT * FROM products WHERE id IN (%s)", ids); pr = _rows("SELECT * FROM prices WHERE product_id IN (%s)", ids); al = _rows("SELECT * FROM alerts WHERE product_id IN (%s)", ids)
         for t, c in (("prices", "product_id"), ("alerts", "product_id"), ("products", "id")): db.ex(f"DELETE FROM {t} WHERE {c} IN ({','.join('?' * len(ids))})", ids)
-        tok = _undo_token(f"删除 {len(ps)} 个商品", lambda: (_reinsert("products", ps), _reinsert("prices", pr), _reinsert("alerts", al)))
+        try:
+            from app.domains.search import semantic as _sem
+            from app.domains.dedup import service as _dedup
+            _sem.on_products_changed(removed=ids); _dedup.invalidate_index()
+        except Exception as e:
+            print("index update after delete:", e)
+        def _restore_deleted():
+            _reinsert("products", ps); _reinsert("prices", pr); _reinsert("alerts", al)
+            try:
+                from app.domains.search import semantic as _sem
+                from app.domains.dedup import service as _dedup
+                _sem.on_products_changed(updated=ids); _dedup.invalidate_index()
+            except Exception:
+                pass
+        tok = _undo_token(f"删除 {len(ps)} 个商品", _restore_deleted)
         return {"ok": True, "count": len(ps), "undo": tok, "message": f"已删除 {len(ps)} 个商品"}
     if action in ("monitor", "unmonitor"):
         prev = _rows("SELECT id, monitored FROM products WHERE id IN (%s)", ids); on = 1 if action == "monitor" else 0

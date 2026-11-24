@@ -99,17 +99,53 @@ def _vectors(ps, F):
     if getattr(search, "_ST", None): return np.asarray(search._emb(docs), dtype=np.float32), "多语言向量"
     from sklearn.feature_extraction.text import TfidfVectorizer
     return TfidfVectorizer(analyzer="char_wb", ngram_range=(1, 3)).fit_transform(docs).tocsr(), "字符 n-gram"
+def invalidate_index():
+    """商品增删改后失效去重分块索引（内存 + 磁盘 ANN）。"""
+    _BIDX.update(key=None, index=None, engine=None)
+    try:
+        from app.core.vector import remove_index
+        remove_index("dedup")
+    except Exception:
+        pass
+
+def _ann_signature(ps, b, engine=""):
+    from app.core.vector import content_digest, make_signature
+    return make_signature(
+        name="dedup", kind="auto", dim=0, n=len(ps),
+        digest=content_digest([p["id"] for p in ps], texts=[p.get("title") for p in ps]),
+        params={"exact_max": int(b.get("exact_max", 20000)), "ann_k": int(b.get("ann_k", 30)),
+                "max_block": int(b.get("max_block", 200))},
+        model=engine or "",
+    )
+
+def _save_ann(ix, ps, b, engine):
+    try:
+        ix.save_ann("dedup", signature=_ann_signature(ps, b, engine))
+    except Exception as e:
+        import logging; logging.getLogger("pricehub.dedup").warning("dedup ann save failed", extra={"error": str(e)})
+
 def _block_index(ps, F, new_ids):
-    """取得分块索引；仅新增商品时在缓存索引上增量 add（dense 向量时），否则重建。返回 (index, engine, incremental)。"""
+    """取得分块索引；仅新增商品时在缓存索引上增量 add（dense 向量时），否则先尝试磁盘 ANN，再重建。返回 (index, engine, incremental)。"""
     from .blocking import BlockIndex
     b = (get_settings().get("blocking") or {})
     sig = [(p["id"], p.get("title")) for p in ps]; newset = set(new_ids or [])
     old = _BIDX["key"]
     if new_ids and old is not None and _BIDX["engine"] == "多语言向量" and sig[:len(old)] == old and {x[0] for x in sig[len(old):]} <= newset and len(sig) > len(old):
         add_ps, add_F = ps[len(old):], F[len(old):]; vec, _ = _vectors(add_ps, add_F)
-        _BIDX["index"].add(add_F, vec); _BIDX["key"] = sig; return _BIDX["index"], _BIDX["engine"], True
+        _BIDX["index"].add(add_F, vec); _BIDX["key"] = sig
+        _save_ann(_BIDX["index"], ps, b, _BIDX["engine"]); return _BIDX["index"], _BIDX["engine"], True
     ix = BlockIndex(exact_max=int(b.get("exact_max", 20000)), k=int(b.get("ann_k", 30)), max_block=int(b.get("max_block", 200)))
-    vec, eng = _vectors(ps, F); ix.add(F, vec); _BIDX.update(key=sig, index=ix, engine=eng); return ix, eng, False
+    ix.add(F, None)
+    expect = _ann_signature(ps, b)
+    ok, _reason = ix.load_ann("dedup", expected=expect)
+    if ok and ix.vec is not None and len(ix.vec) == ix.n:
+        eng = "多语言向量"
+        _BIDX.update(key=sig, index=ix, engine=eng); return ix, eng, False
+    ix.vec, ix.ann = None, None
+    vec, eng = _vectors(ps, F)
+    ix._add_vec(vec)
+    _BIDX.update(key=sig, index=ix, engine=eng); _save_ann(ix, ps, b, eng); return ix, eng, False
+
 
 def detect(new_ids=None, record=True):
     """检测候选。new_ids 给定时只比较这些商品与其余商品（新采集增量检测）；否则全量。返回新增/更新的候选数与自动合并数。"""
@@ -206,6 +242,7 @@ def merge(cid: int, canonical_id: int = None, mode="manual", actor="user"):
     db.ex("UPDATE dedup_candidates SET status=?, decided_at=datetime('now') WHERE id=?", ("auto_merged" if mode == "auto" else "merged", cid))
     # 其他涉及被合并商品的待处理候选：失效（已不是独立商品）
     db.ex("UPDATE dedup_candidates SET status='superseded', decided_at=datetime('now') WHERE status='pending' AND (a_id=? OR b_id=?)", (drop, drop))
+    invalidate_index()
     return {"ok": True, "merge_id": mid, "canonical_id": keep, "merged_id": drop, "moved_prices": len(moved), "message": f"已合并：保留 #{keep}，#{drop} 作为它的商品页，移动 {len(moved)} 条价格记录"}
 def unmerge(mid: int):
     m = db.q("SELECT * FROM product_merges WHERE id=?", (mid,), one=True)
@@ -222,6 +259,7 @@ def unmerge(mid: int):
     db.ex("UPDATE product_merges SET undone_at=datetime('now') WHERE id=?", (mid,))
     if m["candidate_id"]: db.ex("UPDATE dedup_candidates SET status='pending', decided_at=NULL WHERE id=?", (m["candidate_id"],))
     db.ex("UPDATE dedup_candidates SET status='pending', decided_at=NULL WHERE status='superseded' AND (a_id=? OR b_id=?)", (drop, drop))
+    invalidate_index()
     return {"ok": True, "message": f"已撤销合并：#{drop} 恢复为独立商品"}
 def not_same(cid: int):
     c = db.q("SELECT status FROM dedup_candidates WHERE id=?", (cid,), one=True)
