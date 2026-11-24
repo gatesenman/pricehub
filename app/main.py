@@ -35,6 +35,11 @@ def _save_image(url_or_path, pid):
         f = search.image_features(path); db.ex("UPDATE products SET image_path=?,phash=?,clip=? WHERE id=?", (path, f["phash"], f.get("clip"), pid))
     except Exception as e: print("image fail", e)
 
+def _safe_attrs(raw):
+    """商品 attrs 损坏时不让整个列表/详情 500。"""
+    if isinstance(raw, dict): return raw
+    try: return json.loads(raw or "{}")
+    except Exception: return {}
 def _conf_of(r):
     return {"confidence": r.get("confidence"), "level": r.get("conf_level"), "basis": json.loads(r.get("conf_basis") or "[]"), "method": r.get("method")}
 def _group_latest(gk, exclude_pid):
@@ -209,7 +214,7 @@ def dashboard():
 def product(pid: int):
     p = db.q("SELECT * FROM products WHERE id=?", (pid,), one=True)
     if not p: raise HTTPException(404, "商品不存在")
-    p.pop("clip", None); p["attrs"] = json.loads(p.get("attrs") or "{}")
+    p.pop("clip", None); p["attrs"] = _safe_attrs(p.get("attrs"))
     lr = db.q("SELECT * FROM prices WHERE product_id=? ORDER BY id DESC LIMIT 1", (pid,), one=True)
     if lr: p["last_price"] = lr["price"]; p["last_conf"] = CF.fresh(_conf_of(lr), lr["ts"]); p["last_ts"] = lr["ts"]
     return p
@@ -247,7 +252,10 @@ def fetch_all(wait=True):
 def monitor_run(): fetch_all(); return {"ok": True}
 @app.post("/api/products")
 def add_product(body: dict = Body(...)):
-    body.setdefault("external_id", hashlib.md5(body["title"].encode()).hexdigest()[:10]); return {"id": upsert(None, body)}
+    title = (body.get("title") or "").strip()
+    if not title: raise HTTPException(400, "请填写商品标题")
+    body["title"] = title
+    body.setdefault("external_id", hashlib.md5(title.encode()).hexdigest()[:10]); return {"id": upsert(None, body)}
 @app.get("/api/products")
 def products(category: str = "", chain: str = "", platform: str = "", q: str = ""):
     key = ("products", category, chain, platform, q)
@@ -266,7 +274,7 @@ def _products(category, chain, platform, q):
     latest = {r["product_id"]: r for r in db.q("SELECT * FROM prices WHERE id IN (SELECT MAX(id) FROM prices GROUP BY product_id)")}
     out = []
     for r in db.q(sql, a):
-        r.pop("clip", None); r["attrs"] = json.loads(r.get("attrs") or "{}"); lr = latest.get(r["id"])
+        r.pop("clip", None); r["attrs"] = _safe_attrs(r.get("attrs")); lr = latest.get(r["id"])
         r["last_price"] = lr["price"] if lr else None
         if lr: r["last_conf"] = CF.fresh(_conf_of(lr), lr["ts"]); r["last_ts"] = lr["ts"]
         out.append(r)
@@ -283,11 +291,17 @@ def history(pid: int):
     return {"history": out, "stats": analytics.history_stats(out)}
 @app.get("/api/products/{pid}/forecast")
 def forecast(pid: int, horizon: int = 7):
+    if not db.q("SELECT id FROM products WHERE id=?", (pid,), one=True): raise HTTPException(404, "商品不存在")
+    horizon = max(1, min(int(horizon or 7), 90))
     h = db.q("SELECT price, ts FROM prices WHERE product_id=? ORDER BY ts, id", (pid,)); f = analytics.forecast(h, horizon)
-    f["conf"] = CF.forecast_conf(__import__("numpy").array([x["price"] for x in h], float)); return f
+    try:
+        f["conf"] = CF.forecast_conf(__import__("numpy").array([x["price"] for x in h], float))
+    except Exception:
+        f["conf"] = {"confidence": 0.1, "level": "low", "basis": ["置信度计算失败"]}
+    return f
 def _peers(pid):
     p = db.q("SELECT * FROM products WHERE id=?", (pid,), one=True)
-    if not p: raise HTTPException(404)
+    if not p: raise HTTPException(404, "商品不存在")
     peers = []
     for r in db.q("SELECT id,platform,title,seller FROM products WHERE group_key=?", (p["group_key"],)):
         lr = db.q("SELECT * FROM prices WHERE product_id=? ORDER BY id DESC LIMIT 1", (r["id"],), one=True)
@@ -306,7 +320,13 @@ def pricing(pid: int, markup: float = 0.2, cost: float | None = None):
 @app.get("/api/compare/deep")
 def deep_compare(ids: str):
     """深度对比：ids=1,2,3（2-8 个）。逐项对比价格/统计/预测/平台/卖家/类目/属性，并标出差异与最优/最差。"""
-    idl = [int(x) for x in ids.split(",") if x.strip()][:8]
+    idl = []
+    for x in (ids or "").split(","):
+        x = x.strip()
+        if not x: continue
+        try: idl.append(int(x))
+        except ValueError: raise HTTPException(400, f"商品 id 无效：{x}")
+    idl = idl[:8]
     if len(idl) < 2: raise HTTPException(400, "至少选择 2 个商品")
     items = []
     for i in idl:
@@ -335,13 +355,31 @@ def s_cat(category: str): return products(category=category)
 @app.get("/api/search/keyword")
 def s_kw(q: str): return products(q=q)
 @app.get("/api/search/semantic")
-def s_sem(q: str, k: int = 10, min_score: float = 0.0): r = search.semantic(q, products(), k, min_score, key=("all", db.VER[0])); return {"engine": search.ENGINE, "vector_engine": getattr(search, "vector_engine_now", lambda: None)(), "results": r}
+def s_sem(q: str = "", k: int = 10, min_score: float = 0.0):
+    q = (q or "").strip()
+    if not q: raise HTTPException(400, "请输入搜索内容")
+    k = max(1, min(int(k or 10), 100))
+    try:
+        r = search.semantic(q, products(), k, float(min_score or 0), key=("all", db.VER[0]))
+    except Exception as e:
+        raise HTTPException(503, f"语义搜索暂时不可用：{e}") from e
+    te, _ie = search.engine_status() if hasattr(search, "engine_status") else (search.ENGINE, None)
+    return {"engine": te, "vector_engine": getattr(search, "vector_engine_now", lambda: None)(), "results": r}
 @app.post("/api/search/image")
 async def s_img(file: UploadFile = File(...), k: int = 10):
-    t = tempfile.NamedTemporaryFile(delete=False, suffix=".img"); t.write(await file.read()); t.close()
-    full = {p["id"]: p for p in products()}
-    res = search.image_search(search.image_features(t.name), db.q("SELECT * FROM products"), k)
-    return {"engine": search.IMG_ENGINE, "results": [dict(full.get(r["id"], {}), score=r["score"], method=r["method"]) for r in res]}
+    raw = await file.read()
+    if not raw: raise HTTPException(400, "请上传一张图片")
+    k = max(1, min(int(k or 10), 100))
+    t = tempfile.NamedTemporaryFile(delete=False, suffix=".img"); t.write(raw); t.close()
+    try:
+        full = {p["id"]: p for p in products()}
+        res = search.image_search(search.image_features(t.name), db.q("SELECT * FROM products"), k)
+        return {"engine": search.IMG_ENGINE, "results": [dict(full.get(r["id"], {}), score=r["score"], method=r["method"]) for r in res]}
+    except Exception as e:
+        raise HTTPException(400, f"无法识别这张图片：{e}") from e
+    finally:
+        try: os.unlink(t.name)
+        except OSError: pass
 @app.post("/api/products/{pid}/image")
 async def set_img(pid: int, file: UploadFile = File(...)):
     path = os.path.join(IMG_DIR, f"{pid}.img"); open(path, "wb").write(await file.read()); _save_image(path, pid); return {"ok": True}

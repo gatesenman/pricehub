@@ -249,15 +249,29 @@ def warm_persisted_index(products=None):
 
 
 def semantic(query, products, k=10, min_score=0.0, key=None):
-    if not products:
+    query = (query or "").strip()
+    if not query or not products:
         return []
+    try:
+        k = max(1, min(int(k or 10), 100))
+    except (TypeError, ValueError):
+        k = 10
+    try:
+        min_score = float(min_score or 0)
+    except (TypeError, ValueError):
+        min_score = 0.0
     if _ensure_st():
         vi = vector_index(products, key)
         I, D = vi.search(_qemb(query), k)
         return [dict(products[int(i)], score=round(float(d), 4)) for i, d in zip(I, D) if d > min_score]
     docs = [doc(p) for p in products]
-    v = TfidfVectorizer(analyzer="char_wb", ngram_range=(1, 3)).fit(docs + [query])
-    s = (v.transform(docs) @ v.transform([query]).T).toarray().ravel()
+    try:
+        v = TfidfVectorizer(analyzer="char_wb", ngram_range=(1, 3)).fit(docs + [query])
+        s = (v.transform(docs) @ v.transform([query]).T).toarray().ravel()
+    except ValueError:
+        return []  # 全空文本等导致没有词汇表
+    if len(s) == 0:
+        return []
     idx = np.argpartition(-s, min(k, len(s) - 1))[:k] if len(s) > k else np.arange(len(s))
     idx = idx[np.argsort(-s[idx])]
     return [dict(products[i], score=round(float(s[i]), 4)) for i in idx if s[i] > min_score]

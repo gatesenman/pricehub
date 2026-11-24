@@ -218,7 +218,7 @@ function AppBase() { return {
     if (tab) { tab.ids = ids; tab.d = null; tab.title = '深度对比（' + ids.length + '）'; this.active = tab.id; return this.loadDeep(tab); }
     this.newTab('deep', {ids, icon: 'split-horizontal', title: '深度对比（' + ids.length + '）', d: null, onlyDiff: false}); },
   async loadDeep(t) { try { t.d = await this.api('/api/compare/deep?ids=' + t.ids.join(',')); this.$nextTick(() => this.deepChart(t)); } catch (e) { t.d = {error: e.message}; } },
-  deepRows(t) { const D = t.d, I = D.items, M = v => ESC(this.money(v)), R = [], rk = D.rank;
+  deepRows(t) { const D = t.d || {}; if (!D.items) return []; const I = D.items, M = v => ESC(this.money(v)), R = [], rk = D.rank || {};
     const num = (label, key, get, fmt, extra) => { const diff = new Set(I.map(it => String(get(it)))).size > 1;
       R.push({label, num: 1, vals: I.map(it => fmt(get(it)) + (extra ? ' ' + extra(it) : '')), diff, best: diff ? (rk[key] || {}).best : null, worst: diff ? (rk[key] || {}).worst : null}); };
     num('当前价', 'last_price', it => it.product.last_price, M, it => App.confBadge(it.product.last_conf));

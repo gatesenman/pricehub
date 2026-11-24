@@ -132,15 +132,28 @@ def metrics(request: Request):
 def healthz(): return {"status": "ok", "uptime_s": int(time.time() - obs.START)}
 @app.get("/readyz")
 def readyz():
+    """各检查独立捕获异常，避免渲染器/向量状态出错把整个就绪探针打成 500。数据库不可用仍返回 503。"""
     checks = {}
     try: db.q("SELECT 1 x", one=True); checks["database"] = {"ok": True, "backend": db.BACKEND}
     except Exception as e: checks["database"] = {"ok": False, "error": str(e)}
-    checks["scheduler"] = {"ok": True, "running": SCHED.running, "workers": SCHED.workers_n}
-    checks["renderer"] = {"ok": True, **render.status()}
-    checks["plugins"] = {"ok": all(p["state"] == "active" for p in sdk.PLUGINS.values()), "count": len(sdk.PLUGINS)}
-    from app import search
-    checks["vector_index"] = {"ok": True, "engine": search.VECTOR_ENGINE, "active": getattr(search, "vector_engine_now", lambda: None)(), "pgvector": __import__("app.core.pgvector_store", fromlist=["status"]).status()}
-    ok = checks["database"]["ok"]
+    try: checks["scheduler"] = {"ok": True, "running": SCHED.running, "workers": SCHED.workers_n}
+    except Exception as e: checks["scheduler"] = {"ok": False, "error": str(e)}
+    try: checks["renderer"] = {"ok": True, **render.status()}
+    except Exception as e: checks["renderer"] = {"ok": False, "error": str(e)}
+    try: checks["plugins"] = {"ok": all(p["state"] == "active" for p in sdk.PLUGINS.values()), "count": len(sdk.PLUGINS)}
+    except Exception as e: checks["plugins"] = {"ok": False, "error": str(e)}
+    try:
+        from app import search
+        ix = getattr(search, "_INDEX", {}) or {}
+        checks["vector_index"] = {
+            "ok": True, "engine": search.VECTOR_ENGINE,
+            "active": getattr(search, "vector_engine_now", lambda: None)(),
+            "source": ix.get("source"), "n": (ix.get("vi").size() if ix.get("vi") is not None and hasattr(ix.get("vi"), "size") else None),
+            "pgvector": __import__("app.core.pgvector_store", fromlist=["status"]).status(),
+        }
+    except Exception as e:
+        checks["vector_index"] = {"ok": False, "error": str(e)}
+    ok = checks.get("database", {}).get("ok")
     return Response(json.dumps({"status": "ready" if ok else "not_ready", "checks": checks}, ensure_ascii=False), status_code=200 if ok else 503, media_type="application/json")
 @app.middleware("http")
 async def _metrics_mw(request: Request, call_next):
