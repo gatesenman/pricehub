@@ -28,3 +28,8 @@ v15 多文件分别 replace 允许读到不同代的 ids/index；现改为单个
 合并逐条 commit，故障会留下已搬价格但没有审计记录。新增线程本地事务/嵌套 savepoint，SQLite BEGIN IMMEDIATE 串行读改写，merge/unmerge 全部同一提交；缺失商品明确 404。没有 schema 迁移，不需要修改生产库或备份迁移。
 验证：test_v22_transactions + test_v12_dedup：7 passed；注入审计写入故障验证价格/商品/审计全部回滚，嵌套回滚和合并撤销往返通过。PostgreSQL 分支未在真实服务器验证。
 下一轮：价格输入与历史时序
+
+## v23 价格合法性与事件时间历史
+人工和采集写入统一拒绝 NaN/Inf/负数/布尔价格，缺失商品不写孤儿价格；ISO 时区归一 UTC。最新价按事件时间而不是插入 id，回填历史不会盖掉现价。预测/统计忽略遗留非法值并按有效日期排序。
+验证：test_v23_price_history + test_v17_stability + test_v12_dedup：16 passed；覆盖 6 类非法值、偏移时区、回填价格及预测清洗。未迁移已有旧格式时间。
+下一轮：跨币种比价与汇率输入

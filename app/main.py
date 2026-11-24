@@ -43,7 +43,7 @@ def _safe_attrs(raw):
 def _conf_of(r):
     return {"confidence": r.get("confidence"), "level": r.get("conf_level"), "basis": json.loads(r.get("conf_basis") or "[]"), "method": r.get("method")}
 def _group_latest(gk, exclude_pid):
-    return [r["price"] for r in db.q("SELECT (SELECT price FROM prices WHERE product_id=p.id ORDER BY id DESC LIMIT 1) price FROM products p WHERE group_key=? AND id<>?", (gk, exclude_pid)) if r["price"]]
+    return [r["price"] for r in db.q("SELECT (SELECT price FROM prices WHERE product_id=p.id ORDER BY ts DESC, id DESC LIMIT 1) price FROM products p WHERE group_key=? AND id<>?", (gk, exclude_pid)) if r["price"]]
 from .core.events import bus
 HOOKS = []   # 兼容 v5 的回调列表；v6 起统一走事件总线，HOOKS 作为总线订阅者被调用
 TOPIC = {"price": "price.recorded", "stock": "stock.changed"}
@@ -55,10 +55,14 @@ def _legacy_hooks(topic, **kw):
         except Exception as e: __import__("logging").getLogger("pricehub").warning("hook fail", extra={"event": ev, "error": str(e)})
 bus.subscribe("price.recorded", _legacy_hooks, "alerting.rules"); bus.subscribe("stock.changed", _legacy_hooks, "alerting.rules")
 def record_price(pid, price, method, ts=None, in_stock=None):
+    from app.core.price_input import amount, timestamp
+    try: price,ts=amount(price),timestamp(ts)
+    except ValueError as e: raise HTTPException(400,str(e)) from e
     p = db.q("SELECT * FROM products WHERE id=?", (pid,), one=True); listing = None
+    if not p: raise HTTPException(404, "商品不存在")
     if p and p.get("merged_into"):   # v12：已合并的商品页继续采到的价格，记到主商品名下并保留来源商品页
         listing = pid; pid = p["merged_into"]; p = db.q("SELECT * FROM products WHERE id=?", (pid,), one=True)
-    hist = [r["price"] for r in db.q("SELECT price FROM prices WHERE product_id=? ORDER BY id DESC LIMIT 10", (pid,))]
+    hist = [r["price"] for r in db.q("SELECT price FROM prices WHERE product_id=? ORDER BY ts DESC, id DESC LIMIT 10", (pid,))]
     c = CF.score_price(price, method, hist, _group_latest(p["group_key"], pid), p.get("currency"), p.get("title"))
     db.ex("INSERT INTO prices(product_id,price,ts,confidence,conf_level,conf_basis,method,in_stock,listing_id) VALUES(?,?,COALESCE(?,datetime('now')),?,?,?,?,?,?)",
           (pid, price, ts, c["confidence"], c["level"], json.dumps(c["basis"], ensure_ascii=False), method, in_stock, listing))
@@ -83,6 +87,11 @@ def migrate_confidence():
 MIGRATED = migrate_confidence()
 
 def upsert(src_id, it):
+    from app.core.price_input import amount, timestamp
+    try:
+        if it.get("price") is not None: it={**it,"price":amount(it["price"])}
+        if it.get("ts") is not None: it={**it,"ts":timestamp(it["ts"])}
+    except ValueError as e: raise HTTPException(400,str(e)) from e
     plat = it.get("platform") or "unknown"; ex = db.q("SELECT * FROM products WHERE platform=? AND external_id=?", (plat, it["external_id"]), one=True)
     gk = it.get("group_key") or analytics.norm_key(it.get("title") or "")
     attrs = json.dumps(it.get("attrs") or {}, ensure_ascii=False)
@@ -109,8 +118,8 @@ def upsert(src_id, it):
                    in_stock=v.get("in_stock"), group_key=f"{gk}|{v['name']}", variant=v["name"])
         cid = upsert(src_id, sub); db.ex("UPDATE products SET parent_id=?, variant=? WHERE id=?", (pid, v["name"], cid))
     if it.get("price") is not None:
-        last = db.q("SELECT price FROM prices WHERE product_id=? ORDER BY id DESC LIMIT 1", (pid,), one=True)
-        record_price(pid, it["price"], it.get("method") or "manual", in_stock=stock)
+        last = db.q("SELECT price FROM prices WHERE product_id=? ORDER BY ts DESC, id DESC LIMIT 1", (pid,), one=True)
+        record_price(pid, it["price"], it.get("method") or "manual", ts=it.get("ts"), in_stock=stock)
         if last and last["price"] and abs(it["price"] - last["price"]) / last["price"] >= 0.05:
             db.ex("INSERT INTO alerts(product_id,msg) VALUES(?,?)", (pid, f"价格变动 {last['price']} -> {it['price']}"))
     try:
@@ -215,7 +224,7 @@ def product(pid: int):
     p = db.q("SELECT * FROM products WHERE id=?", (pid,), one=True)
     if not p: raise HTTPException(404, "商品不存在")
     p.pop("clip", None); p["attrs"] = _safe_attrs(p.get("attrs"))
-    lr = db.q("SELECT * FROM prices WHERE product_id=? ORDER BY id DESC LIMIT 1", (pid,), one=True)
+    lr = db.q("SELECT * FROM prices WHERE product_id=? ORDER BY ts DESC, id DESC LIMIT 1", (pid,), one=True)
     if lr: p["last_price"] = lr["price"]; p["last_conf"] = CF.fresh(_conf_of(lr), lr["ts"]); p["last_ts"] = lr["ts"]
     return p
 @app.get("/api/platforms/facets")
@@ -272,7 +281,7 @@ def _products(category, chain, platform, q):
         if v: sql += f" AND {col}=?"; a.append(v)
     if chain: sql += " AND chain LIKE ?"; a.append(chain + "%")
     if q: sql += " AND (title LIKE ? OR brand LIKE ?)"; a += [f"%{q}%"] * 2
-    latest = {r["product_id"]: r for r in db.q("SELECT * FROM prices WHERE id IN (SELECT MAX(id) FROM prices GROUP BY product_id)")}
+    latest = {r["product_id"]: r for r in db.q("SELECT * FROM (SELECT prices.*, ROW_NUMBER() OVER (PARTITION BY product_id ORDER BY ts DESC, id DESC) AS rn FROM prices) AS latest WHERE rn=1")}
     out = []
     for r in db.q(sql, a):
         r.pop("clip", None); r["attrs"] = _safe_attrs(r.get("attrs")); lr = latest.get(r["id"])
@@ -284,7 +293,7 @@ def _products(category, chain, platform, q):
 def add_price(pid: int, body: dict = Body(...)):
     m = body.get("method", "manual")
     if m not in CF.METHOD: raise HTTPException(400, f"method 可选 {list(CF.METHOD)}")
-    return {"ok": True, "conf": record_price(pid, float(body["price"]), m, body.get("ts"))}
+    return {"ok": True, "conf": record_price(pid, body.get("price"), m, body.get("ts"))}
 @app.get("/api/products/{pid}/history")
 def history(pid: int):
     h = db.q("SELECT * FROM prices WHERE product_id=? ORDER BY ts, id", (pid,))
@@ -305,7 +314,7 @@ def _peers(pid):
     if not p: raise HTTPException(404, "商品不存在")
     peers = []
     for r in db.q("SELECT id,platform,title,seller FROM products WHERE group_key=?", (p["group_key"],)):
-        lr = db.q("SELECT * FROM prices WHERE product_id=? ORDER BY id DESC LIMIT 1", (r["id"],), one=True)
+        lr = db.q("SELECT * FROM prices WHERE product_id=? ORDER BY ts DESC, id DESC LIMIT 1", (r["id"],), one=True)
         r["price"] = lr and lr["price"]; r["conf"] = lr and CF.fresh(_conf_of(lr), lr["ts"]); peers.append(r)
     return p, peers
 @app.get("/api/products/{pid}/compare")

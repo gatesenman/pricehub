@@ -23,17 +23,12 @@ try:
 except Exception as e: log.info("statsmodels ARIMA unavailable (STL 仍可用)", extra={"error": str(e)})
 
 def _series(prices):
-    """prices: [{price, ts?}, ...] → (y float64, dates date|None)"""
-    y, dates = [], []
-    for i, x in enumerate(prices):
-        try: y.append(float(x["price"] if isinstance(x, dict) else x))
-        except (TypeError, ValueError): continue
-        d = None
-        if isinstance(x, dict) and x.get("ts"):
-            try: d = datetime.datetime.strptime(str(x["ts"])[:10], "%Y-%m-%d").date()
-            except Exception: d = None
-        dates.append(d or (datetime.date.today() - datetime.timedelta(days=len(prices) - i - 1)))
-    return np.asarray(y, float), dates
+    from app.core.price_input import observations
+    rows=observations(prices)
+    today=datetime.date.today()
+    dates=[datetime.datetime.fromisoformat(ts).date() if ts else today-datetime.timedelta(days=len(rows)-i-1)
+           for i,(ts,_,value) in enumerate(rows)]
+    return np.asarray([value for _,_,value in rows],float),dates
 
 def _ci_from_resid(resid, point, z=1.645):
     """用残差标准差估 90% 置信区间。"""

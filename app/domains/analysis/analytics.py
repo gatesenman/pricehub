@@ -1,6 +1,7 @@
 import numpy as np, re
 def history_stats(prices):
-    p = np.array([x["price"] for x in prices], float)
+    from app.core.price_input import observations
+    p = np.array([value for _,_,value in observations(prices)], float)
     if not len(p): return {}
     return dict(count=len(p), min=float(p.min()), max=float(p.max()), avg=round(float(p.mean()), 2), last=float(p[-1]),
                 change_pct=round(float((p[-1] - p[0]) / p[0] * 100), 2) if p[0] else 0)
