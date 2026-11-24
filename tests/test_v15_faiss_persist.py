@@ -30,7 +30,7 @@ def test_save_load_numpy_and_search_identical(tmp_path=None):
         I0, D0 = vi.search(X[7], 5)
         digest = content_digest(ids, vectors=X)
         meta = save_vector_index(vi, "t_numpy", _sig("t_numpy", 200, 32, digest, "numpy-exact"), root=root)
-        assert meta["kind"] == "numpy-exact" and os.path.exists(index_paths("t_numpy", root)["vecs"])
+        assert meta["kind"] == "numpy-exact" and os.path.exists(index_paths("t_numpy", root)["snapshot"])
         loaded, reason = load_vector_index("t_numpy", expected=_sig("t_numpy", 200, 32, digest), root=root)
         assert reason == "ok" and loaded is not None and loaded.engine == "numpy-exact"
         I1, D1 = loaded.search(X[7], 5)
@@ -78,7 +78,7 @@ def test_signature_mismatch_and_corrupt_do_not_load():
         loaded, reason = load_vector_index("t_sig", expected=_sig("t_sig", 81, 16, digest), root=root)
         assert loaded is None and reason == "mismatch"
         # 损坏 meta
-        open(index_paths("t_sig", root)["meta"], "w").write("{not json")
+        open(index_paths("t_sig", root)["snapshot"], "w").write("{not json")
         loaded, reason = load_vector_index("t_sig", expected=_sig("t_sig", 80, 16, digest), root=root)
         assert loaded is None and reason == "corrupt"
         # 缺失

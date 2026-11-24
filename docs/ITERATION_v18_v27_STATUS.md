@@ -8,3 +8,8 @@
 发现商品列表缓存和 count 缓存未含工作区，去重两表遗漏租户 SQL 改写。已补租户表、按工作区分缓存及索引目录/签名，避免跨工作区数据返回。无 schema 变更。
 验证：test_v18_isolation：2 passed。首跑因共享机器负载 256 和 BLAS 线程争抢超时；限制测试 BLAS 线程后 3.3 秒通过。
 下一轮：原子索引快照与损坏校验
+
+## v19 单文件原子索引快照
+v15 多文件分别 replace 允许读到不同代的 ids/index；现改为单个 NPZ 快照、一次 fsync+replace 发布，内含 JSON/ids/向量/序列化 FAISS 与 SHA256；严格校验 shape/dtype/条数/维度/有限值，损坏回退重建。v1 缓存失效，不迁移商品数据。
+验证：test_v19_snapshots + test_v15_faiss_persist：13 passed；包含并发 20 次发布/读取、注入 replace 失败保留旧代、篡改 payload 校验。
+下一轮：语义检索并发与模型缓存一致性

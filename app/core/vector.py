@@ -10,7 +10,7 @@ try:
     import faiss; faiss.omp_set_num_threads(int(os.environ.get("PRICEHUB_FAISS_THREADS", "2"))); HAVE_FAISS = True
 except Exception: faiss = None; HAVE_FAISS = False
 HNSW_MIN = int(os.environ.get("PRICEHUB_HNSW_MIN", "50000"))
-FORMAT = "pricehub-faiss-v1"
+FORMAT = "pricehub-faiss-v2"
 
 
 def default_dir():
@@ -74,7 +74,7 @@ def index_paths(name, root=None):
     root = os.path.join(root, "ws-" + str(tenancy.current()))
     base = os.path.join(root, name)
     return {"root": root, "base": base, "meta": base + ".meta.json", "index": base + ".index",
-            "vecs": base + ".vecs.npy", "ids": base + ".ids.npy"}
+            "vecs": base + ".vecs.npy", "ids": base + ".ids.npy", "snapshot": base + ".snapshot.npz"}
 
 
 def _atomic_write_bytes(path, data):
@@ -166,89 +166,71 @@ class VectorIndex:
         s = self.M @ q[0]; idx = np.argpartition(-s, k - 1)[:k] if n > k else np.arange(n); idx = idx[np.argsort(-s[idx])]; return idx, s[idx]
 
 
+def _array_hash(arr):
+    return hashlib.sha256(np.ascontiguousarray(arr).tobytes()).hexdigest()
+
+
 def save_vector_index(vi, name, signature=None, root=None, store_vectors=False):
-    """原子落盘：meta.json + ids.npy +（FAISS .index 和/或 vecs.npy）。"""
+    """Publish ONE immutable generation by atomic replace; readers cannot mix old/new payloads.
+    The snapshot contains JSON, ids, vectors and serialized FAISS, never pickle.
+    A failed write leaves the previous complete generation untouched.
+    """
     p = index_paths(name, root); os.makedirs(p["root"], exist_ok=True)
+    ids = np.array(vi.ids, dtype=np.int64, copy=True)
+    vectors = np.array(vi.M, dtype=np.float32, copy=True) if vi.M is not None and (store_vectors or vi.index is None) else np.empty((0, int(vi.dim or 0)), np.float32)
+    raw = faiss.serialize_index(vi.index) if vi.index is not None else np.empty(0, np.uint8)
     meta = dict(signature or {})
-    meta.update({
-        "format": FORMAT, "name": name, "kind": vi.engine, "dim": int(vi.dim or 0), "n": vi.size(),
-        "params": _index_params(vi), "saved_at": time.time(),
-        "has_index": vi.index is not None, "has_vecs": bool(store_vectors or (vi.index is None and vi.M is not None)),
-    })
-    if "digest" not in meta:
-        meta["digest"] = content_digest(vi.ids, vectors=vi.M if vi.M is not None else None)
-    if vi.index is not None:
-        if not HAVE_FAISS: raise RuntimeError("FAISS unavailable")
-        fd, tmp = tempfile.mkstemp(prefix=".index.", dir=p["root"]); os.close(fd)
-        try:
-            faiss.write_index(vi.index, tmp); os.replace(tmp, p["index"])
-        except Exception:
-            try: os.unlink(tmp)
-            except OSError: pass
-            raise
-    elif os.path.exists(p["index"]):
-        try: os.unlink(p["index"])
-        except OSError: pass
-    X = vi.M if (meta["has_vecs"] and vi.M is not None) else None
-    if X is not None:
-        _atomic_npy(p["vecs"], np.ascontiguousarray(X, dtype=np.float32))
-    elif os.path.exists(p["vecs"]):
-        try: os.unlink(p["vecs"])
-        except OSError: pass
-    _atomic_npy(p["ids"], np.ascontiguousarray(vi.ids, dtype=np.int64))
-    _atomic_write_json(p["meta"], meta)
+    meta.update(format=FORMAT, name=name, kind=vi.engine, dim=int(vi.dim or 0), n=len(ids),
+                index_params=_index_params(vi), saved_at=time.time(), has_index=bool(len(raw)),
+                has_vecs=bool(len(vectors)))
+    meta.setdefault("digest", content_digest(ids, vectors=vectors))
+    meta["checksums"] = {k: _array_hash(v) for k,v in {"ids":ids,"vectors":vectors,"index":raw}.items()}
+    fd, tmp = tempfile.mkstemp(prefix=".snapshot-", suffix=".npz", dir=p["root"])
+    try:
+        with os.fdopen(fd, "wb") as f:
+            np.savez(f, meta=np.array(json.dumps(meta)), ids=ids, vectors=vectors, index=raw)
+            f.flush(); os.fsync(f.fileno())
+        os.replace(tmp, p["snapshot"])
+    finally:
+        if os.path.exists(tmp): os.unlink(tmp)
     return meta
 
 
 def load_vector_index(name, expected=None, root=None):
-    """加载已有索引。返回 (VectorIndex 或 None, 原因：ok/missing/mismatch/corrupt/no-faiss)。"""
     p = index_paths(name, root)
-    if not os.path.exists(p["meta"]):
-        return None, "missing"
+    if not os.path.exists(p["snapshot"]): return None, "missing"
     try:
-        with open(p["meta"], encoding="utf-8") as f:
-            meta = json.load(f)
-    except Exception:
-        return None, "corrupt"
-    if expected is not None and not signatures_match(meta, expected):
-        return None, "mismatch"
-    try:
-        kind = "hnsw" if "hnsw" in (meta.get("kind") or "") else ("numpy" if (meta.get("kind") or "").startswith("numpy") else "flat")
-        vi = VectorIndex(dim=meta.get("dim"), kind=kind)
-        if os.path.exists(p["ids"]):
-            vi.ids = np.load(p["ids"])
-        else:
-            vi.ids = np.arange(int(meta.get("n") or 0), dtype=np.int64)
-        vi.dim = int(meta.get("dim") or 0) or vi.dim
-        if meta.get("has_index"):
-            if not HAVE_FAISS:
-                return None, "no-faiss"
-            if not os.path.exists(p["index"]):
-                return None, "corrupt"
-            vi.index = faiss.read_index(p["index"])
-            ef = (meta.get("params") or {}).get("efSearch")
-            if ef and hasattr(vi.index, "hnsw"):
-                vi.index.hnsw.efSearch = int(ef)
-        if meta.get("has_vecs") or vi.index is None:
-            if not os.path.exists(p["vecs"]):
-                if vi.index is None:
-                    return None, "corrupt"
-            else:
-                vi.M = np.ascontiguousarray(np.load(p["vecs"]), dtype=np.float32)
-                if vi.index is None:
-                    vi.kind = "numpy"
-        if vi.size() != int(meta.get("n") or 0):
+        with np.load(p["snapshot"], allow_pickle=False) as z:
+            meta=json.loads(str(z["meta"])); ids=z["ids"]; vectors=z["vectors"]; raw=z["index"]
+        if meta.get("format") != FORMAT: return None, "mismatch"
+        if expected is not None and not signatures_match(meta, expected): return None, "mismatch"
+        if any(_array_hash(v) != meta.get("checksums",{}).get(k) for k,v in {"ids":ids,"vectors":vectors,"index":raw}.items()):
             return None, "corrupt"
+        n, dim = int(meta["n"]), int(meta["dim"])
+        if ids.dtype != np.int64 or ids.shape != (n,) or len(np.unique(ids)) != n: return None, "corrupt"
+        if meta.get("has_vecs"):
+            if vectors.shape != (n,dim) or vectors.dtype != np.float32 or not np.isfinite(vectors).all(): return None, "corrupt"
+        vi=VectorIndex(dim=dim, kind="numpy")
+        vi.ids=ids
+        if meta.get("has_index"):
+            if not HAVE_FAISS: return None, "no-faiss"
+            vi.index=faiss.deserialize_index(np.ascontiguousarray(raw, dtype=np.uint8))
+            if vi.index.ntotal != n or vi.index.d != dim: return None, "corrupt"
+            if vi.engine != meta.get("kind"): return None, "corrupt"
+        else:
+            if not meta.get("has_vecs"): return None, "corrupt"
+        vi.M=vectors if meta.get("has_vecs") else None
         return vi, "ok"
     except Exception:
         return None, "corrupt"
 
 
 def remove_index(name, root=None):
-    p = index_paths(name, root)
-    for k in ("meta", "index", "vecs", "ids"):
+    p=index_paths(name,root)
+    # Legacy v1 components are disposable caches too.
+    for k in ("snapshot","meta","index","vecs","ids"):
         try: os.unlink(p[k])
-        except OSError: pass
+        except FileNotFoundError: pass
 
 
 def make_index(n):
