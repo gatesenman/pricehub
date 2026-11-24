@@ -13,3 +13,8 @@
 v15 多文件分别 replace 允许读到不同代的 ids/index；现改为单个 NPZ 快照、一次 fsync+replace 发布，内含 JSON/ids/向量/序列化 FAISS 与 SHA256；严格校验 shape/dtype/条数/维度/有限值，损坏回退重建。v1 缓存失效，不迁移商品数据。
 验证：test_v19_snapshots + test_v15_faiss_persist：13 passed；包含并发 20 次发布/读取、注入 replace 失败保留旧代、篡改 payload 校验。
 下一轮：语义检索并发与模型缓存一致性
+
+## v20 搜索并发与模型缓存身份
+语义搜索共用可变 _INDEX，另一请求可能在检索前替换商品顺序。使用可重入锁覆盖索引构建/检索/失效，确保结果位置对应同一商品快照；embedding 文件绑定模型+归一化版本并原子替换。旧无模型元数据缓存自动忽略。
+验证：test_v20_search_consistency + test_v15_faiss_persist：12 passed；并发 40 次交替顺序查询均返回正确 id，模型切换拒绝旧 embedding。
+下一轮：跨平台安全并行和稀疏评分

@@ -3,7 +3,7 @@
 
 v14：ST / CLIP 改为首次真正用到时再加载，避免冷启动把模型装进内存拖慢 /readyz。
 """
-import os, json, threading, numpy as np
+import os, json, threading, tempfile, functools, numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from app.core.vector import (
     VectorIndex, HAVE_FAISS, FallbackIndex,
@@ -25,6 +25,17 @@ _CACHE = {}
 _QCACHE = {}
 _INDEX = {"key": None, "M": None, "vi": None, "source": None, "sig": None}
 SEARCH_INDEX = "search"
+_INDEX_LOCK = threading.RLock()
+_EMB_LOCK = threading.RLock()
+def _synchronized(fn):
+    @functools.wraps(fn)
+    def call(*args, **kw):
+        with _INDEX_LOCK: return fn(*args, **kw)
+    return call
+
+def _model_signature():
+    return os.environ.get("PRICEHUB_TEXT_MODEL", "paraphrase-multilingual-MiniLM-L12-v2") + ":normalized-v1"
+
 EMB_FILE = os.environ.get(
     "PRICEHUB_EMB_CACHE",
     os.path.join(os.path.dirname(__import__("app").__file__), "..", "data", "emb_cache.npz"),
@@ -51,7 +62,7 @@ def _ensure_st():
         try:
             from sentence_transformers import SentenceTransformer
             _ST = SentenceTransformer(os.environ.get("PRICEHUB_TEXT_MODEL", "paraphrase-multilingual-MiniLM-L12-v2"))
-            ENGINE = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+            ENGINE = "sentence-transformers/" + os.environ.get("PRICEHUB_TEXT_MODEL", "paraphrase-multilingual-MiniLM-L12-v2")
             _load_disk()
         except Exception as e:
             print("ST unavailable:", e, flush=True)
@@ -90,32 +101,40 @@ def vector_engine_now():
 
 
 def _load_disk():
-    """向量持久化：重启后无需重新编码全部商品（冷启动加速）。"""
     try:
-        z = np.load(EMB_FILE, allow_pickle=False)
-        for t, e in zip(z["t"], z["e"]):
-            _CACHE[str(t)] = e
-    except Exception:
-        pass
+        with _EMB_LOCK, np.load(EMB_FILE, allow_pickle=False) as z:
+            if str(z["model"]) != _model_signature(): return
+            if len(z["t"]) != len(z["e"]) or z["e"].ndim != 2 or not np.isfinite(z["e"]).all(): return
+            _CACHE.update({str(k):e for k,e in zip(z["t"],z["e"])})
+    except (OSError, ValueError, KeyError): pass
 
 
 def _save_disk():
+    tmp=None
     try:
-        ks = list(_CACHE)
-        np.savez(EMB_FILE, t=np.array(ks), e=np.array([_CACHE[k] for k in ks], dtype=np.float32))
+        with _EMB_LOCK:
+            folder=os.path.dirname(os.path.abspath(EMB_FILE)); os.makedirs(folder, exist_ok=True)
+            fd,tmp=tempfile.mkstemp(prefix=".emb-",dir=folder)
+            ks=list(_CACHE)
+            with os.fdopen(fd,"wb") as f:
+                np.savez(f,model=np.array(_model_signature()), t=np.array(ks), e=np.array([_CACHE[k] for k in ks],dtype=np.float32))
+                f.flush(); os.fsync(f.fileno())
+            os.replace(tmp,EMB_FILE)
     except Exception as e:
-        print("emb cache save failed:", e)
+        print("emb cache save failed:",e)
+    finally:
+        if tmp and os.path.exists(tmp): os.unlink(tmp)
 
 
 def _emb(texts):
-    st = _ensure_st()
-    miss = list(dict.fromkeys(t for t in texts if t not in _CACHE))
-    if miss:
-        for t, e in zip(miss, st.encode(miss, normalize_embeddings=True, batch_size=128)):
-            _CACHE[t] = e.astype(np.float32)
-        if len(miss) > 20:
+    st=_ensure_st()
+    with _EMB_LOCK:
+        miss=list(dict.fromkeys(t for t in texts if t not in _CACHE))
+        if miss:
+            for t,e in zip(miss,st.encode(miss,normalize_embeddings=True,batch_size=128)):
+                _CACHE[t]=e.astype(np.float32)
             _save_disk()
-    return np.array([_CACHE[t] for t in texts])
+        return np.array([_CACHE[t] for t in texts])
 
 
 def _qemb(q):
@@ -128,7 +147,7 @@ def _qemb(q):
 
 
 def doc(p):
-    return f"{p['title']} {p.get('category') or ''} {p.get('brand') or ''}"
+    return f"{p.get('title') or ''} {p.get('category') or ''} {p.get('brand') or ''}"
 
 
 def _docs_ids(products):
@@ -142,7 +161,7 @@ def search_signature(products, dim=None, model=None):
     return make_signature(
         name=SEARCH_INDEX, kind="auto", dim=dim, n=len(products),
         digest=content_digest(ids, texts=["workspace:" + str(__import__("app.core.tenancy", fromlist=["current"]).current())] + docs),
-        model=model if model is not None else (ENGINE if _ST is not None else ""),
+        model=model if model is not None else _model_signature(),
     )
 
 
@@ -155,6 +174,7 @@ def _active_index():
     return vi
 
 
+@_synchronized
 def index_matrix(products, key=None):
     """向量索引：商品集合（id+标题等）不变时复用；优先加载磁盘 FAISS，否则重建并落盘。
     缓存键用内容签名，不再跟 db.VER 走，避免每次记价格都重建索引。"""
@@ -162,7 +182,7 @@ def index_matrix(products, key=None):
         return None
     sig = search_signature(products)
     digest = sig["digest"]
-    if _INDEX.get("vi") is not None and _INDEX.get("sig") and _INDEX["sig"].get("digest") == digest:
+    if _INDEX.get("vi") is not None and _INDEX.get("sig") and _INDEX["sig"] == sig:
         return _INDEX["M"]
     loaded, reason = load_vector_index(SEARCH_INDEX, expected=sig)
     if loaded is not None:
@@ -174,18 +194,20 @@ def index_matrix(products, key=None):
     if isinstance(inner, VectorIndex):
         inner.ids = np.asarray(_docs_ids(products)[0], dtype=np.int64)
         try:
-            save_vector_index(inner, SEARCH_INDEX, {**sig, "dim": int(M.shape[1]), "model": ENGINE})
+            save_vector_index(inner, SEARCH_INDEX, {**sig, "dim": int(M.shape[1]), "model": _model_signature()})
         except Exception as e:
             print("faiss save failed:", e)
     _INDEX.update(key=key if key is not None else digest, M=M, vi=vi, source="build:" + reason, sig=sig)
     return _INDEX["M"]
 
 
+@_synchronized
 def vector_index(products, key=None):
     index_matrix(products, key)
     return _INDEX["vi"]
 
 
+@_synchronized
 def invalidate_index(remove_disk=True):
     """商品删除或标题变更后失效内存/磁盘索引，下次搜索或预热再重建。"""
     _INDEX.update(key=None, M=None, vi=None, source=None, sig=None)
@@ -194,6 +216,7 @@ def invalidate_index(remove_disk=True):
         except Exception: pass
 
 
+@_synchronized
 def on_products_changed(added=None, removed=None, updated=None, products=None):
     """写入/删除商品时更新索引。删除或改标题：失效（HNSW 不便按 id 删除）。纯新增：能增量则 add 并落盘。"""
     added = list(added or [])
@@ -216,7 +239,7 @@ def on_products_changed(added=None, removed=None, updated=None, products=None):
         if _INDEX.get("M") is not None:
             _INDEX["M"] = np.vstack([_INDEX["M"], E])
         if products is not None:
-            sig = search_signature(products, dim=E.shape[1], model=ENGINE)
+            sig = search_signature(products, dim=E.shape[1], model=_model_signature())
         else:
             # 尚无完整列表时，用旧签名加新文本，保证磁盘与内存一致；下次完整加载会再校验
             old = _INDEX.get("sig") or {}
@@ -226,13 +249,14 @@ def on_products_changed(added=None, removed=None, updated=None, products=None):
         _INDEX["sig"] = sig
         _INDEX["key"] = sig.get("digest")
         _INDEX["source"] = "add"
-        save_vector_index(vi, SEARCH_INDEX, {**sig, "dim": int(E.shape[1]), "model": ENGINE})
+        save_vector_index(vi, SEARCH_INDEX, {**sig, "dim": int(E.shape[1]), "model": _model_signature()})
         return {"action": "add", "n": vi.size()}
     except Exception as e:
         invalidate_index(remove_disk=True)
         return {"action": "invalidate", "reason": str(e)}
 
 
+@_synchronized
 def warm_persisted_index(products=None):
     """启动时加载已有索引。签名与当前商品一致才用，否则留给首次搜索再重建。"""
     if not products:
@@ -241,13 +265,14 @@ def warm_persisted_index(products=None):
         return {"action": "skip", "reason": "no-st"}
     # 若尚未加载模型但磁盘索引只依赖已缓存向量，仍可先试加载（不触发编码）
     sig = search_signature(products)
-    loaded, reason = load_vector_index(SEARCH_INDEX, expected={k: sig[k] for k in ("format", "name", "n", "digest") if k in sig} | {"kind": "auto"})
+    loaded, reason = load_vector_index(SEARCH_INDEX, expected=sig)
     if loaded is not None:
         _INDEX.update(key=sig["digest"], M=loaded.M, vi=loaded, source="disk", sig=sig)
         return {"action": "load", "n": loaded.size(), "engine": loaded.engine, "reason": reason}
     return {"action": "miss", "reason": reason, "n": len(products)}
 
 
+@_synchronized
 def semantic(query, products, k=10, min_score=0.0, key=None):
     query = (query or "").strip()
     if not query or not products:
