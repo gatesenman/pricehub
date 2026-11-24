@@ -5,7 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from apscheduler.schedulers.background import BackgroundScheduler
 from . import db, sources, analytics, search, ai_search, confidence as CF, platform_registry, healthcheck
 import threading, asyncio
-HERE = os.path.dirname(__file__); IMG_DIR = os.path.join(HERE, "..", "data", "images"); os.makedirs(IMG_DIR, exist_ok=True)
+HERE = os.path.dirname(__file__); IMG_DIR = os.environ.get("PRICEHUB_IMAGE_DIR") or os.path.join(HERE, "..", "data", "images"); os.makedirs(IMG_DIR, exist_ok=True)
 app = FastAPI(title="PriceHub 全球交易平台价格全生命周期管理")
 from .core.perf_middleware import install as _install_perf; _install_perf(app)  # v14：gzip + 静态缓存
 db.init()

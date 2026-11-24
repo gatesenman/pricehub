@@ -189,20 +189,38 @@ def quick_monitor_alias(body: dict = Body(...)): return quick_monitor(body)  # �
 
 # ---------------- 批量操作与撤销 ----------------
 UNDO = {}
+_UNDO_LOCK = threading.RLock()
 def _undo_token(label, restore):
-    tok = uuid.uuid4().hex[:12]; UNDO[tok] = {"label": label, "restore": restore, "at": _now()}
-    for k in [k for k, v in UNDO.items() if _now() - v["at"] > 600]: UNDO.pop(k)
+    from app.core import tenancy
+    tok=uuid.uuid4().hex
+    with _UNDO_LOCK:
+        UNDO[tok]={"label":label,"restore":restore,"at":_now(),"ws":tenancy.current()}
+        for k in [k for k,v in UNDO.items() if _now()-v["at"]>600]: UNDO.pop(k,None)
     return tok
 def _rows(sql, ids): return db.q(sql % ",".join("?" * len(ids)), ids)
 def _reinsert(table, rows):
     for r in rows:
-        cols = list(r); db.ex(f"INSERT OR REPLACE INTO {table}({','.join(cols)}) VALUES({','.join('?' * len(cols))})", [r[c] for c in cols])
+        cols = list(r); db.ex(f"INSERT INTO {table}({','.join(cols)}) VALUES({','.join('?' * len(cols))})", [r[c] for c in cols])
 @app.post("/api/products/bulk")
+@db.atomic
 def products_bulk(body: dict = Body(...)):
     ids = [int(i) for i in body.get("ids") or []]; action = body.get("action")
     if not ids: raise HTTPException(400, "请先勾选商品")
     if action == "delete":
-        ps = _rows("SELECT * FROM products WHERE id IN (%s)", ids); pr = _rows("SELECT * FROM prices WHERE product_id IN (%s)", ids); al = _rows("SELECT * FROM alerts WHERE product_id IN (%s)", ids)
+        ps = _rows("SELECT * FROM products WHERE id IN (%s)", ids)
+        if any(p.get("merged_into") is not None or p.get("parent_id") is not None for p in ps):
+            raise HTTPException(409,"请先撤销合并或解除规格关系，再删除商品")
+        ph=','.join('?'*len(ids))
+        if db.q(f"SELECT id FROM products WHERE merged_into IN ({ph}) OR parent_id IN ({ph})",ids+ids):
+            raise HTTPException(409,"商品仍有关联合并页或规格，不能删除")
+        pr = _rows("SELECT * FROM prices WHERE product_id IN (%s)", ids)
+        al = _rows("SELECT * FROM alerts WHERE product_id IN (%s)", ids)
+        related={}
+        for table in ("rules","evidence"):
+            related[table]=_rows(f"SELECT * FROM {table} WHERE product_id IN (%s)",ids)
+            db.ex(f"DELETE FROM {table} WHERE product_id IN ({ph})",ids)
+        related["dedup_candidates"]=db.q(f"SELECT * FROM dedup_candidates WHERE a_id IN ({ph}) OR b_id IN ({ph})",ids+ids)
+        db.ex(f"DELETE FROM dedup_candidates WHERE a_id IN ({ph}) OR b_id IN ({ph})",ids+ids)
         for t, c in (("prices", "product_id"), ("alerts", "product_id"), ("products", "id")): db.ex(f"DELETE FROM {t} WHERE {c} IN ({','.join('?' * len(ids))})", ids)
         try:
             from app.domains.search import semantic as _sem
@@ -212,6 +230,7 @@ def products_bulk(body: dict = Body(...)):
             print("index update after delete:", e)
         def _restore_deleted():
             _reinsert("products", ps); _reinsert("prices", pr); _reinsert("alerts", al)
+            for table,rows in related.items(): _reinsert(table,rows)
             try:
                 from app.domains.search import semantic as _sem
                 from app.domains.dedup import service as _dedup
@@ -242,9 +261,19 @@ def del_source_undoable(sid: int):
     return {"ok": True, "undo": _undo_token(f"删除数据源「{s['name']}」", lambda: _reinsert("sources", [s])), "message": f"已删除数据源「{s['name']}」"}
 @app.post("/api/undo/{tok}")
 def undo(tok: str):
-    u = UNDO.pop(tok, None)
-    if not u: raise HTTPException(404, "撤销已过期（10 分钟内有效）")
-    u["restore"](); return {"ok": True, "message": f"已撤销：{u['label']}"}
+    from app.core import tenancy
+    with _UNDO_LOCK:
+        u=UNDO.get(tok)
+        if not u or u.get("ws")!=tenancy.current(): raise HTTPException(404,"撤销不存在或已过期")
+        if _now()-u["at"]>600:
+            UNDO.pop(tok,None); raise HTTPException(404,"撤销已过期（10 分钟内有效）")
+        try:
+            with db.transaction(): u["restore"]()
+        except Exception as e:
+            # Never REPLACE rows whose ids were reused since deletion; retain token for diagnosis/retry.
+            raise HTTPException(409,"无法安全撤销：数据已变化，未覆盖任何现有记录") from e
+        UNDO.pop(tok,None)
+        return {"ok":True,"message":f"已撤销：{u['label']}"}
 
 # ---------------- 全局搜索建议 ----------------
 @app.get("/api/suggest")
